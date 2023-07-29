@@ -28,7 +28,6 @@ function App() {
         <Route path='/clientlist/editclient/:clientId' element={<EditClient />} />
 
         {/* Vendor API */}
-
         <Route path='/vendor' element={<VendorComponent/>}></Route>
         <Route path='/vendorlist' element={<ListVendorComponent/>} />
         <Route path='/vendorlist/editvendor/:vendorId' element={<EditVendor/>} />
