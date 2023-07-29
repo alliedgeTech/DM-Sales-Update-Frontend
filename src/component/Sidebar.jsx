@@ -104,10 +104,10 @@ export const Sidebar = () => {
                                         <Link to="/clientlist">List clients</Link>
                                     </li>
                                     <li className="submenu-item ">
-                                        <Link to="/client">Add vendors</Link>
+                                        <Link to="/vendor">Add vendors</Link>
                                     </li>
                                     <li className="submenu-item ">
-                                        <Link to="/client">List vendors</Link>
+                                        <Link to="/vendorlist">List vendors</Link>
                                     </li>
                                 </ul>
                             </li>

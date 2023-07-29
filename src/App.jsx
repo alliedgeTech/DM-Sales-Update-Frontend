@@ -11,7 +11,9 @@ import { Error404 } from "./component/errors/Error404"
 import { AddCompanyWiseItemComponent } from "./component/companines/AddCompanyWiseItemComponent"
 import { ListCompanyWiseItemComponent } from "./component/companines/ListCompanyWiseItemComponent"
 import { AddPurchaseComponent } from "./component/purchase/AddPurchaseComponent"
-
+import {VendorComponent} from "./component/vendor/VendorComponent"
+import {ListVendorComponent} from "./component/vendor/ListVendorComponent"
+import {EditVendor} from "./component/vendor/EditVendor"
 function App() {
 
   return (
@@ -25,6 +27,11 @@ function App() {
         <Route path='/clientlist' element={<ListClientComponent />} />
         <Route path='/clientlist/editclient/:clientId' element={<EditClient />} />
 
+        {/* Vendor API */}
+        <Route path='/vendor' element={<VendorComponent/>}></Route>
+        <Route path='/vendorlist' element={<ListVendorComponent/>} />
+        <Route path='/vendorlist/editvendor/:vendorId' element={<EditVendor/>} />
+
         {/* Companies API */}
         <Route path="/add-company" element={<AddCompaniesComponent />} />
         <Route path="/add-item" element={<AddCompanyWiseItemComponent />} />
@@ -33,6 +40,8 @@ function App() {
         {/* Purchase API */}
         <Route path="/add-purchase" element={<AddPurchaseComponent />} />
 
+          {/* Purchase API */}
+      
         {/* errors */}
         <Route path="/erorr404" element={<Error404 />} />
       </Routes>
