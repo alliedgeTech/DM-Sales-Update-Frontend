@@ -6,8 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import { notifyDone } from "../../assets/toster"
 export const VendorComponent = () => {
 
-     
-    const validation={
+
+    const validation = {
         vendorName: {
             required: {
                 value: true,
@@ -84,11 +84,10 @@ export const VendorComponent = () => {
                 message: "maximum words length is 12."
             }
         },
-    
         remark: {
             required: {
                 value: true,
-                message: "Address is required."
+                message: "Remarks is required."
             },
             minLength: {
                 value: 10,
@@ -114,7 +113,7 @@ export const VendorComponent = () => {
             }
         }
     }
-    
+
     var navigate = useNavigate()
     const { register, handleSubmit, formState: { errors } } = useForm()
 
@@ -136,8 +135,6 @@ export const VendorComponent = () => {
 
     }
     const mutation = usePostvendorData();
-
-
 
     useEffect(() => {
         console.log(" isIdle => ", mutation.isIdle);
@@ -210,12 +207,12 @@ export const VendorComponent = () => {
                                                     placeholder="Enter client name"
                                                     name="fname-column"
                                                     data-parsley-required="true"
-                                                    {...register("vendorName",validation.vendorName)}
+                                                    {...register("vendorName", validation.vendorName)}
 
                                                 />
                                                 <span className='text-danger font-weight-bold'>{errors?.vendorName?.message}</span>
                                             </div>
-                                            
+
                                             <div className="form-group mandatory">
                                                 <label htmlFor="phoneNo" class="form-label">Phone Number</label>
                                                 <input
@@ -224,9 +221,9 @@ export const VendorComponent = () => {
                                                     id="phoneNo"
                                                     placeholder="Enter contact number"
                                                     data-parsley-required="true"
-                                                    {...register("phoneNumber1",validation.phoneNumber1)}
+                                                    {...register("phoneNumber1", validation.phoneNumber1)}
                                                 />
-                                                 <span className='text-danger font-weight-bold'>{errors?.phoneNumber1?.message}</span>
+                                                <span className='text-danger font-weight-bold'>{errors?.phoneNumber1?.message}</span>
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phoneNumberSecond" class="form-label">Phone Number</label>
@@ -235,13 +232,13 @@ export const VendorComponent = () => {
                                                     className="form-control"
                                                     id="phoneNumberSecond"
                                                     placeholder="Enter second phone number"
-                                                    {...register("phoneNumber2",validation.phoneNumber2)}
+                                                    {...register("phoneNumber2", validation.phoneNumber2)}
                                                 />
                                                 <span className='text-danger font-weight-bold'>{errors?.phoneNumber2?.message}</span>
                                             </div>
                                             <div className="form-group mandatory">
                                                 <label htmlFor="gst" class="form-label">Address</label>
-                                                <textarea class="form-control" maxLength="3000" placeholder='Enter Address' id="remarks" rows="2"{...register("address",validation.address)}></textarea>
+                                                <textarea class="form-control" maxLength="3000" placeholder='Enter Address' id="remarks" rows="2"{...register("address", validation.address)}></textarea>
                                                 <span className='text-danger font-weight-bold'>{errors?.address?.message}</span>
                                             </div>
                                         </div>
@@ -253,7 +250,7 @@ export const VendorComponent = () => {
                                                     className="form-control"
                                                     id="email"
                                                     placeholder="Enter email address"
-                                                    {...register("email1",validation.email1)}
+                                                    {...register("email1", validation.email1)}
                                                 />
                                                 <span className='text-danger font-weight-bold'>{errors?.email1?.message}</span>
                                             </div>
@@ -264,7 +261,7 @@ export const VendorComponent = () => {
                                                     className="form-control"
                                                     id="email"
                                                     placeholder="Enter second email address"
-                                                    {...register("email2",validation.email2)}
+                                                    {...register("email2", validation.email2)}
                                                 />
                                                 <span className='text-danger font-weight-bold'>{errors?.email2?.message}</span>
                                             </div>
@@ -276,18 +273,18 @@ export const VendorComponent = () => {
                                                     id="panno"
                                                     placeholder="Enter GST Number"
                                                     data-parsley-required="true"
-                                                    {...register("gstNo",validation.gstNo)}
+                                                    {...register("gstNo", validation.gstNo)}
                                                 />
                                                 <span className='text-danger font-weight-bold'>{errors?.gstNo?.message}</span>
                                             </div>
                                             <div className="form-group mandatory">
                                                 <div class="form-group mb-3">
                                                     <label for="remarks" class="form-label">Remarks</label>
-                                                    <textarea class="form-control" maxLength="3000" id="remarks" rows="2"  {...register("remark",validation.remark)}placeholder='Enter Remark'></textarea>
+                                                    <textarea class="form-control" maxLength="3000" id="remarks" rows="2"  {...register("remark", validation.remark)} placeholder='Enter Remark'></textarea>
                                                 </div>
                                                 <span className='text-danger font-weight-bold'>{errors?.remark?.message}</span>
                                             </div>
-                                          
+
                                             <div class="d-flex form-group">
                                                 <button type="submit" class="btn btn-primary me-2 mb-1">Submit</button>
                                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1" onClick={() => document.getElementById("forms").reset()} >Reset</button>
@@ -300,7 +297,6 @@ export const VendorComponent = () => {
                     </section>
                 </div >
             </div >
-
         </>
     )
-    }
+}

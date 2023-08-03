@@ -1,5 +1,6 @@
 import React from 'react'
 import error from "../../assets/images/samples/error-404.svg"
+import { Link } from 'react-router-dom'
 
 export const Error404 = () => {
     return (
@@ -10,7 +11,7 @@ export const Error404 = () => {
                         <img class="img-error" src={error} alt="Not Found" />
                         <h1 class="error-title">NOT FOUND</h1>
                         <p class='fs-5 text-gray-600'>The page you are looking not found.</p>
-                        <a href="index.html" class="btn btn-lg btn-outline-primary mt-3">Go Home</a>
+                        <Link to="/" class="btn btn-lg btn-outline-primary mt-3">Go Home</Link>
                     </div>
                 </div>
             </div>

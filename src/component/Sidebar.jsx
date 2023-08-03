@@ -51,6 +51,7 @@ export const Sidebar = () => {
                                         className="form-check-input  me-0"
                                         type="checkbox"
                                         id="toggle-dark"
+                                        style={{ cursor: "pointer" }}
                                     />
                                     <label className="form-check-label" />
                                 </div>

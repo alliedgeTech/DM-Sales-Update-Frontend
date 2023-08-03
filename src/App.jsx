@@ -43,7 +43,7 @@ function App() {
           {/* Purchase API */}
       
         {/* errors */}
-        <Route path="/erorr404" element={<Error404 />} />
+        <Route path="/*" element={<Error404 />} />
       </Routes>
     </>
   )

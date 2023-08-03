@@ -4,22 +4,22 @@ import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { notifyDone } from "../../assets/toster"
 export const ListVendorComponent = () => {
-    
+
     var { data, isError, isLoading, refetch } = useVendorData()
     const mutation = useDeleteVendor()
 
     useEffect(() => {
-        refetch()   
+        refetch()
     }, [isLoading, mutation.data, mutation.isLoading])
 
-    const deleteVendor=(id)=>{
+    const deleteVendor = (id) => {
         mutation.mutate(id);
         notifyDone("vendor deleted successfully.")
-}
+    }
 
     return (
         <>
-         <ToastContainer
+            <ToastContainer
                 position="top-right"
                 autoClose={2000}
                 hideProgressBar={false}
@@ -31,75 +31,75 @@ export const ListVendorComponent = () => {
                 pauseOnHover
                 theme="light"
             />
-        <div id='main'>
-            <header className="mb-3">
-                <a href="#" className="burger-btn d-block d-xl-none">
-                    <i className="bi bi-justify fs-3" />
-                </a>
-            </header>
-            <div className="page-title">
-                <div className="row">
-                    <div className="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Vendor</h3>
-                    </div>
-                    <div className="col-12 col-md-6 order-md-2 order-first">
-                        <nav
-                            aria-label="breadcrumb"
-                            className="breadcrumb-header float-start float-lg-end"
-                        >
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item">
-                                    <Link to="/">Deshboard</Link>
-                                </li>
-                                <li className="breadcrumb-item active" aria-current="page">
-                                    Vendor
-                                </li>
-                            </ol>
-                        </nav>
+            <div id='main'>
+                <header className="mb-3">
+                    <a href="#" className="burger-btn d-block d-xl-none">
+                        <i className="bi bi-justify fs-3" />
+                    </a>
+                </header>
+                <div className="page-title">
+                    <div className="row">
+                        <div className="col-12 col-md-6 order-md-1 order-last">
+                            <h3>Vendor</h3>
+                        </div>
+                        <div className="col-12 col-md-6 order-md-2 order-first">
+                            <nav
+                                aria-label="breadcrumb"
+                                className="breadcrumb-header float-start float-lg-end"
+                            >
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
+                                        <Link to="/">Deshboard</Link>
+                                    </li>
+                                    <li className="breadcrumb-item active" aria-current="page">
+                                        Vendor
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <section className="section">
-                <div className="row" id="table-head">
-                    <div className="col-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4 className="card-title">Vendors </h4>
-                            </div>
-                            {
-                                data?.data?.data === undefined || data?.data?.data === isLoading ? (
-                                    <div className='d-flex justify-content-center align-item-center my-5'>
-                                        <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
-                                            <span class="visually-hidden"></span>
+                <section className="section">
+                    <div className="row" id="table-head">
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="card-header">
+                                    <h4 className="card-title">Vendors </h4>
+                                </div>
+                                {
+                                    data?.data?.data === undefined || data?.data?.data === isLoading ? (
+                                        <div className='d-flex justify-content-center align-item-center my-5'>
+                                            <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
+                                                <span class="visually-hidden"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                ) : (
+                                    ) : (
 
-                                    <div className="card-content p-2">
-                                        <div className="table-responsive">
-                                            <table className="table mb-0">
-                                                <thead className="thead-dark">
-                                                    <tr>
-                                                        <th>NAME</th>
-                                                        <th>EMAIL</th>
-                                                        <th>PHONE NUMBER</th>
-                                                        <th>GST NUMBER</th>
-                                                        <th>ACTION</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                        <div className="card-content p-2">
+                                            <div className="table-responsive">
+                                                <table className="table mb-0">
+                                                    <thead className="thead-dark">
+                                                        <tr>
+                                                            <th>NAME</th>
+                                                            <th>EMAIL</th>
+                                                            <th>PHONE NUMBER</th>
+                                                            <th>GST NUMBER</th>
+                                                            <th>ACTION</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                                    {
-                                                        data?.data?.data?.map(vendor => {
-                                                            return (
-                                                                <>
-                                                                    <tr>
-                                                                        <td className="text-bold-500">{vendor.vendorName}</td>
-                                                                        <td>{vendor.email1}</td>
-                                                                        <td className="text-bold-500">{vendor.phoneNumber1}</td>
-                                                                        <td>{vendor.gstNo}</td>
-                                                                        <td>
-                                                                        <button
+                                                        {
+                                                            data?.data?.data?.map(vendor => {
+                                                                return (
+                                                                    <>
+                                                                        <tr>
+                                                                            <td className="text-bold-500">{vendor.vendorName}</td>
+                                                                            <td>{vendor.email1}</td>
+                                                                            <td className="text-bold-500">{vendor.phoneNumber1}</td>
+                                                                            <td>{vendor.gstNo}</td>
+                                                                            <td>
+                                                                                <button
                                                                                     type="button"
                                                                                     className="btn btn-sm"
                                                                                     data-bs-toggle="modal"
@@ -107,10 +107,10 @@ export const ListVendorComponent = () => {
                                                                                 >
                                                                                     <i class="bi bi-card-text text-primary"></i>
                                                                                 </button>
-                                                                            <Link to={`editvendor/${vendor._id}`} className='btn btn-sm'>
-                                                                                <i class="bi bi-box-arrow-up-right"></i>
-                                                                            </Link>
-                                                                            <button
+                                                                                <Link to={`editvendor/${vendor._id}`} className='btn btn-sm'>
+                                                                                    <i class="bi bi-box-arrow-up-right"></i>
+                                                                                </Link>
+                                                                                <button
                                                                                     type="button"
                                                                                     className="btn btn-sm"
                                                                                     data-bs-toggle="modal"
@@ -118,9 +118,9 @@ export const ListVendorComponent = () => {
                                                                                 >
                                                                                     <i class="bi bi-trash3 text-danger"></i>
                                                                                 </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                    <div
+                                                                            </td>
+                                                                        </tr>
+                                                                        <div
                                                                             class="modal fade text-left"
                                                                             id={`danger${vendor._id}`}
                                                                             tabindex="-1"
@@ -156,73 +156,71 @@ export const ListVendorComponent = () => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    <div
-                                                                        className="modal fade text-left"
-                                                                        id={`primary${vendor._id}`}
-                                                                        tabIndex={-1}
-                                                                        role="dialog"
-                                                                        aria-labelledby="myModalLabel160"
-                                                                        aria-hidden="true"
-                                                                    >
                                                                         <div
-                                                                            className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                                            role="document"
+                                                                            className="modal fade text-left"
+                                                                            id={`primary${vendor._id}`}
+                                                                            tabIndex={-1}
+                                                                            role="dialog"
+                                                                            aria-labelledby="myModalLabel160"
+                                                                            aria-hidden="true"
                                                                         >
-                                                                            <div className="modal-content">
-                                                                                <div className="modal-header bg-primary">
-                                                                                    <h5 className="modal-title white" id="myModalLabel160">
-                                                                                        Other details
-                                                                                    </h5>
-                                                                                </div>
-                                                                                <div className="modal-body">
-                                                                                    <tr className='d-flex flex-column'>
-                                                                                        <td>
-                                                                                            <h6>Second email</h6>
-                                                                                            <p>{vendor?.email2 ? vendor?.email2 : "No second email"}</p>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <h6>Second contact number</h6>
-                                                                                            <p>{vendor?.phoneNumber2 ? vendor?.phoneNumber2 : "No second phone number"}</p>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <h6>Remark</h6>
-                                                                                            <p>{vendor?.remark}</p>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <h6>Address</h6>
-                                                                                            <p>{vendor?.address}</p>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </div>
-                                                                                <div className="modal-footer">
-                                                                                    <button
-                                                                                        type="button"
-                                                                                        className="btn btn-light-secondary"
-                                                                                        data-bs-dismiss="modal"
-                                                                                    >
-                                                                                        x
-                                                                                    </button>
+                                                                            <div
+                                                                                className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                                                role="document"
+                                                                            >
+                                                                                <div className="modal-content">
+                                                                                    <div className="modal-header bg-primary">
+                                                                                        <h5 className="modal-title white" id="myModalLabel160">
+                                                                                            Other details
+                                                                                        </h5>
+                                                                                    </div>
+                                                                                    <div className="modal-body">
+                                                                                        <tr className='d-flex flex-column'>
+                                                                                            <td>
+                                                                                                <h6>Second email</h6>
+                                                                                                <p>{vendor?.email2 ? vendor?.email2 : "No second email"}</p>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <h6>Second contact number</h6>
+                                                                                                <p>{vendor?.phoneNumber2 ? vendor?.phoneNumber2 : "No second phone number"}</p>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <h6>Remark</h6>
+                                                                                                <p>{vendor?.remark}</p>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <h6>Address</h6>
+                                                                                                <p>{vendor?.address}</p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </div>
+                                                                                    <div className="modal-footer">
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="btn btn-light-secondary"
+                                                                                            data-bs-dismiss="modal"
+                                                                                        >
+                                                                                            x
+                                                                                        </button>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </>
-                                                            )
-                                                        })
-                                                    }
-                                                </tbody>
-                                            </table>
+                                                                    </>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
+                            </div>
                         </div>
-
                     </div>
-                </div>
-            </section >
-
-        </div >
+                </section >
+            </div >
         </>
     )
 }

@@ -1,14 +1,580 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
-import { usePostClientData } from '../../services/clientServices';
 import { ToastContainer } from 'react-toastify';
 import { notifyDone } from "../../assets/toster"
+import { useVendorData, usevendorData } from '../../services/vendorServices';
+import { useGetCompanys, useGetItems } from '../../services/companyAndItemServices';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCompany } from '../../redux/CompanySlice';
+import { addItems } from '../../redux/ItemSlice';
 
 export const AddPurchaseComponent = () => {
+
+  const validation = {
+    uom: {
+      required: {
+        value: true,
+        message: "This is required."
+      },
+      minLength: {
+        value: 1,
+        message: "minimum words length is 1."
+      },
+      maxLength: {
+        value: 200,
+        message: "maximum words length is 200."
+      }
+    },
+    companyId: {
+      required: {
+        value: true,
+        message: "Item name is required."
+      },
+    },
+    vendorId: {
+      required: {
+        value: true,
+        message: "Vendor name is required."
+      },
+    },
+    item: {
+      required: {
+        value: true,
+        message: "Vendor name is required."
+      }
+    },
+    date: {
+      required: {
+        value: true,
+        message: "Date is required."
+      }
+    },
+    qty: {
+      required: {
+        value: true,
+        message: "Quantity is required."
+      },
+      min: {
+        value: 1,
+        message: "Minimum one quantity is required."
+      }
+    },
+    price: {
+      required: {
+        value: true,
+        message: "Price is required."
+      },
+      min: {
+        value: 1,
+        message: "Minimum one rs is required."
+      }
+    },
+    invoice: {
+      required: {
+        value: true,
+        message: "Invoice is required."
+      },
+      minLength: {
+        value: 1,
+        message: "minimum words length is 1."
+      },
+      maxLength: {
+        value: 200,
+        message: "maximum words length is 200."
+      }
+    },
+    remark: {
+      required: {
+        value: true,
+        message: "Remarks is required."
+      },
+      minLength: {
+        value: 10,
+        message: "minimum words length is 10."
+      },
+      maxLength: {
+        value: 3000,
+        message: "maximum words length is 3000."
+      }
+    }
+  }
+
+  var navigate = useNavigate()
+  // var { data, isError, isLoading } = useGetCompanys()
+
+  var { register, handleSubmit, formState: { errors } } = useForm();
+
+  var [purchaseItems, setPurchaseItems] = useState([])
+
+  const submitData = (data) => {
+    console.log("data : ", data);
+    setPurchaseItems([...purchaseItems, data])
+    notifyDone("Item added in list.")
+  }
+
+  var [items, setItems] = useState([])
+  // get company and items and store in redux store
+  // const { data: companyData, isLoading: companyLoading } = useGetCompanys();
+  // const { data: itemData, isLoading: itemLoading } = useGetItems();
+  const { data: vendorData, isLoading: vendorLoading } = useVendorData();
+
+  var itemsData = useSelector((state) => state.items.value)
+  var companiesData = useSelector((state) => state.company.value)
+  console.log("dddd", itemsData, companiesData);
+  // const dispatch = useDispatch();
+
+  useEffect(() => {
+    // if (companyData !== undefined && companyLoading === false && companiesData.length === 0) {
+    //   console.log("---", companyData);
+    //   companyData.data.data.forEach(element => {
+    //     dispatch(addCompany(element));
+    //   });
+    // }
+
+    // if (itemData !== undefined && itemLoading === false && itemsData.length === 0) {
+    //   itemData.data.data.forEach(element => {
+    //     dispatch(addItems(element));
+    //   })
+    // }
+    if (itemsData.length === 0 && companiesData.length === 0) {
+      navigate("/")
+    }
+    console.log(itemsData, companiesData);
+  }, [itemsData, companiesData])
+
+  console.log("--->>", itemsData, companiesData);
+
+  // const itemsData = useSelector((state) => state.items.value)
+  // const companiesData = useSelector((state) => state.company.value)
+
+  useEffect(() => {
+
+    // if (mutation.isError || isError) {
+    //   navigate('/erorr404')
+    // }
+    // if (mutation.data && note === 0) {
+    //   notifyDone("Company's item added successfully.")
+    //   setnote(1)
+    // }
+    // if (mutation.isLoading) {
+    //   setnote(0) 
+    // }
+    console.log("items data ----> ", itemsData);
+    console.log("company data ----> ", companiesData);
+    console.log("vendor data ----> ", vendorData);
+
+  }, [itemsData, companiesData, items, companyId])
+
+
+
+  const [vendor, setVendor] = useState("")
+  function desebleVendor(vendor) {
+    if (vendor.length !== 0 && vendor !== undefined && vendor !== null) {
+      document.getElementById("vendor").setAttribute("disabled", true);
+      console.log("vendor : ", vendor);
+      setVendor(vendor)
+      document.getElementById("vendor").value = vendor;
+    }
+  }
+
+  const [invoise, setInvoice] = useState("")
+  function disableInvoice(invoice) {
+    if (invoice.length !== 0 && invoice !== undefined && invoice !== null) {
+      document.getElementById("invoice").setAttribute("disabled", true);
+      setInvoice(invoice)
+    }
+  }
+
+  var [companyId, setcompanyId] = useState("")
+  const getItemCompanyWise = (data) => {
+    console.log("daatat : " + data);
+    if (data !== "" && data !== null) {
+      document.getElementById("items").disabled = false;
+      setcompanyId(data);
+    } else {
+      document.getElementById("items").disabled = true;
+    }
+  }
+
   return (
-    <div>
-        
-    </div>
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <div id="main">
+        <header className="mb-3">
+          <a href="#" className="burger-btn d-block d-xl-none">
+            <i className="bi bi-justify fs-3" />
+          </a>
+        </header>
+        <div className="page-heading">
+          <div className="page-title">
+            <div className="row">
+              <div className="col-12 col-md-6 order-md-1 order-last">
+                <h3>Purchase</h3>
+              </div>
+              <div className="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  className="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                      <Link to="/">Deshboard</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                      items
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section className="section">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Genetate purchase</h4>
+              </div>
+              <div className="card-body">
+                {
+                  vendorLoading === true || vendorData?.data?.data === undefined ? (
+                    <div className='d-flex justify-content-center align-item-center my-5'>
+                      <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
+                        <span class="visually-hidden"></span>
+                      </div>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit(submitData)} id='forms'>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <fieldset class="form-group mandatory">
+                            <label htmlFor="vendor" class="form-label">Select Vendor</label>
+                            <select class="form-select"
+                              id="vendor"
+                              {...register("vendorId", { value: vendor }, validation.vendorId)}
+                              value=""
+                              onChange={(event) => desebleVendor(event.target.value)}
+                            >
+                              <option value="">Select Vendor's name</option>
+                              {
+                                vendorData?.data?.data?.map(vendor => {
+                                  return (
+                                    <option value={vendor._id}>{vendor.vendorName}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                            <span className='text-danger font-weight-bold'>{errors?.vendorId?.message}</span>
+                          </fieldset>
+                          <fieldset class="form-group mandatory">
+                            <label htmlFor="company" class="form-label">Select company</label>
+                            <select class="form-select"
+                              id="company"
+                              {...register("companyId", validation.companyId)}
+                              onChange={(event) => { getItemCompanyWise(event.target.value) }}
+                            >
+                              <option value="">Select company</option>
+                              {
+                                companiesData.map(company => {
+                                  return (
+                                    <option value={company._id}>{company.name}</option>
+                                  )
+                                })
+                              }
+                            </select>
+                            <span className='text-danger font-weight-bold'>{errors?.companyId?.message}</span>
+                          </fieldset>
+                          <div className="form-group mandatory">
+                            <label htmlFor="item" class="form-label">Quantity</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="qty"
+                              placeholder="Enter quantity."
+                              {...register("qty", validation.qty)}
+                            />
+                            <span className='text-danger font-weight-bold'>{errors?.qty?.message}</span>
+                          </div>
+                          <div className="form-group mandatory">
+                            <label htmlFor="item" class="form-label">Total price</label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="price"
+                              placeholder="Enter quantity."
+                              {...register("price", validation.price)}
+                            />
+                            <span className='text-danger font-weight-bold'>{errors?.price?.message}</span>
+                          </div>
+                          <div className="form-group mandatory">
+                            <label htmlFor="date" class="form-label">Date</label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              id="date"
+                              {...register("date", validation.date)}
+                            />
+                            <span className='text-danger font-weight-bold'>{errors?.date?.message}</span>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-group mandatory">
+                            <label htmlFor="invoice" class="form-label">Invoice (Bill number)</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="invoice"
+                              placeholder='Enter your invoice or bill number'
+                              onBlurCapture={(event) => disableInvoice(event.target.value)}
+                              {...register("invoice", { value: invoise }, validation.invoice)}
+                            />
+                            <span className='text-danger font-weight-bold'>{errors?.invoice?.message}</span>
+                          </div>
+                          <fieldset class="form-group mandatory">
+                            <label htmlFor="items" class="form-label">Select item</label>
+                            <select class="form-select"
+                              id="items"
+                              {...register("item", validation.item)}
+                              disabled="true"
+                            >
+                              <option value="">First select company</option>
+                              {
+                                itemsData?.map(item => {
+                                  if (item?.companyId?._id == companyId) {
+                                    return (
+                                      <option key={item._id} value={item._id}> {item.name}</option>
+                                    );
+                                  } else {
+                                    return null; // You can optionally return null for other cases
+                                  }
+                                })
+                              }
+                            </select>
+                            <span className='text-danger font-weight-bold'>{errors?.item?.message}</span>
+                          </fieldset>
+                          <div className="form-group mandatory">
+                            <label htmlFor="uom" class="form-label">Unit of mesurement</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="uom"
+                              placeholder="example: KG, Nos."
+                              {...register("uom", validation.uom)}
+                            />
+                            <span className='text-danger font-weight-bold'>{errors?.uom?.message}</span>
+                          </div>
+                          <div className="form-group mandatory">
+                            <div class="form-group mb-3">
+                              <label for="remarks" class="form-label">Remarks</label>
+                              <textarea class="form-control" maxLength="3000" id="remarks" rows="4"  {...register("remark", validation.remark)} placeholder='Enter Remark'></textarea>
+                            </div>
+                            <span className='text-danger font-weight-bold'>{errors?.remark?.message}</span>
+                          </div>
+                          <div class="d-flex justify-content-between form-group">
+                            <div className="">
+                              <button type="submit" class="btn btn-outline-primary me-1 mb-1">Submit</button>
+                              <button type="reset" class="btn btn-light-secondary me-1 mb-1" onClick={() => document.getElementById("forms").reset()}>Reset</button>
+                            </div>
+                            <div className="">
+                              {/* {
+                              mutation.isLoading ? (
+                                <button class="btn btn-primary mx-1" type="button" disabled="">
+                                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                  <span className='px-2'>Loading...</span>
+                                </button>
+                              ) : ( */}
+                              <button type="button" class="btn btn-primary me-1 mb-1">Process to purchase</button>
+                              {/* )
+                            } */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+
+                  )
+                }
+              </div >
+            </div >
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Purchase Items </h4>
+              </div>
+              {
+                purchaseItems.length === 0 ? (
+                  <div className='d-flex justify-content-center align-item-center my-5'>
+                    No items added
+                  </div>
+                ) : (
+                  <div className="card-content p-2">
+                    <div className="table-responsive">
+                      <p>Vendor name : {vendorData?.data?.data.forEach(element => {
+                        if (element._id === vendor) {
+                          console.log("ffffff",element);
+                          return element.vendorName;
+                        }
+                      })
+                      } </p>
+                      {/* <p>Vendor name : {vendorData?.data?.data.filter(ven => ven._id === vendor)[0].vendorName} </p> */}
+                      <table className="table mb-0">
+                        <thead className="thead-dark">
+                          <tr>
+                            <th>Company</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Uom</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            purchaseItems?.map(item => {
+                              return (
+                                <>
+                                  <tr>
+                                    {
+                                      console.log(item)
+                                    }
+                                    {/* <td className="text-bold-500">{companiesData?.filter(ele => ele._id === item.companyId ? ele.name : "")}</td> */}
+                                    <td>{item.email1}</td>
+                                    <td className="text-bold-500">{item.item}</td>
+                                    <td>{item.qty}</td>
+                                    <td>{item.price}</td>
+                                    <td>
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#primary${item._id}`}
+                                      >
+                                        <i class="bi bi-card-text text-primary"></i>
+                                      </button>
+                                      <Link to={`editvendor/${item._id}`} className='btn btn-sm'>
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                      </Link>
+                                      <button
+                                        type="button"
+                                        className="btn btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#danger${item._id}`}
+                                      >
+                                        <i class="bi bi-trash3 text-danger"></i>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                  <div
+                                    class="modal fade text-left"
+                                    id={`danger${item._id}`}
+                                    tabindex="-1"
+                                    aria-labelledby="myModalLabel120"
+                                    style={{ display: "none" }}
+                                    aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                          <h5 class="modal-title white" id="myModalLabel120">Danger alert
+                                          </h5>
+                                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          Are you sure you want to delete this client?
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <i class="bx bx-x d-block d-sm-none"></i>
+                                            <span class="d-none d-sm-block">Close</span>
+                                          </button>
+                                          <button
+                                            class="btn btn-danger ml-1"
+                                            data-bs-dismiss="modal"
+                                          // onClick={() => { deleteVendor(item._id) }}
+                                          >
+                                            <i class="bx bx-check d-block d-sm-none"></i>
+                                            <span class="d-none d-sm-block">Delete</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* <div
+                                    className="modal fade text-left"
+                                    id={`primary${item._id}`}
+                                    tabIndex={-1}
+                                    role="dialog"
+                                    aria-labelledby="myModalLabel160"
+                                    aria-hidden="true"
+                                  >
+                                    <div
+                                      className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                      role="document"
+                                    >
+                                      <div className="modal-content">
+                                        <div className="modal-header bg-primary">
+                                          <h5 className="modal-title white" id="myModalLabel160">
+                                            Other details
+                                          </h5>
+                                        </div>
+                                        <div className="modal-body">
+                                          <tr className='d-flex flex-column'>
+                                            <td>
+                                              <h6>Second email</h6>
+                                              <p>{item?.email2 ? vendor?.email2 : "No second email"}</p>
+                                            </td>
+                                            <td>
+                                              <h6>Second contact number</h6>
+                                              <p>{vendor?.phoneNumber2 ? vendor?.phoneNumber2 : "No second phone number"}</p>
+                                            </td>
+                                            <td>
+                                              <h6>Remark</h6>
+                                              <p>{vendor?.remark}</p>
+                                            </td>
+                                            <td>
+                                              <h6>Address</h6>
+                                              <p>{vendor?.address}</p>
+                                            </td>
+                                          </tr>
+                                        </div>
+                                        <div className="modal-footer">
+                                          <button
+                                            type="button"
+                                            className="btn btn-light-secondary"
+                                            data-bs-dismiss="modal"
+                                          >
+                                            x
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div> */}
+                                </>
+                              )
+                            })
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+          </section >
+        </div >
+      </div >
+
+    </>
   )
 }

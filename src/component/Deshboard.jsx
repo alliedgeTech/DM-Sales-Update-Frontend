@@ -1,15 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "../assets/css/main/app.css";
 import "../assets/css/main/app-dark.css";
 import "../assets/css/shared/iconly.css";
 import { Line } from 'react-chartjs-2';
-
 import { Chart, LineController, LinearScale, PointElement, LineElement, CategoryScale } from 'chart.js';
-
-// Register the required scale(s) before creating your chart
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetCompanys, useGetItems } from '../services/companyAndItemServices';
+import { addCompany } from '../redux/CompanySlice';
+import { addItems } from '../redux/ItemSlice';
 
 export const Deshboard = () => {
-    
+
+    const { data: companyData, isLoading: companyLoading } = useGetCompanys();
+    const { data: itemData, isLoading: itemLoading } = useGetItems();
+
+    const itemsData = useSelector((state) => state.items.value)
+    const companiesData = useSelector((state) => state.company.value)
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (companyData !== undefined && companyLoading === false && companiesData.length === 0) {
+            console.log("---", companyData);
+            companyData.data.data.forEach(element => {
+                dispatch(addCompany(element));
+            });
+        }
+
+        if (itemData !== undefined && itemLoading === false && itemsData.length === 0) {
+            itemData.data.data.forEach(element => {
+                dispatch(addItems(element));
+            })
+        }
+        console.log(itemsData, companiesData);
+    }, [itemsData, companiesData, companyLoading, itemLoading])
+
+
+
+
+
+
+
+
+
+
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
