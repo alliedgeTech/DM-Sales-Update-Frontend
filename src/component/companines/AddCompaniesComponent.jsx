@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form"
 import { ToastContainer } from 'react-toastify'
 import { useDeleteCompany, useGetCompanys, useAddCompany } from '../../services/companyAndItemServices'
 import { notifyDone, notifyErorr } from "../../assets/toster"
+import { useDispatch } from 'react-redux';
+import { addCompany } from '../../redux/CompanySlice'
 
 export const AddCompaniesComponent = () => {
 
@@ -23,21 +25,23 @@ export const AddCompaniesComponent = () => {
             }
         }
     }
-
+    
     const [notify, setNotify] = useState(0)
     const [deleteNote, setDeleteNote] = useState(0)
-
+    
     var { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitData = (data) => {
         console.log(data);
         mutation.mutate(data)
+        dispatch(addCompany(data));
     }
 
     var { data, isLoading, refetch } = useGetCompanys()
 
     const mutation = useAddCompany()
     const deleteMutation = useDeleteCompany()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (mutation.isError) {
