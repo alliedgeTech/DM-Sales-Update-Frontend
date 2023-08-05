@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+// import { useDemoData } from '@mui/x-data-grid-generator';
 import { Link } from 'react-router-dom';
 import { useGetItems } from '../../services/companyAndItemServices';
 import "../../assets/css/style.css"
@@ -22,7 +22,7 @@ export const ListCompanyWiseItemComponent = () => {
         const completedData = data.map(element => {
             return {
                 "id": element._id,
-                "Company": element.companyId.name,
+                "Company": element.companyId?.name,
                 "Items": element.name,
             }
 

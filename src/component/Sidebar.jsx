@@ -122,6 +122,9 @@ export const Sidebar = () => {
                                     <li className="submenu-item ">
                                         <Link to='/add-purchase'>Add purchase</Link>
                                     </li>
+                                    <li className="submenu-item ">
+                                        <Link to='/list-purchase'>List purchase</Link>
+                                    </li>
                                 </ul>
                             </li>
                             <li className="sidebar-item  has-sub">
