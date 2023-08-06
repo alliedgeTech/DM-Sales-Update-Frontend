@@ -15,6 +15,8 @@ import { VendorComponent } from "./component/vendor/VendorComponent"
 import { ListVendorComponent } from "./component/vendor/ListVendorComponent"
 import { EditVendor } from "./component/vendor/EditVendor"
 import { ListPurchaseComponent } from "./component/purchase/ListPurchaseComponent"
+import { AddSellBill } from "./component/sell/AddSellBill"
+import { ViewSellBill } from "./component/sell/ViewSellBill"
 function App() {
 
   return (
@@ -41,9 +43,11 @@ function App() {
         {/* Purchase API */}
         <Route path="/add-purchase" element={<AddPurchaseComponent />} />
         <Route path='/list-purchase' element={<ListPurchaseComponent />} />
-        
+       
+         {/* Sell API */}
+        <Route path="/addsellbill" element={<AddSellBill/>}/> 
+        <Route path="/viewsellbill" element={<ViewSellBill/>}/> 
 
-        {/* errors */}
         <Route path="/*" element={<Error404 />} />
       </Routes>
     </>

@@ -48,7 +48,6 @@ export const useVendorData = () => {
         retryDelay: 2000
     })
 }
-
 export const useDeleteVendor = (id) => {
     return useMutation("deleteClient", deleteVendor, {
         retry: 5,

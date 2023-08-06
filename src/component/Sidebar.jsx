@@ -127,6 +127,20 @@ export const Sidebar = () => {
                                     </li>
                                 </ul>
                             </li>
+                             <li className="sidebar-item  has-sub">
+                                <a href="#" className="sidebar-link">
+                                    <i className="bi bi-collection-fill" />
+                                    <span>Sell</span>
+                                </a>
+                                <ul className="submenu ">
+                                    <li className="submenu-item ">
+                                        <Link to='/addsellbill'>Generate Sell Bill</Link>
+                                    </li>
+                                    <li className="submenu-item ">
+                                        <Link to='/viewsellbill'>View Sell Bill</Link>
+                                    </li>
+                                </ul>
+                            </li>
                             <li className="sidebar-item  has-sub">
                                 <a href="#" className="sidebar-link">
                                     <i className="bi bi-postcard-fill" />
