@@ -138,6 +138,18 @@ export const Sidebar = () => {
                                     </li>
                                 </ul>
                             </li>
+                            <li className="sidebar-title">Stocks</li>
+                            <li className="sidebar-item  has-sub">
+                                <a href="#" className="sidebar-link">
+                                    <i class="bi bi-house-door-fill"></i>
+                                    <span>Stocks</span>
+                                </a>
+                                <ul className="submenu ">
+                                    <li className="submenu-item ">
+                                        <Link to="/list-stock">List stocks</Link>
+                                    </li>
+                                </ul>
+                            </li>
                             <li className="sidebar-title">Companies & items</li>
                             <li className="sidebar-item  has-sub">
                                 <a href="#" className="sidebar-link">
