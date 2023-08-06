@@ -15,9 +15,13 @@ import { VendorComponent } from "./component/vendor/VendorComponent"
 import { ListVendorComponent } from "./component/vendor/ListVendorComponent"
 import { EditVendor } from "./component/vendor/EditVendor"
 import { ListPurchaseComponent } from "./component/purchase/ListPurchaseComponent"
+<<<<<<< HEAD
 import { AddSellBill } from "./component/sell/AddSellBill"
 import { ViewSellBill } from "./component/sell/ViewSellBill"
-function App() {
+=======
+import { StockListComponent } from "./component/stocks/StockListComponent"
+>>>>>>> 75d1d1f218cd186711399d036f9cc18addc6a124
+function App() {c
 
   return (
     <>
@@ -43,10 +47,9 @@ function App() {
         {/* Purchase API */}
         <Route path="/add-purchase" element={<AddPurchaseComponent />} />
         <Route path='/list-purchase' element={<ListPurchaseComponent />} />
-       
-         {/* Sell API */}
-        <Route path="/addsellbill" element={<AddSellBill/>}/> 
-        <Route path="/viewsellbill" element={<ViewSellBill/>}/> 
+
+        {/* Stock API */}
+        <Route path="/list-stock" element={<StockListComponent />} />
 
         <Route path="/*" element={<Error404 />} />
       </Routes>
