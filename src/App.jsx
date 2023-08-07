@@ -18,6 +18,8 @@ import { ListPurchaseComponent } from "./component/purchase/ListPurchaseComponen
 import { AddSellBill } from "./component/sell/AddSellBill"
 import { ViewSellBill } from "./component/sell/ViewSellBill"
 import { StockListComponent } from "./component/stocks/StockListComponent"
+import { CreaditSellBill } from "./component/Deshboard/CreaditSellBill"
+import { DebitSellBill } from "./component/Deshboard/DebitSellBill"
 
 function App() {
 
@@ -49,6 +51,10 @@ function App() {
         {/* sell bill API */}
         <Route path="/addsellbill" element={<AddSellBill />} />
         <Route path="/viewsellbill" element={<ViewSellBill />} />
+
+         {/* Stock API */}
+         <Route path="creditsellbill" element={<CreaditSellBill/>}/>
+         <Route path="debitsellbill" element={<DebitSellBill/>}/>
 
         {/* Stock API */}
         <Route path="/list-stock" element={<StockListComponent />} />

@@ -20,6 +20,10 @@ const getItemCompanyWise = (company) => {
     );
   };
   
+  const deletesell = (id) => {
+    return axios.delete("http://localhost:9990/distributer/api/v1/public/sell/deletesell/" + id)
+}
+
   export const useGetItemCompanyWise = (company) => {
     return useQuery("getItemCompanyWise", getItemCompanyWise, {
       retry: 5,
@@ -41,3 +45,9 @@ const getItemCompanyWise = (company) => {
     });
   };
     
+  export const useDeleteSell = (id) => {
+    return useMutation("deleteClient", deletesell, {
+        retry: 5,
+        retryDelay: 2000
+    })
+}

@@ -23,13 +23,19 @@ export const AddSellBill = () => {
         message: "maximum words length is 200.",
       },
     },
+    paymentType:{
+      required: {
+        value: true,
+        message:"Payment Type is required."
+      }
+    },
     companyId: {
       required: {
         value: true,
         message: "Company name is required.",
       },
     },
-    vendorId: {
+    clientId: {
       required: {
         value: true,
         message: "Vendor name is required.",
@@ -75,7 +81,7 @@ export const AddSellBill = () => {
         message: "Only numbers are allowed.",
       },
     },
-    invoice: {
+    sellbillno: {
       required: {
         value: true,
         message: "Invoice is required.",
@@ -117,7 +123,7 @@ export const AddSellBill = () => {
   var {
     register: clientRegister,
     handleSubmit: clientSubmit,
-    formState: { errors: clientrError },
+    formState: { errors: vendorError },
   } = useForm();
   var {
     register,
@@ -132,6 +138,7 @@ export const AddSellBill = () => {
   }
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
+const [paymentwise, setpaymentwise] = useState([])
   const submitData = (data) => {
     console.log("data : ", data);
     data.id = ids;
@@ -154,10 +161,19 @@ export const AddSellBill = () => {
     }
   };
 
+  const getPaymentWise = (data) => {
+    if (data !== "" && data !== null) {
+      document.getElementById("paymentMode").disabled = false;
+      setpaymentwise(data);
+    } else {
+      document.getElementById("paymentMode").disabled = true;
+    }
+  };
+
   const deleteItems = (id) => {
     sellItem = sellItem.filter((item) => item.id !== id);
-    console.log("eee : ", purchaseItems);
-    setsellItem(purchaseItems);
+    console.log("eee : ", sellItem);
+    setsellItem(sellItem);
   };
 
   var [totalPrice, setTotalPrice] = useState(0);
@@ -254,8 +270,8 @@ export const AddSellBill = () => {
                         </label>
                         <select
                           class="form-select"
-                          id="vendor"
-                          {...clientRegister("clientId", validation.vendorId)}
+                          id="client"
+                          {...clientRegister("clientId", validation.clientId)}
                         // onChange={(event) => desebleVendor(event.target.value)}
                         >
                           <option value="">Select client's name</option>
@@ -268,9 +284,28 @@ export const AddSellBill = () => {
                           })}
                         </select>
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.vendorId?.message} */}
+                          {vendorError?.clientId?.message}
                         </span>
                       </fieldset>
+                       {/* --------------------------------------------------------------------------------------------------- */}
+                       <fieldset class="form-group mandatory">
+                        <label htmlFor="vendor" class="form-label">Select Payment Type:</label>
+                        <select class="form-select" id="paymentType" 
+                            {...clientRegister("paymentType", validation.paymentType)}
+                         onChange={(event) => {
+                          getPaymentWise(event.target.value);
+                        }}
+                        >
+                          <option value="">Select PaymentType</option>
+                          <option value="1">Credit</option>
+                          <option value="0">Debit</option>
+                        </select>
+                        <span className="text-danger font-weight-bold">
+                          {vendorError?.paymentType?.message}
+                        </span>
+                      </fieldset>
+                      {/* ---------------------------------------------------------------------------------------------------------- */}
+
                       <div className="form-group mandatory">
                         <label htmlFor="date" class="form-label">
                           Date
@@ -282,9 +317,10 @@ export const AddSellBill = () => {
                           {...clientRegister("date", validation.date)}
                         />
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.date?.message} */}
+                          {vendorError?.date?.message}
                         </span>
                       </div>
+                     
                     </div>
                     <div className="col-md-6">
                       <div className="form-group mandatory">
@@ -297,13 +333,26 @@ export const AddSellBill = () => {
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
                           //// onBlurCapture={(event) => disableInvoice(event.target.value)}
-                          {...clientRegister("sellbillno", validation.invoice)}
+                          {...clientRegister("sellbillno", validation.sellbillno)}
                         />
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.invoice?.message} */}
+                          {vendorError?.sellbillno?.message}
                         </span>
                       </div>
+
                       <div className="form-group mandatory">
+                      <fieldset class="form-group mandatory">
+                          <label htmlFor="vendor" class="form-label">Select Payment Mode:</label>
+                          <select class="form-select" id="paymentMode"  disabled="true"
+                              {...clientRegister("paymentMode")}>
+                            <option value="">Select PaymentMode</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                          </select>
+                        </fieldset>
                         <div class="form-group mb-3">
                           <label for="remarks" class="form-label">
                             Remarks
@@ -318,8 +367,9 @@ export const AddSellBill = () => {
                           ></textarea>
                         </div>
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.remark?.message} */}
+                          {vendorError?.remark?.message}
                         </span>
+                       
                       </div>
                       <button
                         type="submit"
@@ -379,7 +429,7 @@ export const AddSellBill = () => {
                           <select
                             class="form-select"
                             id="company"
-                            {...register("companyId")}
+                            {...register("companyId", validation.companyId)}
                             onChange={(event) => {
                               getItemCompanyWise(event.target.value);
                             }}

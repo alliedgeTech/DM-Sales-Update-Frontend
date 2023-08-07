@@ -3,6 +3,7 @@ import "../assets/css/main/app.css";
 import "../assets/css/main/app-dark.css";
 import "../assets/css/shared/iconly.css";
 import { Line } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
 import { Chart, LineController, LinearScale, PointElement, LineElement, CategoryScale } from 'chart.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetCompanys, useGetItems } from '../services/companyAndItemServices';
@@ -305,46 +306,29 @@ export const Deshboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="card">
-                                    <div className="card-header">
-                                        <h4>Recent Messages</h4>
-                                    </div>
+                                 {/* -------------------------------------------------------- */}
+                                <div className="card pt-4">
                                     <div className="card-content pb-4">
-                                        {/* <div className="recent-message d-flex px-4 py-3"> */}
-                                        {/* <div className="avatar avatar-lg">
-                                                <img src="assets/images/faces/4.jpg" />
-                                            </div> */}
-                                        <div className="name ms-4 mb-2">
-                                            <h6 className="mb-1 text-danger">Jay Chemical</h6>
-                                            <p className="mb-0 text-danger">Panding to give money</p>
+                                        <div className="name ms-4 mb-0">
+                                            <h5 className="mb-1 text-danger">Credit Sell Bill</h5>
                                         </div>
-                                        <div className="name ms-4 mb-2">
-                                            <h6 className="mb-1 text-success">Shree Enterprice</h6>
-                                            <p className="mb-0 text-success">Panding to collect money</p>
-                                        </div>
-                                        {/* </div> */}
-                                        {/* <div className="recent-message d-flex px-4 py-3">
-                                            <div className="avatar avatar-lg">
-                                                <img src="assets/images/faces/5.jpg" />
-                                            </div>
-                                            <div className="name ms-4">
-                                                <h5 className="mb-1">Dean Winchester</h5>
-                                                <h6 className="text-muted mb-0">@imdean</h6>
-                                            </div>
-                                        </div>
-                                        <div className="recent-message d-flex px-4 py-3">
-                                            <div className="avatar avatar-lg">
-                                                <img src="assets/images/faces/1.jpg" />
-                                            </div>
-                                            <div className="name ms-4">
-                                                <h5 className="mb-1">John Dodol</h5>
-                                                <h6 className="text-muted mb-0">@dodoljohn</h6>
-                                            </div>
-                                        </div>*/}
                                         <div className="px-4">
-                                            <button className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
-                                                Checkout Messages
-                                            </button>
+                                        <Link to='/creditsellbill' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                             View Credit Sell Bill
+                                        </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                 {/* -------------------------------------------------------- */}
+                                 <div className="card pt-4">
+                                    <div className="card-content pb-4">
+                                        <div className="name ms-4 mb-0">
+                                            <h5 className="mb-1 text-danger">Debit Sell Bill</h5>
+                                        </div>
+                                        <div className="px-4">
+                                            <Link to='debitsellbill' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                                 View Debit Sell Bill
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

@@ -41,13 +41,14 @@ export const ListPurchaseComponent = () => {
     const completedData = data.map((element) => {
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
+      console.log("element purchse",element)
       //   id += 1;
       return {
         id: ++id,
         _id: element._id,
         invoice: element.invoice,
         date: date,
-        vendor: element.vendorId.vendorName,
+        vendor: element?.vendorId?.vendorName,
       };
     });
     setRowData(completedData);
