@@ -1,5 +1,5 @@
-import {React,useState,useEffect} from 'react'
-import { Link ,useNavigate} from "react-router-dom";
+import { React, useState, useEffect } from 'react'
+import { Link, useNavigate } from "react-router-dom";
 import { useClientData } from '../../services/clientServices';
 import { useForm } from "react-hook-form";
 import { ToastContainer } from "react-toastify";
@@ -7,7 +7,7 @@ import { notifyDone } from "../../assets/toster";
 import { useSelector } from "react-redux";
 import { useAddSell } from "../../services/sellServices";
 export const AddSellBill = () => {
- 
+
   const validation = {
     uom: {
       required: {
@@ -109,102 +109,102 @@ export const AddSellBill = () => {
     },
   };
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
-   const [items, setitems] = useState([])
-    const { data: clientData, isLoading: clientLoading }=useClientData();
+  const [items, setitems] = useState([])
+  const { data: clientData, isLoading: clientLoading } = useClientData();
 
-    var {
-        register: clientRegister,
-        handleSubmit: clientSubmit,
-        formState: { errors: clientrError },
-      } = useForm();
-      var {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm();
-    const [clientDetails, setclientDetails] = useState({})
+  var {
+    register: clientRegister,
+    handleSubmit: clientSubmit,
+    formState: { errors: clientrError },
+  } = useForm();
+  var {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [clientDetails, setclientDetails] = useState({})
 
-    const submitBeforeData=(data)=>{
-        console.log("sell before data-->",data)
-        setclientDetails(data)
-    }
-    var [ids, setids] = useState(1);
-    var [sellItem, setsellItem] = useState([]);
-    const submitData = (data) => {
-      console.log("data : ", data);
-      data.id = ids;
-      setids((ids += 1));
-      setsellItem([...sellItem, data]);
+  const submitBeforeData = (data) => {
+    console.log("sell before data-->", data)
+    setclientDetails(data)
+  }
+  var [ids, setids] = useState(1);
+  var [sellItem, setsellItem] = useState([]);
+  const submitData = (data) => {
+    console.log("data : ", data);
+    data.id = ids;
+    setids((ids += 1));
+    setsellItem([...sellItem, data]);
     //   notifyDone("Item added in list.");
-      document.getElementById("forms").reset();
-    };
+    document.getElementById("forms").reset();
+  };
 
-    var itemsData = useSelector((state) => state.items.value);
-    var companiesData = useSelector((state) => state.company.value);
-  
-    var [companyId, setcompanyId] = useState("");
-    const getItemCompanyWise = (data) => {
-      if (data !== "" && data !== null) {
-        document.getElementById("items").disabled = false;
-        setcompanyId(data);
-      } else {
-        document.getElementById("items").disabled = true;
-      }
-    };
-  
-    const deleteItems = (id) => {
-      sellItem = sellItem.filter((item) => item.id !== id);
-      console.log("eee : ", purchaseItems);
-      setsellItem(purchaseItems);
-    };
-  
-    var [totalPrice, setTotalPrice] = useState(0);
-  
-    const setTotalRs = (price) => {
-      var qty = document.getElementById("qty").value;
-      if (qty <= 0) {
-      } else {
-        var p = price * qty;
-        setTotalPrice(p);
-        console.log(totalPrice);
-        document.getElementById("totalPrice").value = p;
-      }
-    };
-  
-    const mutation = useAddSell();
-    const addDataIntoPurchase = () => {
-      clientDetails.items = sellItem;
-      setclientDetails(clientDetails);
-      console.log("items : ", clientDetails);
-      mutation.mutate(clientDetails);
-    };
-  
-    var [note, setnote] = useState(0);
-    useEffect(() => {
-      if (mutation.isSuccess) {
-        notifyDone("sell items added successfully.");
-        navigate("/");
-      } else if (mutation.isError) {
-        navigate("/erorr404");
-      }
-      if (mutation.data && note === 0) {
-        notifyDone("Company's item added successfully.");
-        setnote(1);
-      }
-      if (mutation.isLoading) {
-        setnote(0);
-      }
-      if (itemsData.length === 0 && companiesData.length === 0) {
-        navigate("/");
-      }
-      console.log(itemsData, companiesData, clientData);
-    }, [itemsData, companiesData, items, companyId, mutation]);
+  var itemsData = useSelector((state) => state.items.value);
+  var companiesData = useSelector((state) => state.company.value);
+
+  var [companyId, setcompanyId] = useState("");
+  const getItemCompanyWise = (data) => {
+    if (data !== "" && data !== null) {
+      document.getElementById("items").disabled = false;
+      setcompanyId(data);
+    } else {
+      document.getElementById("items").disabled = true;
+    }
+  };
+
+  const deleteItems = (id) => {
+    sellItem = sellItem.filter((item) => item.id !== id);
+    console.log("eee : ", purchaseItems);
+    setsellItem(purchaseItems);
+  };
+
+  var [totalPrice, setTotalPrice] = useState(0);
+
+  const setTotalRs = (price) => {
+    var qty = document.getElementById("qty").value;
+    if (qty <= 0) {
+    } else {
+      var p = price * qty;
+      setTotalPrice(p);
+      console.log(totalPrice);
+      document.getElementById("totalPrice").value = p;
+    }
+  };
+
+  const mutation = useAddSell();
+  const addDataIntoPurchase = () => {
+    clientDetails.items = sellItem;
+    setclientDetails(clientDetails);
+    console.log("items : ", clientDetails);
+    mutation.mutate(clientDetails);
+  };
+
+  var [note, setnote] = useState(0);
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      notifyDone("sell items added successfully.");
+      navigate("/");
+    } else if (mutation.isError) {
+      navigate("/erorr404");
+    }
+    if (mutation.data && note === 0) {
+      notifyDone("Company's item added successfully.");
+      setnote(1);
+    }
+    if (mutation.isLoading) {
+      setnote(0);
+    }
+    if (itemsData.length === 0 && companiesData.length === 0) {
+      navigate("/");
+    }
+    console.log(itemsData, companiesData, clientData);
+  }, [itemsData, companiesData, items, companyId, mutation]);
 
   return (
-   <>
-         <div id="main">
+    <>
+      <div id="main">
         <header className="mb-3">
           <a href="#" className="burger-btn d-block d-xl-none">
             <i className="bi bi-justify fs-3" />
@@ -237,9 +237,8 @@ export const AddSellBill = () => {
             <div
               className="card"
               style={{
-                display: `${
-                  Object.keys(clientDetails).length === 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(clientDetails).length === 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -257,7 +256,7 @@ export const AddSellBill = () => {
                           class="form-select"
                           id="vendor"
                           {...clientRegister("clientId", validation.vendorId)}
-                          // onChange={(event) => desebleVendor(event.target.value)}
+                        // onChange={(event) => desebleVendor(event.target.value)}
                         >
                           <option value="">Select client's name</option>
                           {clientData?.data?.data?.map((client) => {
@@ -338,9 +337,8 @@ export const AddSellBill = () => {
             <div
               className="card fadeUp"
               style={{
-                display: `${
-                  Object.keys(clientDetails).length !== 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(clientDetails).length !== 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -348,7 +346,7 @@ export const AddSellBill = () => {
               </div>
               <div className="card-body">
                 {clientLoading === true ||
-                clientData?.data?.data === undefined ? (
+                  clientData?.data?.data === undefined ? (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
                       class="spinner-border"
@@ -365,7 +363,7 @@ export const AddSellBill = () => {
                         Client name :
                         {
                           clientData?.data?.data?.find(
-                            (client) => client._id === clientDetails.vendorId
+                            (client) => client._id === clientDetails.clientId
                           )?.name
                         }{" "}
                       </p>
@@ -449,7 +447,6 @@ export const AddSellBill = () => {
                               if (item?.companyId?._id == companyId) {
                                 return (
                                   <option key={item._id} value={item._id}>
-                                    {" "}
                                     {item.name}
                                   </option>
                                 );
@@ -484,7 +481,7 @@ export const AddSellBill = () => {
                             className="form-control"
                             id="totalPrice"
                             disabled="true"
-                            // {...register("totalprice", { value: totalPrice })}
+                          // {...register("totalprice", { value: totalPrice })}
                           />
                           <span className="text-danger font-weight-bold">
                             {errors?.totalPrice?.message}
@@ -520,7 +517,7 @@ export const AddSellBill = () => {
                                 data-bs-toggle="modal"
                                 data-bs-target={`#process-to-purchase`}
                                 disabled={
-                                    sellItem.length === 0 ? true : false
+                                  sellItem.length === 0 ? true : false
                                 }
                               >
                                 Process to Sell
@@ -537,9 +534,8 @@ export const AddSellBill = () => {
             <div
               className="card"
               style={{
-                display: `${
-                  Object.keys(clientDetails).length !== 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(clientDetails).length !== 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -755,6 +751,6 @@ export const AddSellBill = () => {
           </section>
         </div>
       </div>
-   </>
+    </>
   )
 }
