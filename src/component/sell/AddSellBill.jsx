@@ -27,10 +27,10 @@ export const AddSellBill = () => {
         message: "maximum words length is 200.",
       },
     },
-    paymentType:{
+    paymentType: {
       required: {
         value: true,
-        message:"Payment Type is required."
+        message: "Payment Type is required."
       }
     },
     companyId: {
@@ -150,7 +150,7 @@ export const AddSellBill = () => {
   }
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
-const [paymentwise, setpaymentwise] = useState([])
+  const [paymentwise, setpaymentwise] = useState([])
   const submitData = (data) => {
     console.log("data : ", data);
     data.id = ids;
@@ -173,10 +173,18 @@ const [paymentwise, setpaymentwise] = useState([])
     }
   };
 
+  var [disble, setdisble] = useState(0)
   const getPaymentWise = (data) => {
     if (data !== "" && data !== null) {
       document.getElementById("paymentMode").disabled = false;
       setpaymentwise(data);
+      if (data === 0) {
+        setdisble(1)
+      } else {
+        console.log("-->>>", disble);
+        setdisble(-1)
+      }
+      // data === 1 ? setdisble(1) : setdisble(0);
     } else {
       document.getElementById("paymentMode").disabled = true;
     }
@@ -207,7 +215,7 @@ const [paymentwise, setpaymentwise] = useState([])
     setclientDetails(clientDetails);
     console.log("items : ", clientDetails);
     mutation.mutate(clientDetails);
-    
+
   };
 
   const setInstock = (data) => {
@@ -241,7 +249,7 @@ const [paymentwise, setpaymentwise] = useState([])
     }
     console.log("---> ", stocksData);
     // console.log(itemsData, companiesData, clientData);
-  }, [itemsData, companiesData, stocksData, companyId, mutation]);
+  }, [itemsData, companiesData, stocksData, companyId, mutation, disble]);
 
   return (
     <>
@@ -312,21 +320,21 @@ const [paymentwise, setpaymentwise] = useState([])
                           {clientError?.clientId?.message}
                         </span>
                       </fieldset>
-                       {/* --------------------------------------------------------------------------------------------------- */}
-                       <fieldset class="form-group mandatory">
-                        <label htmlFor="vendor" class="form-label">Select Payment Type:</label>
-                        <select class="form-select" id="paymentType" 
-                            {...clientRegister("paymentType", validation.paymentType)}
-                         onChange={(event) => {
-                          getPaymentWise(event.target.value);
-                        }}
+                      {/* --------------------------------------------------------------------------------------------------- */}
+                      <fieldset class="form-group mandatory">
+                        <label htmlFor="paymentType" class="form-label">Select Payment Type:</label>
+                        <select class="form-select" id="paymentType"
+                          {...clientRegister("paymentType", validation.paymentType)}
+                          onChange={(event) => {
+                            getPaymentWise(event.target.value);
+                          }}
                         >
                           <option value="">Select PaymentType</option>
                           <option value="1">Credit</option>
                           <option value="0">Debit</option>
                         </select>
                         <span className="text-danger font-weight-bold">
-                          {vendorError?.paymentType?.message}
+                          {clientError?.paymentType?.message}
                         </span>
                       </fieldset>
                       {/* ---------------------------------------------------------------------------------------------------------- */}
@@ -345,7 +353,7 @@ const [paymentwise, setpaymentwise] = useState([])
                           {clientError?.date?.message}
                         </span>
                       </div>
-                     
+
                     </div>
                     <div className="col-md-6">
                       <div className="form-group mandatory">
@@ -366,10 +374,10 @@ const [paymentwise, setpaymentwise] = useState([])
                       </div>
 
                       <div className="form-group mandatory">
-                      <fieldset class="form-group mandatory">
+                        <fieldset class="form-group mandatory">
                           <label htmlFor="vendor" class="form-label">Select Payment Mode:</label>
-                          <select class="form-select" id="paymentMode"  disabled="true"
-                              {...clientRegister("paymentMode")}>
+                          <select class="form-select" id="paymentMode" disabled={disble !== 0 ? "false" : "true"}
+                            {...clientRegister("paymentMode")}>
                             <option value="">Select PaymentMode</option>
                             <option value="Cash">Cash</option>
                             <option value="UPI">UPI</option>
@@ -394,7 +402,7 @@ const [paymentwise, setpaymentwise] = useState([])
                         <span className="text-danger font-weight-bold">
                           {clientError?.remark?.message}
                         </span>
-                       
+
                       </div>
                       <button
                         type="submit"
