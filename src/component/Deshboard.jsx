@@ -35,15 +35,6 @@ export const Deshboard = () => {
         console.log(itemsData, companiesData);
     }, [itemsData, companiesData, companyLoading, itemLoading])
 
-
-
-
-
-
-
-
-
-
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],

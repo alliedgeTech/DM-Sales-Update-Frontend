@@ -4,10 +4,14 @@ import { useClientData } from '../../services/clientServices';
 import { useForm } from "react-hook-form";
 import { ToastContainer } from "react-toastify";
 import { notifyDone } from "../../assets/toster";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAddSell } from "../../services/sellServices";
+import { useGetStockData } from '../../services/stockServices';
+import { addStock } from '../../redux/StockSlice';
+
 export const AddSellBill = () => {
 
+  var [StockQuantity, setStockQuantity] = useState(0)
   const validation = {
     uom: {
       required: {
@@ -29,7 +33,7 @@ export const AddSellBill = () => {
         message: "Company name is required.",
       },
     },
-    vendorId: {
+    clientId: {
       required: {
         value: true,
         message: "Vendor name is required.",
@@ -56,6 +60,10 @@ export const AddSellBill = () => {
         value: 1,
         message: "Minimum one quantity is required.",
       },
+      max: {
+        value: StockQuantity,
+        message: `Maximum ${StockQuantity} quantity is required.`,
+      },
       pattern: {
         value: /^[0-9]+$/,
         message: "Only numbers are allowed.",
@@ -75,10 +83,10 @@ export const AddSellBill = () => {
         message: "Only numbers are allowed.",
       },
     },
-    invoice: {
+    sellbillno: {
       required: {
         value: true,
-        message: "Invoice is required.",
+        message: "Sell bill number is required.",
       },
       minLength: {
         value: 1,
@@ -111,13 +119,17 @@ export const AddSellBill = () => {
 
   const navigate = useNavigate();
 
-  const [items, setitems] = useState([])
+  // var [stockIn, setstockIn] = useState(0)
+  const { data: stockData, isLoading: stockLoading } = useGetStockData();
+  const dispatch = useDispatch();
+  const stocksData = useSelector((state) => state.stock.value)
+
   const { data: clientData, isLoading: clientLoading } = useClientData();
 
   var {
     register: clientRegister,
     handleSubmit: clientSubmit,
-    formState: { errors: clientrError },
+    formState: { errors: clientError },
   } = useForm();
   var {
     register,
@@ -179,10 +191,22 @@ export const AddSellBill = () => {
     setclientDetails(clientDetails);
     console.log("items : ", clientDetails);
     mutation.mutate(clientDetails);
+    
   };
+
+  const setInstock = (data) => {
+    console.log("selected :: ", data);
+    StockQuantity = stocksData.find(ele => ele.itemId._id === data)?.qty
+    setStockQuantity(StockQuantity)
+  }
 
   var [note, setnote] = useState(0);
   useEffect(() => {
+    if (stockData !== undefined && stockLoading === false && stocksData.length === 0) {
+      stockData.data.data.forEach(element => {
+        dispatch(addStock(element));
+      });
+    }
     if (mutation.isSuccess) {
       notifyDone("sell items added successfully.");
       navigate("/");
@@ -199,8 +223,9 @@ export const AddSellBill = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-    console.log(itemsData, companiesData, clientData);
-  }, [itemsData, companiesData, items, companyId, mutation]);
+    console.log("---> ", stocksData);
+    // console.log(itemsData, companiesData, clientData);
+  }, [itemsData, companiesData, stocksData, companyId, mutation]);
 
   return (
     <>
@@ -255,7 +280,7 @@ export const AddSellBill = () => {
                         <select
                           class="form-select"
                           id="vendor"
-                          {...clientRegister("clientId", validation.vendorId)}
+                          {...clientRegister("clientId", validation.clientId)}
                         // onChange={(event) => desebleVendor(event.target.value)}
                         >
                           <option value="">Select client's name</option>
@@ -268,7 +293,7 @@ export const AddSellBill = () => {
                           })}
                         </select>
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.vendorId?.message} */}
+                          {clientError?.clientId?.message}
                         </span>
                       </fieldset>
                       <div className="form-group mandatory">
@@ -282,7 +307,7 @@ export const AddSellBill = () => {
                           {...clientRegister("date", validation.date)}
                         />
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.date?.message} */}
+                          {clientError?.date?.message}
                         </span>
                       </div>
                     </div>
@@ -297,10 +322,10 @@ export const AddSellBill = () => {
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
                           //// onBlurCapture={(event) => disableInvoice(event.target.value)}
-                          {...clientRegister("sellbillno", validation.invoice)}
+                          {...clientRegister("sellbillno", validation.sellbillno)}
                         />
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.invoice?.message} */}
+                          {clientError?.sellbillno?.message}
                         </span>
                       </div>
                       <div className="form-group mandatory">
@@ -318,7 +343,7 @@ export const AddSellBill = () => {
                           ></textarea>
                         </div>
                         <span className="text-danger font-weight-bold">
-                          {/* {vendorError?.remark?.message} */}
+                          {clientError?.remark?.message}
                         </span>
                       </div>
                       <button
@@ -365,7 +390,7 @@ export const AddSellBill = () => {
                           clientData?.data?.data?.find(
                             (client) => client._id === clientDetails.clientId
                           )?.name
-                        }{" "}
+                        }
                       </p>
                       <p>Sell Bill Number : {clientDetails?.sellbillno} </p>
                       <p>Date : {clientDetails?.date} </p>
@@ -398,7 +423,7 @@ export const AddSellBill = () => {
                           </span>
                         </fieldset>
                         <div className="form-group mandatory">
-                          <label htmlFor="item" class="form-label">
+                          <label htmlFor="qty" class="form-label">
                             Quantity
                           </label>
                           <input
@@ -406,14 +431,14 @@ export const AddSellBill = () => {
                             className="form-control"
                             id="qty"
                             placeholder="Enter quantity."
-                            {...register("qty")}
+                            {...register("qty", validation.qty)}
                           />
                           <span className="text-danger font-weight-bold">
                             {errors?.qty?.message}
                           </span>
                         </div>
                         <div className="form-group mandatory">
-                          <label htmlFor="item" class="form-label">
+                          <label htmlFor="price" class="form-label">
                             Price of one unit
                           </label>
                           <input
@@ -433,21 +458,27 @@ export const AddSellBill = () => {
                       </div>
                       <div className="col-md-6">
                         <fieldset class="form-group mandatory">
-                          <label htmlFor="items" class="form-label">
-                            Select item
-                          </label>
+                          <div className="d-flex justify-content-between">
+                            <label htmlFor="items" class="form-label">
+                              Select item
+                            </label>
+                            <span className='text-right text-danger mx-3'
+                              hidden={StockQuantity === 0 ? true : false}
+                            >In stock : {StockQuantity}</span>
+                          </div>
                           <select
                             class="form-select"
                             id="items"
                             {...register("itemId", validation.itemId)}
                             disabled="true"
+                            onChange={(event) => setInstock(event.target.value)}
                           >
                             <option value="">First select company</option>
-                            {itemsData?.map((item) => {
-                              if (item?.companyId?._id == companyId) {
+                            {stocksData?.map((item) => {
+                              if (item?.itemId?.companyId === companyId) {
                                 return (
-                                  <option key={item._id} value={item._id}>
-                                    {item.name}
+                                  <option key={item?.itemId._id} value={item?.itemId._id}>
+                                    {item.itemId?.name}
                                   </option>
                                 );
                               }
