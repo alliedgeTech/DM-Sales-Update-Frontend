@@ -16,7 +16,9 @@ export const Sidebar = () => {
                     <div className="sidebar-header position-relative">
                         <div className="d-flex justify-content-between align-items-center">
                             <div className="logo">
-                                <h2>ERP</h2>
+                                {/* <h2>ERP</h2> */}
+                                <h3>D M </h3>
+                                <h5>Sales Agency</h5>
                             </div>
                             <div className="theme-toggle d-flex gap-2  align-items-center mt-2">
                                 <svg

@@ -15,20 +15,41 @@ export const CreaditSellBill = () => {
             width: 70,
         },
         { field: "_id", headerName: "", width: "0" },
-        { field: "sellbillno", headerName: "Bill no", width: 150 },
-        { field: "date", headerName: "Date", width: 250 },
-        { field: "client", headerName: "Client", width: 350 },
-        { field: "paymentType", headerName: "PaymentType", width: 250 }
+        { field: "sellbillno", headerName: "Bill no", width: 120 },
+        { field: "date", headerName: "Date", width: 150 },
+        { field: "client", headerName: "Client", width: 230 },
+        { field: "paymentType", headerName: "PaymentType", width: 200 },
+        { field: "total", headerName: "Total price", width: 150 },
+        {
+            field: "actions",
+            headerName: "View Items",
+            width: 100,
+            renderCell: (params) => (
+              <button
+                className="btn btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#primaryItems"
+                // onClick={() => handleButtonClick(params.row._id)}
+              >
+                <i class="bi bi-box-arrow-up"></i>
+              </button>
+            ),
+          },
     ];
 
     const [rowData, setRowData] = useState([]);
 
+    var [creditprice, setcreditprice] = useState(0)
     const setRows = (data) => {
         var id = 0;
         const completedData = data.filter(element => element.paymentType === 1).map(element => {
+            creditprice += (element?.items[0]?.price * element?.items[0]?.qty);
+            setcreditprice(creditprice);
+            console.log(creditprice);
             var date = element.date.substring(0, 10).split("-");
             date = `${date[2]}/${date[1]}/${date[0]}`;
-            console.log("element: ", element);
+            console.log("elements only ", element);
+            console.log("element:-- ", element.items);
             //   id += 1;
             return {
                 id: ++id,
@@ -36,7 +57,8 @@ export const CreaditSellBill = () => {
                 sellbillno: element.sellbillno,
                 date: date,
                 client: element?.clientId?.name,
-                paymentType: element.paymentType === 1 ? "Credit" : null
+                paymentType: element.paymentType === 1 ? "Credit" : null,
+                total: element?.items[0]?.price * element?.items[0]?.qty
             };
         })
         setRowData(completedData);
@@ -83,7 +105,7 @@ export const CreaditSellBill = () => {
                     <div className="page-title">
                         <div className="row">
                             <div className="col-12 col-md-6 order-md-1 order-last">
-                                <h3>Creadit Bill List</h3>
+                                <h3>Credit Bill List</h3>
                             </div>
                             <div className="col-12 col-md-6 order-md-2 order-first">
                                 <nav
@@ -129,6 +151,9 @@ export const CreaditSellBill = () => {
                                         </div>
                                     </div>
                                 )}
+                                   <div className="col-12 col-md-6 m-2">
+                                    <h5>Total credit Bill Price : {creditprice}</h5>
+                                </div>
                             </div>
                         </div>
                     </section>

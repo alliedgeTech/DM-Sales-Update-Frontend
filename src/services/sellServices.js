@@ -24,6 +24,9 @@ const getItemCompanyWise = (company) => {
     return axios.delete("http://localhost:9990/distributer/api/v1/public/sell/deletesell/" + id)
 }
 
+const updateDebitMoney=(data)=>{
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/updateDebitMoney/" + data.debitpriceid,data.debitPrice)
+}
   export const useGetItemCompanyWise = (company) => {
     return useQuery("getItemCompanyWise", getItemCompanyWise, {
       retry: 5,
@@ -50,4 +53,11 @@ const getItemCompanyWise = (company) => {
         retry: 5,
         retryDelay: 2000
     })
+}
+
+export const useUpdateDebitMoney = (id) => {
+  return useMutation("deleteClient", updateDebitMoney, {
+      retry: 5,
+      retryDelay: 2000
+  })
 }
