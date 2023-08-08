@@ -20,12 +20,17 @@ import { ViewSellBill } from "./component/sell/ViewSellBill"
 import { StockListComponent } from "./component/stocks/StockListComponent"
 import { CreaditSellBill } from "./component/Deshboard/CreaditSellBill"
 import { DebitSellBill } from "./component/Deshboard/DebitSellBill"
+import { SellBillPrintComponent } from "./component/sell/SellBillPrintComponent"
+import { useState } from "react"
 
 function App() {
 
+  var [isOpen, setisOpen] = useState(true)
+  var [sellItems, setsellItems] = useState([])
   return (
     <>
-      <Sidebar />
+      {/* <AppContext.Provider value={{ sellItems }}> */}
+      <Sidebar isOpen={isOpen} />
       <Routes>
         <Route path="/" element={<Deshboard />} />
 
@@ -50,17 +55,18 @@ function App() {
 
         {/* sell bill API */}
         <Route path="/addsellbill" element={<AddSellBill />} />
-        <Route path="/viewsellbill" element={<ViewSellBill />} />
-
-         {/* Stock API */}
-         <Route path="creditsellbill" element={<CreaditSellBill/>}/>
-         <Route path="debitsellbill" element={<DebitSellBill/>}/>
+        <Route path="/viewsellbill" element={<ViewSellBill sellItems={setsellItems} />} />
+        <Route path="/viewsellbill/generate-sell-bill/:id" element={<SellBillPrintComponent items={sellItems} onClose={() => setisOpen(false)} />} />
+        {/* Stock API */}
+        <Route path="creditsellbill" element={<CreaditSellBill />} />
+        <Route path="debitsellbill" element={<DebitSellBill />} />
 
         {/* Stock API */}
         <Route path="/list-stock" element={<StockListComponent />} />
 
-        <Route path="/*" element={<Error404 />} />
+        <Route path="/*" element={<Error404 onClose={() => setisOpen(false)} />} />
       </Routes>
+      {/* </AppContext.Provider> */}
     </>
   )
 }

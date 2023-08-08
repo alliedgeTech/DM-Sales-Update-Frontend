@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 
-export const Sidebar = () => {
+export const Sidebar = (props) => {
 
+    console.log(props);
     useEffect(() => {
         import('../assets/js/bootstrap.js');
         import('../assets/js/app.js');
-
     }, [])
 
     return (
-        <div>
+        <div id='sidebar-id' style={{ display: props.isOpen === true ? "block" : "none"}}>
             <div id="sidebar" className="active">
                 <div className="sidebar-wrapper active">
                     <div className="sidebar-header position-relative">
@@ -129,7 +129,7 @@ export const Sidebar = () => {
                                     </li>
                                 </ul>
                             </li>
-                             <li className="sidebar-item  has-sub">
+                            <li className="sidebar-item  has-sub">
                                 <a href="#" className="sidebar-link">
                                     <i className="bi bi-collection-fill" />
                                     <span>Sell</span>
