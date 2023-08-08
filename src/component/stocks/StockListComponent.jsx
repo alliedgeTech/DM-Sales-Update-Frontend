@@ -11,14 +11,14 @@ export const StockListComponent = () => {
         {
             field: "id",
             headerName: "ID",
-            width: 30,
+            width: 50,
         },
         { field: "_id", headerName: "", width: "0" },
-        { field: "company", headerName: "Company name", width: 300 },
-        { field: "item", headerName: "Items", width: 250 },
-        { field: "qty", headerName: "Quantity", width: 200 },
-        { field: "price", headerName: "Price", width: 150 },
-        { field: "total", headerName: "total price", width: 150 },
+        { field: "company", headerName: "Company name", width: 400 },
+        { field: "item", headerName: "Items", width: 350 },
+        { field: "qty", headerName: "Quantity", width: 300 },
+        // { field: "price", headerName: "Price", width: 150 },
+        // { field: "total", headerName: "total price", width: 150 },
     ];
 
     const [rowData, setRowData] = useState([]);
@@ -35,8 +35,8 @@ export const StockListComponent = () => {
                 company: element?.companyId.name,
                 item: element?.itemId.name,
                 qty: element?.qty,
-                price: element?.price,
-                total: element.price * element.qty
+                // price: element?.price,
+                // total: element.price * element.qty
             };
         });
         setRowData(completedData);
@@ -112,9 +112,9 @@ export const StockListComponent = () => {
                                         </div>
                                     </div>
                                 )}
-                                <div className="col-12 col-md-6 m-2">
+                                {/* <div className="col-12 col-md-6 m-2">
                                     <h5>Stock's total price : {stockPrice}</h5>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </section>

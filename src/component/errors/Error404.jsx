@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import error from "../../assets/images/samples/error-404.svg"
 import { Link } from 'react-router-dom'
 
-export const Error404 = () => {
+export const Error404 = (props) => {
+
+    useEffect(() => {
+        props.onClose()
+    }, [])
+
     return (
         <div id="error">
             <div class="error-page container">

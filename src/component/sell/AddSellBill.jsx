@@ -173,18 +173,19 @@ export const AddSellBill = () => {
     }
   };
 
-  var [disble, setdisble] = useState(0)
+  // var [disble, setdisble] = useState(false)
   const getPaymentWise = (data) => {
     if (data !== "" && data !== null) {
       document.getElementById("paymentMode").disabled = false;
       setpaymentwise(data);
-      if (data === 0) {
-        setdisble(1)
+      if (data === 1) {
+        // setdisble(1)
+        document.getElementById("paymentMode").disabled = true
       } else {
-        console.log("-->>>", disble);
-        setdisble(-1)
+        // console.log("-->>>", disble);
+        document.getElementById("paymentMode").disabled = false
       }
-      // data === 1 ? setdisble(1) : setdisble(0);
+      // data === 1 ? setdisble(true) : setdisble(false);
     } else {
       document.getElementById("paymentMode").disabled = true;
     }
@@ -247,9 +248,9 @@ export const AddSellBill = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-    console.log("---> ", stocksData);
+    // console.log("---> ", disble);
     // console.log(itemsData, companiesData, clientData);
-  }, [itemsData, companiesData, stocksData, companyId, mutation, disble]);
+  }, [itemsData, companiesData, stocksData, companyId, mutation]);
 
   return (
     <>
@@ -375,8 +376,8 @@ export const AddSellBill = () => {
 
                       <div className="form-group mandatory">
                         <fieldset class="form-group mandatory">
-                          <label htmlFor="vendor" class="form-label">Select Payment Mode:</label>
-                          <select class="form-select" id="paymentMode" disabled={disble !== 0 ? "false" : "true"}
+                          <label htmlFor="paymentMode" class="form-label">Select Payment Mode:</label>
+                          <select class="form-select" id="paymentMode" disabled="true"
                             {...clientRegister("paymentMode")}>
                             <option value="">Select PaymentMode</option>
                             <option value="Cash">Cash</option>
