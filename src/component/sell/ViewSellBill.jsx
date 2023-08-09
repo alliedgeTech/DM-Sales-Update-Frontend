@@ -63,7 +63,6 @@ export const ViewSellBill = (props) => {
       setsellbilltotal(sellbilltotal);
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
-      console.log("element: ", element);
       element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
       return {
         id: ++id,
@@ -84,7 +83,6 @@ var [totalPrice, settotalPrice] = useState(0)
 const handleButtonClick = (id) => {
   others = []
   setothers(others)
-  console.log("blank : ", others);
   totalPrice = 0
   settotalPrice(totalPrice)
   let calculation = 0
@@ -93,7 +91,6 @@ const handleButtonClick = (id) => {
     console.log("iddd ---> ", itm);
     calculation += (itm.price * itm.qty)
     settotalPrice(calculation)
-    console.log(totalPrice, "----------", calculation);
     others.push(itm)
     setothers(others)
   })
@@ -107,7 +104,6 @@ const deletesell = (id) => {
 }
 const deletesell1 = () => {
   mutation.mutate(selldeleteid)
-  console.log("delete button id :", selldeleteid);
 }
 useEffect(() => {
   console.log(data, props);

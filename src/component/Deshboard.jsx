@@ -333,7 +333,7 @@ export const Deshboard = () => {
                             </div> */}
                             <div className="float-end">
                                 <p>
-                                    Maked by{" "}
+                                    Developed by{" "}
                                     <span className="text-danger">
                                         <i className="bi bi-heart" />
                                     </span>{" "}
