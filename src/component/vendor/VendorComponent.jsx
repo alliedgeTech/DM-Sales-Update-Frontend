@@ -208,7 +208,7 @@ export const VendorComponent = () => {
                                                 <input type="text"
                                                     id="first-name-column"
                                                     class="form-control"
-                                                    placeholder="Enter client name"
+                                                    placeholder="Enter Vendor name"
                                                     name="fname-column"
                                                     data-parsley-required="true"
                                                     {...register("vendorName", validation.vendorName)}
