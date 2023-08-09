@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
-import {useUpdateDebitMoney} from "../../services/sellServices"
+import { useUpdateDebitMoney } from "../../services/sellServices"
 // import { Mutation } from "react-query";
 
 export const DebitSellBill = () => {
@@ -12,15 +12,15 @@ export const DebitSellBill = () => {
 
   const validation = {
     debitMoney: {
-        required: {
-            value: true,
-            message: "pleaase Add Money"
-        }
+      required: {
+        value: true,
+        message: "pleaase Add Money"
+      },
     }
   }
 
   var { register, handleSubmit, formState: { errors } } = useForm();
-  var { data, isLoading } = useGetSellData();
+  var { data, isLoading, refetch } = useGetSellData();
 
   const columns = [
     {
@@ -43,7 +43,7 @@ export const DebitSellBill = () => {
           className="btn btn-sm"
           data-bs-toggle="modal"
           data-bs-target="#primaryItems"
-        onClick={() => handleButtonClick(params.row._id)}
+          onClick={() => handleButtonClick(params.row._id, params.row.total)}
         >
           <i class="bi bi-box-arrow-up"></i>
         </button>
@@ -51,18 +51,17 @@ export const DebitSellBill = () => {
     },
   ];
 
-
   const [rowData, setRowData] = useState([]);
 
   var [debitprice, setdebitprice] = useState(0)
   const setRows = (data) => {
     var id = 0;
     const completedData = data.filter(element => element.paymentType === 0).map(element => {
-      debitprice += (element?.items[0]?.price * element?.items[0]?.qty);
+      debitprice += +element?.total;
       setdebitprice(debitprice);
-      console.log(debitprice);
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
+      console.log(debitprice);
       console.log("element: ", element);
       //   id += 1;
       return {
@@ -72,36 +71,37 @@ export const DebitSellBill = () => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 0 ? "Debit" : "?",
-        total: element?.items[0]?.price * element?.items[0]?.qty
+        total: element?.total
       };
     })
     setRowData(completedData);
-    console.log("dsfadsfa  => ", rowData);
   };
 
+
+  var mutation = useUpdateDebitMoney();
+  const adddebitPrice = (data) => {
+    console.log("Add debited price ====> ", data)
+    mutation.mutate({ "_Id": debitpriceid, price: data.debitMoney })
+    document.getElementById("forms").reset();
+  }
+
+  var [note, setnote] = useState(1)
   useEffect(() => {
-    console.log(data);
-    if (data && isLoading === false) {
+    if (data && isLoading === false && note === 1) {
       setRows(data?.data?.data);
+      setnote(0)
     }
-  }, [isLoading]);
+    else if (mutation.data && mutation.isLoading === true) {
+      refetch()
+    }
+    console.log("adsfsdfsdafsadafa");
+  }, [isLoading, mutation]);
 
-  const [debitPrice, setdebitPrice] = useState(0)
-  const adddebitPrice=(data)=>{
-    setdebitPrice(data.debitMoney)
-        console.log("Add debited price ====> ",data.debitMoney)
-  }
-const [debitpriceid, setdebitpriceid] = useState("")
- const handleButtonClick =(id)=>{
-   setdebitpriceid(id);
- }
-
- const mutation = useUpdateDebitMoney();
-  const debitMoney=()=>{
-    mutation.mutate({"debitpriceid":debitpriceid,"debitPrice":debitPrice});
+  const [debitpriceid, setdebitpriceid] = useState("")
+  const handleButtonClick = (id, total) => {
+    setdebitpriceid(id);
   }
 
- 
   return (
     <>
       <div id="main">
@@ -160,8 +160,8 @@ const [debitpriceid, setdebitpriceid] = useState("")
                     </div>
                   </div>
                 )}
-                 <div className="col-12 col-md-6 m-2">
-                     <h5>Total Debit Bill Price : {debitprice}</h5>
+                <div className="col-12 col-md-6 m-2">
+                  <h5>Total Debit Bill Price : {debitprice}</h5>
                 </div>
               </div>
             </div>
@@ -169,40 +169,48 @@ const [debitpriceid, setdebitpriceid] = useState("")
         </div>
       </div>
 
-      {/* --------------------------------------Model------------------------------ */}
-      <div class="modal fade text-left w-100" id="primaryItems" tabindex="-1" aria-labelledby="myModalLabel16" style={{ "display": "none" }} aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+      <div
+        class="modal fade text-left"
+        id="primaryItems"
+        tabindex="-1"
+        aria-labelledby="myModalLabel120"
+        style={{ display: "none" }}
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+          role="document"
+        >
           <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="myModalLabel16">Add Money for Debit</h4>
+            <div class="modal-header bg-primary">
+              <h4 class="modal-title text-black" id="myModalLabel16">Add Money for Debit</h4>
               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
             <div class="modal-body">
-              <div className="card-content p-2">
+              <div className="card-content">
                 <div className="table-responsive">
                   <form onSubmit={handleSubmit(adddebitPrice)} id='forms'>
-                    <div className="row">
-                      <div className="col-md-9">
-                        <div class="form-group mandatory">
-                          <label for="first-name-column" class="form-label">Add Money</label>
-                          <input type="number"
-                            id="addDebitMoney"
-                            class="form-control"
-                            placeholder="Add Debit Money"
-                            name="fname-column"
-                            data-parsley-required="true"
-                          {...register("debitMoney", validation.debitMoney)} 
-                          />
-                        </div>
+                    <div className="col-md-12 px-2">
+                      <div class="form-group mandatory">
+                        <label for="first-name-column" class="form-label">Add Money</label>
+                        <input type="number"
+                          id="addDebitMoney"
+                          class="form-control"
+                          placeholder="Add Debit Money"
+                          name="fname-column"
+                          data-parsley-required="true"
+                          {...register("debitMoney", validation.debitMoney)}
+                        />
+                      </div>
+                      <div className="d-flex justify-content-between">
                         <span className="text-danger font-weight-bold">
                           {errors?.debitMoney?.message}
                         </span>
-                        <button type="submit" class="btn btn-primary me-2 mb-4"
-                        onClick={()=>{
-                          debitMoney()
-                        }}
+                        <button type="submit"
+                          class="btn btn-primary me-2 mb-4"
+                          data-bs-dismiss="modal"
                         >Add
                         </button>
                       </div>
@@ -212,9 +220,6 @@ const [debitpriceid, setdebitpriceid] = useState("")
               </div>
             </div>
             <div class="modal-footer">
-              {/* <div className="text-left">
-                Total purchase price : {totalPrice}
-              </div> */}
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>
                 <span class="d-none d-sm-block">Close</span>

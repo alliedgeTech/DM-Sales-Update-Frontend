@@ -25,16 +25,16 @@ export const CreaditSellBill = () => {
             headerName: "View Items",
             width: 100,
             renderCell: (params) => (
-              <button
-                className="btn btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#primaryItems"
+                <button
+                    className="btn btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#primaryItems"
                 // onClick={() => handleButtonClick(params.row._id)}
-              >
-                <i class="bi bi-box-arrow-up"></i>
-              </button>
+                >
+                    <i class="bi bi-box-arrow-up"></i>
+                </button>
             ),
-          },
+        },
     ];
 
     const [rowData, setRowData] = useState([]);
@@ -43,13 +43,13 @@ export const CreaditSellBill = () => {
     const setRows = (data) => {
         var id = 0;
         const completedData = data.filter(element => element.paymentType === 1).map(element => {
-            creditprice += (element?.items[0]?.price * element?.items[0]?.qty);
+            creditprice += element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+                return accumulator + currentValue;
+            }, 0)
             setcreditprice(creditprice);
             console.log(creditprice);
             var date = element.date.substring(0, 10).split("-");
             date = `${date[2]}/${date[1]}/${date[0]}`;
-            console.log("elements only ", element);
-            console.log("element:-- ", element.items);
             //   id += 1;
             return {
                 id: ++id,
@@ -58,32 +58,14 @@ export const CreaditSellBill = () => {
                 date: date,
                 client: element?.clientId?.name,
                 paymentType: element.paymentType === 1 ? "Credit" : null,
-                total: element?.items[0]?.price * element?.items[0]?.qty
+                total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue;
+                }, 0)
             };
         })
         setRowData(completedData);
         console.log("dsfadsfa  => ", rowData);
     };
-
-    // var [others, setothers] = useState([])
-    // var [totalPrice, settotalPrice] = useState(0)
-    // const handleButtonClick = (id) => {
-    //   others = []
-    //   setothers(others)
-    //   console.log("blank : ", others);
-    //   totalPrice = 0
-    //   settotalPrice(totalPrice)
-    //   let calculation = 0
-    //   const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
-    //   dts.forEach(itm => {
-    //     console.log("iddd ---> ", itm);
-    //     calculation += (itm.price * itm.qty)
-    //     settotalPrice(calculation)
-    //     console.log(totalPrice, "----------", calculation);
-    //     others.push(itm)
-    //     setothers(others)
-    //   })
-    // };
 
     useEffect(() => {
         console.log(data);
@@ -151,7 +133,7 @@ export const CreaditSellBill = () => {
                                         </div>
                                     </div>
                                 )}
-                                   <div className="col-12 col-md-6 m-2">
+                                <div className="col-12 col-md-6 m-2">
                                     <h5>Total credit Bill Price : {creditprice}</h5>
                                 </div>
                             </div>
