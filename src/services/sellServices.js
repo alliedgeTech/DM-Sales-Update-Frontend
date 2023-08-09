@@ -28,7 +28,7 @@ const datewisesellbill=(data)=>{
       return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellprice",data)
 }
 const updateDebitMoney=(data)=>{
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/updateDebitMoney/" + data.debitpriceid,data.debitPrice)
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/update-money", data)
 }
   export const useGetItemCompanyWise = (company) => {
     return useQuery("getItemCompanyWise", getItemCompanyWise, {
