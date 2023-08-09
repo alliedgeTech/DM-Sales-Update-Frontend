@@ -62,7 +62,7 @@ export const DebitSellBill = () => {
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
       console.log(debitprice);
-      console.log("element: ", element);
+      console.log("element: debit", element);
       //   id += 1;
       return {
         id: ++id,

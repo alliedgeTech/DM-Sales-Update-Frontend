@@ -14,10 +14,10 @@ export const ListPurchaseComponent = () => {
       width: 30,
     },
     { field: "_id", headerName: "", width: "0" },
-    { field: "invoice", headerName: "Bill no", width: 100 },
-    { field: "date", headerName: "Date", width: 200 },
+    { field: "invoice", headerName: "Invoice No", width: 100 },
+    { field: "date", headerName: "Date", width: 220 },
     { field: "vendor", headerName: "Vendor", width: 250 },
-    // { field: "total", headerName: "Amount", width: 350 },
+    { field: "total", headerName: "Amount", width: 230 },
     
     {
       field: "actions",
@@ -37,23 +37,24 @@ export const ListPurchaseComponent = () => {
   ];
 
   const [rowData, setRowData] = useState([]);
-
+  var totalPrices = 0;
   const setRows = (data) => {
     var id = 0;
     const completedData = data.map((element) => {
-      // var date = element.date.substring(0, 10).split("-");
-      // date = `${date[2]}/${date[1]}/${date[0]}`;
-      console.log("element purchse",element)
-      //   id += 1;
+      console.log("element: ---->", element);
+      element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
+      console.log("totalPrices-->>",totalPrices);
       return {
         id: ++id,
         _id: element._id,
         invoice: element.invoice,
         date: element.date,
         vendor: element?.vendorId?.vendorName,
-        // total: element?.total
-      };
-    });
+        total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0)
+  };
+});
     setRowData(completedData);
     console.log("dsfadsfa  => ", rowData);
   };
