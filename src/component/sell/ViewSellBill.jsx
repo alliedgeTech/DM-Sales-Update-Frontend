@@ -72,9 +72,7 @@ export const ViewSellBill = (props) => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 1 ? "Credit" : "Debit",
-        total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
-          return accumulator + currentValue;
-        }, 0)
+        total: element?.total
   };
 });
 setRowData(completedData);
