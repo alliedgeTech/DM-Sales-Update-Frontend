@@ -57,13 +57,7 @@ export const DebitSellBill = () => {
   const setRows = (data) => {
     var id = 0;
     const completedData = data.filter(element => element.paymentType === 0).map(element => {
-<<<<<<< HEAD
-      debitprice += element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
-        return accumulator + currentValue;
-      }, 0)
-=======
       debitprice += +element?.total;
->>>>>>> 901809024c8167b65871e23ef36c72b07d3d952c
       setdebitprice(debitprice);
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
@@ -77,13 +71,7 @@ export const DebitSellBill = () => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 0 ? "Debit" : "?",
-<<<<<<< HEAD
-        total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
-          return accumulator + currentValue;
-        }, 0)
-=======
         total: element?.total
->>>>>>> 901809024c8167b65871e23ef36c72b07d3d952c
       };
     })
     setRowData(completedData);
