@@ -22,6 +22,7 @@ import { CreaditSellBill } from "./component/Deshboard/CreaditSellBill"
 import { DebitSellBill } from "./component/Deshboard/DebitSellBill"
 import { SellBillPrintComponent } from "./component/sell/SellBillPrintComponent"
 import { useState } from "react"
+import { DateViseSellPrice } from "./component/sell/DateViseSellPrice"
 
 function App() {
 
@@ -55,8 +56,9 @@ function App() {
 
         {/* sell bill API */}
         <Route path="/addsellbill" element={<AddSellBill />} />
-        <Route path="/viewsellbill" element={<ViewSellBill sellItems={setsellItems} />} />
+        <Route path="/viewsellbill" element={<ViewSellBill sellItems={setsellItems} onclose={() => setisOpen(true)} />} />
         <Route path="/viewsellbill/generate-sell-bill/:id" element={<SellBillPrintComponent items={sellItems} onClose={() => setisOpen(false)} />} />
+        <Route path="/datewisesellprice" element={<DateViseSellPrice/>}/>
         {/* Stock API */}
         <Route path="creditsellbill" element={<CreaditSellBill />} />
         <Route path="debitsellbill" element={<DebitSellBill />} />

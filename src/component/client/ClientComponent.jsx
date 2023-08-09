@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { usePostClientData } from '../../services/clientServices';
@@ -62,13 +62,17 @@ export const ClientComponent = () => {
     }
 
     const mutation = usePostClientData();
-
+    var [note, setnote] = useState(0)
     useEffect(() => {
         if (mutation.isError) {
             navigate('/erorr404')
         }
-        if (mutation.data) {
+        if (mutation.data && note == 0) {
             notifyDone("Client added successfully.")
+            setnote(1)
+        }
+        if (mutation.isLoading) {
+            setnote(0)
         }
     }, [mutation])
 

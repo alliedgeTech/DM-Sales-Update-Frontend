@@ -141,6 +141,9 @@ export const Sidebar = (props) => {
                                     <li className="submenu-item ">
                                         <Link to='/viewsellbill'>View Sell Bill</Link>
                                     </li>
+                                    <li className="submenu-item ">
+                                        <Link to='/datewisesellprice'>DateWise SellPrice</Link>
+                                    </li>
                                 </ul>
                             </li>
                             <li className="sidebar-item  has-sub">

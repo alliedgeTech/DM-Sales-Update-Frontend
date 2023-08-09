@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { usePostvendorData } from '../../services/vendorServices';
@@ -135,7 +135,7 @@ export const VendorComponent = () => {
 
     }
     const mutation = usePostvendorData();
-
+    var [note, setnote] = useState(0)
     useEffect(() => {
         console.log(" isIdle => ", mutation.isIdle);
         console.log(" loading => ", mutation.isLoading);
@@ -144,8 +144,12 @@ export const VendorComponent = () => {
         if (mutation.isError) {
             navigate('/erorr404')
         }
-        if (mutation.data) {
+        if (mutation.data && note === 0) {
             notifyDone("vendor added successfully.")
+            setnote(1)
+        }
+        if (mutation.isLoading) {
+            setnote(0)
         }
     }, [mutation])
     return (

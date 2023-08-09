@@ -306,9 +306,8 @@ export const AddSellBill = () => {
                           class="form-select"
                           id="client"
                           {...clientRegister("clientId", validation.clientId)}
-                        // onChange={(event) => desebleVendor(event.target.value)}
                         >
-                          <option value="">Select client's name</option>
+                          <option className='search-dropdown' value="">Select client's name</option>
                           {clientData?.data?.data?.map((client) => {
                             return (
                               <option value={client._id}>

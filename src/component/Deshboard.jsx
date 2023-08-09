@@ -86,7 +86,7 @@ export const Deshboard = () => {
                                                     </div>
                                                     <div className="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                         <h6 className="text-muted font-semibold">
-                                                            Complete projects
+                                                            Total Sell Amount
                                                         </h6>
                                                         <h6 className="font-extrabold mb-0">112</h6>
                                                     </div>
@@ -293,7 +293,7 @@ export const Deshboard = () => {
                                     <div className="card-body py-4 px-4">
                                         <div className="ms-3 name">
                                             <h5 className="font-bold">Admin</h5>
-                                            <h6 className="text-muted mb-0">@Executive</h6>
+                                            <h6 className="text-muted mb-0">@Darshit Raval</h6>
                                         </div>
                                     </div>
                                 </div>
