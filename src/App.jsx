@@ -1,5 +1,3 @@
-// import './App.css'
-
 import { Route, Routes } from "react-router-dom"
 import { Deshboard } from "./component/Deshboard"
 import { Sidebar } from "./component/Sidebar"
