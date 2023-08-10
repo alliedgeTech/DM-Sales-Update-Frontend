@@ -10,7 +10,7 @@ export const Sidebar = (props) => {
     }, [])
 
     return (
-        <div id='sidebar-id' style={{ display: props.isOpen === true ? "block" : "none"}}>
+        <div id='sidebar-id' style={{ display: props.isOpen === true ? "block" : "none" }}>
             <div id="sidebar" className="active">
                 <div className="sidebar-wrapper active">
                     <div className="sidebar-header position-relative">
@@ -143,17 +143,6 @@ export const Sidebar = (props) => {
                                     </li>
                                     <li className="submenu-item ">
                                         <Link to='/datewisesellprice'>DateWise SellPrice</Link>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li className="sidebar-item  has-sub">
-                                <a href="#" className="sidebar-link">
-                                    <i className="bi bi-postcard-fill" />
-                                    <span>Projects</span>
-                                </a>
-                                <ul className="submenu ">
-                                    <li className="submenu-item ">
-                                        <a href="layout-default.html">Add projects</a>
                                     </li>
                                 </ul>
                             </li>
