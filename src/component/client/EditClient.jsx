@@ -73,7 +73,6 @@ export const EditClient = () => {
     });
 
     const submitData = (data) => {
-        console.log(data);
         mutation.mutate({ id: id, data: data });
     }
     const navigate = useNavigate();

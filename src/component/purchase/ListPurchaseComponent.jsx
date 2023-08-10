@@ -41,9 +41,7 @@ export const ListPurchaseComponent = () => {
   const setRows = (data) => {
     var id = 0;
     const completedData = data.map((element) => {
-      console.log("element: ---->", element);
       element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
-      console.log("totalPrices-->>",totalPrices);
       return {
         id: ++id,
         _id: element._id,
@@ -56,7 +54,6 @@ export const ListPurchaseComponent = () => {
   };
 });
     setRowData(completedData);
-    console.log("dsfadsfa  => ", rowData);
   };
 
   var [others, setothers] = useState([])
@@ -64,27 +61,22 @@ export const ListPurchaseComponent = () => {
   const handleButtonClick = (id) => {
     others = []
     setothers(others)
-    console.log("blank : ", others);
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
     const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
     dts.forEach(itm => {
-      console.log("iddd ---> ", itm);
       calculation += (itm.price * itm.qty)
       settotalPrice(calculation)
-      console.log(totalPrice, "----------", calculation);
       others.push(itm)
       setothers(others)
     })
   };
 
   useEffect(() => {
-    console.log(data);
     if (data && isLoading === false) {
       setRows(data?.data?.data);
     }
-    console.log("othr ", others);
   }, [isLoading, others]);
 
   return (

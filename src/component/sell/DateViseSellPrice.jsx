@@ -18,10 +18,7 @@ export const DateViseSellPrice = () => {
   const [datewiseselllist, setdatewiseselllist] = useState([])
   const mutation = useDateWiseSellBill();
 
-  console.log("items retrived", mutation.data);
-  console.log("-------------->", mutation.data);
   const submitData = (data) => {
-    console.log("date---->", data);
     mutation.mutate(data)
   }
 
@@ -31,11 +28,9 @@ export const DateViseSellPrice = () => {
   var [Cheque, setCheque] = useState([])
   var [debit, setdebit] = useState([])
 
-  console.log("==========================+++++",Cheque);
   useEffect(() => {
     if (mutation.data && mutation.isLoading === false) {
       setitem(mutation.data.data.data)
-      console.log("item--->useState",item);
       var tempupi=0,tempcash=0,tempCheque=0,tempdebit=0,temptotalsellAmt=0;
       item.forEach((itm)=>{
           if(itm.paymentMode=="UPI"){
@@ -73,8 +68,6 @@ export const DateViseSellPrice = () => {
           }
       })
     }
-
-    console.log("ddddd", item);
   }, [mutation])
 
   return (

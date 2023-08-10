@@ -28,10 +28,8 @@ export const ListCompanyWiseItemComponent = () => {
 
         })
         setRowData(completedData)
-        console.log("dsfadsfa  => ", rowData);
     }
     useEffect(() => {
-        console.log(data);
         if (data && isLoading === false)
             setRows(data?.data?.data)
     }, [isLoading])

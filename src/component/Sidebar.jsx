@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 export const Sidebar = (props) => {
 
-    console.log(props);
     useEffect(() => {
         import('../assets/js/bootstrap.js');
         import('../assets/js/app.js');

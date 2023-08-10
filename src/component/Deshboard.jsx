@@ -22,7 +22,6 @@ export const Deshboard = () => {
 
     useEffect(() => {
         if (companyData !== undefined && companyLoading === false && companiesData.length === 0) {
-            console.log("---", companyData);
             companyData.data.data.forEach(element => {
                 dispatch(addCompany(element));
             });
@@ -33,7 +32,6 @@ export const Deshboard = () => {
                 dispatch(addItems(element));
             })
         }
-        console.log(itemsData, companiesData);
     }, [itemsData, companiesData, companyLoading, itemLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);

@@ -133,7 +133,6 @@ export const EditVendor = () => {
     var { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: async () => {
             const vendor = await axios.get("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + id)
-            console.log('eidit vendor: ', vendor)
             return {
                 vendorName: vendor?.data?.data.vendorName,
                 phoneNumber1: vendor?.data?.data.phoneNumber1,

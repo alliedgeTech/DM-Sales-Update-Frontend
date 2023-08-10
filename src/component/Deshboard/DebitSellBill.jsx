@@ -61,8 +61,6 @@ export const DebitSellBill = () => {
       setdebitprice(debitprice);
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
-      console.log(debitprice);
-      console.log("element: debit", element);
       //   id += 1;
       return {
         id: ++id,
@@ -80,7 +78,6 @@ export const DebitSellBill = () => {
 
   var mutation = useUpdateDebitMoney();
   const adddebitPrice = (data) => {
-    console.log("Add debited price ====> ", data)
     mutation.mutate({ "_Id": debitpriceid, price: data.debitMoney })
     document.getElementById("forms").reset();
   }
@@ -94,7 +91,6 @@ export const DebitSellBill = () => {
     else if (mutation.data && mutation.isLoading === true) {
       refetch()
     }
-    console.log("adsfsdfsdafsadafa");
   }, [isLoading, mutation]);
 
   const [debitpriceid, setdebitpriceid] = useState("")

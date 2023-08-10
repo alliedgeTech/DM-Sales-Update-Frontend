@@ -77,7 +77,6 @@ export const ViewSellBill = (props) => {
       };
     });
     setRowData(completedData);
-    console.log("dsfadsfa  => ", rowData);
   };
 
   var [others, setothers] = useState([])
@@ -90,7 +89,6 @@ export const ViewSellBill = (props) => {
     let calculation = 0
     const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
     dts.forEach(itm => {
-      console.log("iddd ---> ", itm);
       calculation += (itm.price * itm.qty)
       settotalPrice(calculation)
       others.push(itm)
@@ -115,7 +113,6 @@ export const ViewSellBill = (props) => {
     }
 
     document.getElementsByName("_id").checked = "";
-    console.log("othr ", others);
   }, [isLoading, others]);
 
   return (

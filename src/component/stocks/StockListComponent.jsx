@@ -14,10 +14,10 @@ export const StockListComponent = () => {
             width: 90,
         },
         { field: "_id", headerName: "", width: "0" },
-        { field: "company", headerName: "Company name", width:300 },
+        { field: "company", headerName: "Company name", width: 300 },
         { field: "item", headerName: "Items", width: 250 },
         { field: "qty", headerName: "Quantity", width: 250 },
-        {field:"uom",headerName:"Unit",width:200}
+        { field: "uom", headerName: "Unit", width: 200 }
         // { field: "price", headerName: "Price", width: 150 },
         // { field: "total", headerName: "total price", width: 150 },
     ];
@@ -29,32 +29,24 @@ export const StockListComponent = () => {
         const completedData = data.map((element) => {
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);
-            console.log(stockPrice);
-            console.log("element with UNIt....",element.uom)
             return {
                 id: ++id,
                 _id: element?._id,
                 company: element?.companyId.name,
                 item: element?.itemId.name,
                 qty: element?.qty,
-                uom:element?.uom
-                // price: element?.price,
-                // total: element.price * element.qty
+                uom: element?.uom
             };
         });
         setRowData(completedData);
-        console.log("dsfadsfa  => ", rowData);
     };
 
     var [others, setothers] = useState([])
-    // var [totalPrice, settotalPrice] = useState(0)
-    
+
     useEffect(() => {
-        console.log(data);
         if (data && isLoading === false) {
             setRows(data?.data?.data);
         }
-        console.log("othr ", others);
     }, [isLoading, others]);
 
     return (

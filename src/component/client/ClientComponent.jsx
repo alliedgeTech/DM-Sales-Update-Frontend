@@ -57,7 +57,6 @@ export const ClientComponent = () => {
     var { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitData = (data) => {
-        console.log(data);
         mutation.mutate(data)
     }
 

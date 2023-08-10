@@ -15,7 +15,6 @@ const getClientById = (id) => {
 }
 
 const UpdateClient = async (data) => {
-    console.log("update ->>", data.id, " -----<>", data.data);
     return await axios.put("http://localhost:9990/distributer/api/v1/public/client/client/" + data.id, data.data)
 }
 
@@ -41,7 +40,6 @@ export const useGetClientById = (id) => {
 }
 
 export const useEditClient = (id, client) => {
-    console.log("->", id, client);
     return useMutation("getClientById", UpdateClient, {
         retry: 5,
         retryDelay: 2000

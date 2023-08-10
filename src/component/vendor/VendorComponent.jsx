@@ -129,18 +129,11 @@ export const VendorComponent = () => {
             remark: data.remark,
             address: data.address,
         }
-        console.log(data);
-        console.log("vendor data", vendor)
-        console.log("-->", vendor.status)
 
     }
     const mutation = usePostvendorData();
     var [note, setnote] = useState(0)
     useEffect(() => {
-        console.log(" isIdle => ", mutation.isIdle);
-        console.log(" loading => ", mutation.isLoading);
-        console.log(" data => ", mutation.data);
-        console.log(" error => ", mutation.error);
         if (mutation.isError) {
             navigate('/erorr404')
         }

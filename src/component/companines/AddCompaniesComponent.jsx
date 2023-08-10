@@ -32,7 +32,6 @@ export const AddCompaniesComponent = () => {
     var { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitData = (data) => {
-        console.log(data);
         mutation.mutate(data)
         dispatch(addCompany(data));
     }

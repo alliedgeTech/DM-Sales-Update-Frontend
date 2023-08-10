@@ -14,7 +14,6 @@ const getVendorById = (id) => {
 }
 
 const UpdateVendor = async (data) => {
-    console.log("update ->>", data.id, " ----->", data.data);
     return await axios.put("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + data.id, data.data)
 }
 
@@ -34,8 +33,6 @@ export const usePostvendorData = () => {
     return useMutation("postData", postVendorData, {})
 }
 export const useEditVendor = (id, vendor) => {
-    //  console.log("id and vendor---->",id,vendor)
-
     return useMutation("getVendorById", UpdateVendor, {
         retry: 5,
         retryDelay: 2000

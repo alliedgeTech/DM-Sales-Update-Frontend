@@ -131,7 +131,6 @@ export const AddPurchaseComponent = () => {
 
   var [purchaseItems, setPurchaseItems] = useState([]);
   const submitData = (data) => {
-    console.log("data : ", data);
     data.id = ids;
     setids((ids += 1));
     setPurchaseItems([...purchaseItems, data]);
@@ -157,7 +156,6 @@ export const AddPurchaseComponent = () => {
 
   const deleteItems = (id) => {
     purchaseItems = purchaseItems.filter((item) => item.id !== id);
-    console.log("eee : ", purchaseItems);
     setPurchaseItems(purchaseItems);
   };
 
@@ -169,7 +167,6 @@ export const AddPurchaseComponent = () => {
     } else {
       var p = price * qty;
       setTotalPrice(p);
-      console.log(totalPrice);
       document.getElementById("totalPrice").value = p;
     }
   };
@@ -178,7 +175,6 @@ export const AddPurchaseComponent = () => {
   const addDataIntoPurchase = () => {
     vendorDetails.items = purchaseItems;
     setvendorDetails(vendorDetails);
-    console.log("items : ", vendorDetails);
     mutation.mutate(vendorDetails);
   };
 
@@ -200,7 +196,6 @@ export const AddPurchaseComponent = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-    console.log(itemsData, companiesData);
   }, [itemsData, companiesData, items, companyId, mutation]);
 
   return (

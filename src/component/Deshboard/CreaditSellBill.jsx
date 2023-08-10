@@ -48,7 +48,6 @@ export const CreaditSellBill = () => {
                 return accumulator + currentValue;
             }, 0)
             setcreditprice(creditprice);
-            console.log(creditprice);
             var date = element.date.substring(0, 10).split("-");
             date = `${date[2]}/${date[1]}/${date[0]}`;
             //   id += 1;
@@ -65,11 +64,9 @@ export const CreaditSellBill = () => {
             };
         })
         setRowData(completedData);
-        console.log("dsfadsfa  => ", rowData);
     };
 
     useEffect(() => {
-        console.log(data);
         if (data && isLoading === false) {
             setRows(data?.data?.data);
         }

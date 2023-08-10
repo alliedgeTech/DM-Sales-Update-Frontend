@@ -8,10 +8,6 @@ export const ListClientComponent = () => {
   var { data, isError, isLoading, refetch } = useClientData();
   const mutation = useDeleteClient();
 
-  // const [clients, setClient] = useState([])
-  console.log("data...", data);
-  console.log("is loading...", isLoading);
-
   useEffect(() => {
     refetch();
   }, [isLoading, mutation.data, mutation.isLoading]);

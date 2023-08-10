@@ -37,7 +37,6 @@ export const AddCompanyWiseItemComponent = () => {
     var { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitData = (data) => {
-        console.log(data);
         mutation.mutate(data)
     }
 

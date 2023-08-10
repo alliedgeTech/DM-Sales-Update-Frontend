@@ -145,18 +145,15 @@ export const AddSellBill = () => {
   const [clientDetails, setclientDetails] = useState({})
 
   const submitBeforeData = (data) => {
-    console.log("sell before data-->", data)
     setclientDetails(data)
   }
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
   const [paymentwise, setpaymentwise] = useState([])
   const submitData = (data) => {
-    console.log("data : ", data);
     data.id = ids;
     setids((ids += 1));
     setsellItem([...sellItem, data]);
-    //   notifyDone("Item added in list.");
     document.getElementById("forms").reset();
   };
 
@@ -173,19 +170,15 @@ export const AddSellBill = () => {
     }
   };
 
-  // var [disble, setdisble] = useState(false)
   const getPaymentWise = (data) => {
     if (data !== "" && data !== null) {
       document.getElementById("paymentMode").disabled = false;
       setpaymentwise(data);
       if (data === 1) {
-        // setdisble(1)
         document.getElementById("paymentMode").disabled = true
       } else {
-        // console.log("-->>>", disble);
         document.getElementById("paymentMode").disabled = false
       }
-      // data === 1 ? setdisble(true) : setdisble(false);
     } else {
       document.getElementById("paymentMode").disabled = true;
     }
@@ -193,7 +186,6 @@ export const AddSellBill = () => {
 
   const deleteItems = (id) => {
     sellItem = sellItem.filter((item) => item.id !== id);
-    console.log("eee : ", sellItem);
     setsellItem(sellItem);
   };
 
@@ -205,7 +197,6 @@ export const AddSellBill = () => {
     } else {
       var p = price * qty;
       setTotalPrice(p);
-      console.log(totalPrice);
       document.getElementById("totalPrice").value = p;
     }
   };
@@ -214,13 +205,11 @@ export const AddSellBill = () => {
   const addDataIntoPurchase = () => {
     clientDetails.items = sellItem;
     setclientDetails(clientDetails);
-    console.log("items : ", clientDetails);
     mutation.mutate(clientDetails);
 
   };
 
   const setInstock = (data) => {
-    console.log("selected :: ", data);
     StockQuantity = stocksData.find(ele => ele.itemId._id === data)?.qty
     setStockQuantity(StockQuantity)
   }
@@ -248,8 +237,6 @@ export const AddSellBill = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-    // console.log("---> ", disble);
-    // console.log(itemsData, companiesData, clientData);
   }, [itemsData, companiesData, stocksData, companyId, mutation]);
 
   return (
