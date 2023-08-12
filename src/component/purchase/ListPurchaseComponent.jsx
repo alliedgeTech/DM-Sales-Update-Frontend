@@ -18,7 +18,7 @@ export const ListPurchaseComponent = () => {
     { field: "date", headerName: "Date", width: 220 },
     { field: "vendor", headerName: "Vendor", width: 250 },
     { field: "total", headerName: "Amount", width: 230 },
-    
+
     {
       field: "actions",
       headerName: "View Items",
@@ -51,8 +51,8 @@ export const ListPurchaseComponent = () => {
         total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0)
-  };
-});
+      };
+    });
     setRowData(completedData);
   };
 

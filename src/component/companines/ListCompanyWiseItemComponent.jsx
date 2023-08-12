@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 // import { useDemoData } from '@mui/x-data-grid-generator';
 import { Link } from 'react-router-dom';
-import { useGetItems } from '../../services/companyAndItemServices';
+import { useDeleteItem, useGetItems } from '../../services/companyAndItemServices';
 import "../../assets/css/style.css"
+import { notifyDone, notifyErorr } from './../../assets/toster';
+import { ToastContainer } from 'react-toastify';
 
 export const ListCompanyWiseItemComponent = () => {
 
@@ -12,9 +14,24 @@ export const ListCompanyWiseItemComponent = () => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 350 },
         { field: 'Company', headerName: 'Company', width: 300 },
-        { field: 'Items', headerName: 'Items', width: 450 },
+        { field: 'Items', headerName: 'Items', width: 300 },
+        {
+            field: "actions",
+            headerName: "Delete",
+            width: 100,
+            renderCell: (params) => (
+                <>
+                    <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#danger1"
+                        onClick={() => deleteItems(params.row.id)}
+                    >
+                        <i class="bi bi-trash3 text-danger"></i>
+                    </button>
+                </>
+            ),
+        },
     ]
-    var { data, isLoading } = useGetItems()
+    var { data, isLoading, refetch } = useGetItems()
 
     const [rowData, setRowData] = useState([])
 
@@ -29,13 +46,46 @@ export const ListCompanyWiseItemComponent = () => {
         })
         setRowData(completedData)
     }
+
+    const mutation = useDeleteItem();
+    const deleteItems = (id) => {
+        console.log("++", id);
+        mutation.mutate(id);
+    }
+
+    var [note, setnote] = useState(false)
     useEffect(() => {
-        if (data && isLoading === false)
+        if (data && isLoading === false) {
             setRows(data?.data?.data)
-    }, [isLoading])
+        }
+        if (mutation.data && note === false) {
+            notifyDone("item Deleted successfully.")
+            setnote(true)
+            refetch()
+        }
+        if (mutation.isError && note === false) {
+            notifyErorr("Error while delete items.")
+            setnote(true)
+        }
+        if (mutation.isLoading && note === true) {
+            setnote(false)
+        }
+    }, [isLoading, mutation])
 
     return (
         <div id="main">
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <header className="mb-3">
                 <a href="#" className="burger-btn d-block d-xl-none">
                     <i className="bi bi-justify fs-3" />
@@ -56,7 +106,7 @@ export const ListCompanyWiseItemComponent = () => {
                                     <li className="breadcrumb-item">
                                         <Link to="/">Deshboard</Link>
                                     </li>
-                                    <li className="breadcrumb-item active" aria-current="page">
+                                    <li className="breadcrumb-item active" aria-current="page"> 
                                         items
                                     </li>
                                 </ol>
@@ -71,7 +121,7 @@ export const ListCompanyWiseItemComponent = () => {
                         </div>
                         <div className="card-body">
                             {
-                                rowData.length != 0 ? (
+                                rowData.length !== 0 && mutation.isLoading !== true ? (
                                     <DataGrid
                                         columns={columns}
                                         rows={rowData}

@@ -125,7 +125,6 @@ export const AddSellBill = () => {
 
   const navigate = useNavigate();
 
-  // var [stockIn, setstockIn] = useState(0)
   const { data: stockData, isLoading: stockLoading } = useGetStockData();
   const dispatch = useDispatch();
   const stocksData = useSelector((state) => state.stock.value)
@@ -206,7 +205,6 @@ export const AddSellBill = () => {
     clientDetails.items = sellItem;
     setclientDetails(clientDetails);
     mutation.mutate(clientDetails);
-
   };
 
   const setInstock = (data) => {

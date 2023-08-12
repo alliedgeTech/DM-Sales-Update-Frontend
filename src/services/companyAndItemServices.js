@@ -13,6 +13,10 @@ const deleteCompanys = (id) => {
     return axios.delete("http://localhost:9990/distributer/api/v1/public/company/company/" + id)
 }
 
+const deleteItems = (id) => {
+    return axios.delete("http://localhost:9990/distributer/api/v1/public/item/item/" + id)
+}
+
 const AddItemsByCompany = (item) => {
     return axios.post("http://localhost:9990/distributer/api/v1/public/item/additem", item)
 }
@@ -37,6 +41,13 @@ export const useGetCompanys = () => {
 
 export const useDeleteCompany = (id) => {
     return useMutation("deletecompanys", deleteCompanys, {
+        retry: 5,
+        retryDelay: 1000
+    });
+}
+
+export const useDeleteItem = (id) => {
+    return useMutation("deleteitems", deleteItems, {
         retry: 5,
         retryDelay: 1000
     });

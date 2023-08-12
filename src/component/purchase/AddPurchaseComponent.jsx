@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { notifyDone } from "../../assets/toster";
 import { useVendorData } from "../../services/vendorServices";
 import { useSelector } from "react-redux";
-import { useAddPurchase } from "../../services/purchaseServices";
+import { useAddPurchase, useGetUniqueBillNo } from "../../services/purchaseServices";
 
 export const AddPurchaseComponent = () => {
   const validation = {
@@ -70,10 +70,6 @@ export const AddPurchaseComponent = () => {
         value: 1,
         message: "Minimum one rs is required.",
       },
-      pattern: {
-        value: /^[0-9]+$/,
-        message: "Only numbers are allowed.",
-      },
     },
     invoice: {
       required: {
@@ -87,10 +83,6 @@ export const AddPurchaseComponent = () => {
       maxLength: {
         value: 200,
         message: "maximum words length is 200.",
-      },
-      pattern: {
-        value: /^[a-zA-Z0-9-]+$/,
-        message: "Only alphanumeric characters and hyphens are allowed.",
       },
     },
     remark: {
@@ -138,7 +130,6 @@ export const AddPurchaseComponent = () => {
     document.getElementById("forms").reset();
   };
 
-  var [items, setItems] = useState([]);
   const { data: vendorData, isLoading: vendorLoading } = useVendorData();
 
   var itemsData = useSelector((state) => state.items.value);
@@ -159,17 +150,21 @@ export const AddPurchaseComponent = () => {
     setPurchaseItems(purchaseItems);
   };
 
-  var [totalPrice, setTotalPrice] = useState(0);
-
   const setTotalRs = (price) => {
     var qty = document.getElementById("qty").value;
     if (qty <= 0) {
     } else {
       var p = price * qty;
-      setTotalPrice(p);
       document.getElementById("totalPrice").value = p;
     }
   };
+
+  var billMutation = useGetUniqueBillNo();
+  const getBillUnique = (value) => {
+    if (value && value.length >= 2) {
+      billMutation.mutate(value);
+    }
+  }
 
   const mutation = useAddPurchase();
   const addDataIntoPurchase = () => {
@@ -178,6 +173,7 @@ export const AddPurchaseComponent = () => {
     mutation.mutate(vendorDetails);
   };
 
+  var [billError, setbillError] = useState(true)
   var [note, setnote] = useState(0);
   useEffect(() => {
     if (mutation.isSuccess) {
@@ -196,13 +192,21 @@ export const AddPurchaseComponent = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-  }, [itemsData, companiesData, items, companyId, mutation]);
+    if (billMutation.data) {
+      console.log("bill mutation -> ", billMutation.data.data.data);
+      if (billMutation.data.data.data === false) {
+        setbillError(false)
+      } else {
+        setbillError(true)
+      }
+    }
+  }, [itemsData, companiesData, companyId, mutation, billMutation]);
 
   return (
     <>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -245,9 +249,8 @@ export const AddPurchaseComponent = () => {
             <div
               className="card"
               style={{
-                display: `${
-                  Object.keys(vendorDetails).length === 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(vendorDetails).length === 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -265,7 +268,7 @@ export const AddPurchaseComponent = () => {
                           class="form-select"
                           id="vendor"
                           {...vendorRegister("vendorId", validation.vendorId)}
-                          // onChange={(event) => desebleVendor(event.target.value)}
+                        // onChange={(event) => desebleVendor(event.target.value)}
                         >
                           <option value="">Select Vendor's name</option>
                           {vendorData?.data?.data?.map((vendor) => {
@@ -297,15 +300,20 @@ export const AddPurchaseComponent = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group mandatory">
-                        <label htmlFor="invoice" class="form-label">
-                          Invoice (Bill number)
-                        </label>
+                        <div className="d-flex justify-content-between">
+                          <label htmlFor="invoice" class="form-label">
+                            Invoice (Bill number)
+                          </label>
+                          <span className="text-danger font-weight-bold mx-2" style={{ display: billError == true ? "none" : "block" }}>
+                            Please, enter unique bill number
+                          </span>
+                        </div>
                         <input
                           type="text"
                           className="form-control"
                           id="invoice"
                           placeholder="Enter your invoice or bill number"
-                          // onBlurCapture={(event) => disableInvoice(event.target.value)}
+                          onKeyUp={(event) => getBillUnique(event.target.value)}
                           {...vendorRegister("invoice", validation.invoice)}
                         />
                         <span className="text-danger font-weight-bold">
@@ -333,6 +341,7 @@ export const AddPurchaseComponent = () => {
                       <button
                         type="submit"
                         class="btn btn-outline-primary me-1 mb-1"
+                        disabled={billError !== true ? true : false}
                       >
                         Process next
                       </button>
@@ -344,9 +353,8 @@ export const AddPurchaseComponent = () => {
             <div
               className="card fadeUp"
               style={{
-                display: `${
-                  Object.keys(vendorDetails).length !== 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(vendorDetails).length !== 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -354,7 +362,7 @@ export const AddPurchaseComponent = () => {
               </div>
               <div className="card-body">
                 {vendorLoading === true ||
-                vendorData?.data?.data === undefined ? (
+                  vendorData?.data?.data === undefined ? (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
                       class="spinner-border"
@@ -455,7 +463,6 @@ export const AddPurchaseComponent = () => {
                               if (item?.companyId?._id == companyId) {
                                 return (
                                   <option key={item._id} value={item._id}>
-                                    {" "}
                                     {item.name}
                                   </option>
                                 );
@@ -490,7 +497,7 @@ export const AddPurchaseComponent = () => {
                             className="form-control"
                             id="totalPrice"
                             disabled="true"
-                            // {...register("totalprice", { value: totalPrice })}
+                          // {...register("totalprice", { value: totalPrice })}
                           />
                           <span className="text-danger font-weight-bold">
                             {errors?.totalPrice?.message}
@@ -543,9 +550,8 @@ export const AddPurchaseComponent = () => {
             <div
               className="card"
               style={{
-                display: `${
-                  Object.keys(vendorDetails).length !== 0 ? "block" : "none"
-                }`,
+                display: `${Object.keys(vendorDetails).length !== 0 ? "block" : "none"
+                  }`,
               }}
             >
               <div className="card-header">
@@ -758,9 +764,9 @@ export const AddPurchaseComponent = () => {
                 </div>
               </div>
             </div>
-          </section>
-        </div>
-      </div>
+          </section >
+        </div >
+      </div >
     </>
   );
 };
