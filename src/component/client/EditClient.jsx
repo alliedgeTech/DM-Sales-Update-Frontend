@@ -145,7 +145,7 @@ export const EditClient = () => {
                                                     class="form-control"
                                                     placeholder="Enter client name"
                                                     name="fname-column"
-                                                    disabled
+                                                    // disabled
                                                     data-parsley-required="true"
                                                     {...register("name", validation.name)} />
                                                 <span className='text-danger font-weight-bold'>{errors?.name?.message}</span>

@@ -9,7 +9,9 @@ export const companySlice = createSlice({
     initialState,
     reducers: {
         addCompany: (state, action) => {
-            state.value.push(action.payload)
+            action.payload.forEach(element => {
+                state.value.push(element)
+            });
         }
     }
 })

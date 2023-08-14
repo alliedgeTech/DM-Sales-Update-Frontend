@@ -8,18 +8,12 @@ export const StockListComponent = () => {
     var { data, isLoading } = useGetStockData();
 
     const columns = [
-        {
-            field: "id",
-            headerName: "ID",
-            width: 90,
-        },
+        { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
         { field: "company", headerName: "Company name", width: 300 },
         { field: "item", headerName: "Items", width: 250 },
         { field: "qty", headerName: "Quantity", width: 250 },
         { field: "uom", headerName: "Unit", width: 200 }
-        // { field: "price", headerName: "Price", width: 150 },
-        // { field: "total", headerName: "total price", width: 150 },
     ];
 
     const [rowData, setRowData] = useState([]);
@@ -27,13 +21,14 @@ export const StockListComponent = () => {
     const setRows = (data) => {
         var id = 0;
         const completedData = data.map((element) => {
+            console.log("stock list", element);
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);
             return {
                 id: ++id,
                 _id: element?._id,
                 company: element?.companyId.name,
-                item: element?.itemId.name,
+                item: element?.itemId?.name,
                 qty: element?.qty,
                 uom: element?.uom
             };

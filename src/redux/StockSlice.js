@@ -9,7 +9,9 @@ const StockSlice = createSlice({
     initialState,
     reducers: {
         addStock: (state, action) => {
-            state.value.push(action.payload)
+            action.payload.forEach(element => {
+                state.value.push(element)
+            });
         }
     }
 })

@@ -9,8 +9,6 @@ import { ToastContainer } from 'react-toastify';
 
 export const ListCompanyWiseItemComponent = () => {
 
-    // const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
-
     const columns = [
         { field: 'id', headerName: 'ID', width: 350 },
         { field: 'Company', headerName: 'Company', width: 300 },
@@ -42,7 +40,6 @@ export const ListCompanyWiseItemComponent = () => {
                 "Company": element.companyId?.name,
                 "Items": element.name,
             }
-
         })
         setRowData(completedData)
     }

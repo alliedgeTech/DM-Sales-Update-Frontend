@@ -9,30 +9,43 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGetCompanys, useGetItems } from '../services/companyAndItemServices';
 import { addCompany } from '../redux/CompanySlice';
 import { addItems } from '../redux/ItemSlice';
+import { useGetStockData } from '../services/stockServices';
+import { addStock } from '../redux/StockSlice';
+import { useGetPurchaseData } from '../services/purchaseServices';
+import { addPurchase } from '../redux/PurchaseSlice';
 
 export const Deshboard = () => {
 
-    const { data: companyData, isLoading: companyLoading } = useGetCompanys();
-    const { data: itemData, isLoading: itemLoading } = useGetItems();
+    var { data: companyData, isLoading: companyLoading } = useGetCompanys();
+    var { data: itemData, isLoading: itemLoading } = useGetItems();
+    var { data: stockData, isLoading: stockLoading } = useGetStockData();
+    var { data: purchaseData, isLoading: purchaseLoading } = useGetPurchaseData();
 
     const itemsData = useSelector((state) => state.items.value)
     const companiesData = useSelector((state) => state.company.value)
+    const stocksData = useSelector((state) => state.stock.value)
+    const purchasesData = useSelector((state) => state.purchase.value)
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (companyData !== undefined && companyLoading === false && companiesData.length === 0) {
-            companyData.data.data.forEach(element => {
-                dispatch(addCompany(element));
-            });
+            dispatch(addCompany(companyData.data.data));
         }
 
         if (itemData !== undefined && itemLoading === false && itemsData.length === 0) {
-            itemData.data.data.forEach(element => {
-                dispatch(addItems(element));
-            })
+            dispatch(addItems(itemData.data.data));
         }
-    }, [itemsData, companiesData, companyLoading, itemLoading])
+
+        if (stockData !== undefined && stockLoading === false && stocksData.length === 0) {
+            dispatch(addStock(stockData.data.data));
+        }
+
+        if (purchaseData !== undefined && purchaseLoading === false && purchasesData.length === 0) {
+            console.log("purchase : ", purchaseData);
+            dispatch(addPurchase(purchaseData.data.data));
+        }
+    }, [itemsData, companiesData, companyLoading, itemLoading, stockLoading, purchaseLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
@@ -295,28 +308,28 @@ export const Deshboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                 {/* -------------------------------------------------------- */}
+                                {/* -------------------------------------------------------- */}
                                 <div className="card pt-4">
                                     <div className="card-content pb-4">
                                         <div className="name ms-4 mb-0">
                                             <h5 className="mb-1 text-danger">Credit Sell Bill</h5>
                                         </div>
                                         <div className="px-4">
-                                        <Link to='/creditsellbill' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
-                                             View Credit Sell Bill
-                                        </Link>
+                                            <Link to='/creditsellbill' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                                View Credit Sell Bill
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
-                                 {/* -------------------------------------------------------- */}
-                                 <div className="card pt-4">
+                                {/* -------------------------------------------------------- */}
+                                <div className="card pt-4">
                                     <div className="card-content pb-4">
                                         <div className="name ms-4 mb-0">
                                             <h5 className="mb-1 text-danger">Debit Sell Bill</h5>
                                         </div>
                                         <div className="px-4">
                                             <Link to='debitsellbill' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
-                                                 View Debit Sell Bill
+                                                View Debit Sell Bill
                                             </Link>
                                         </div>
                                     </div>

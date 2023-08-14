@@ -26,6 +26,15 @@ export const ViewSellBill = (props) => {
       width: 150,
       renderCell: (params) => (
         <>
+        <button
+            type="button"
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target={`#primary`}
+            onClick={() => handleButtonClick1(params.row._id)}
+          >
+            <i class="bi bi-card-text text-primary"></i>
+          </button>
           <button
             className="btn btn-sm"
             data-bs-toggle="modal"
@@ -97,6 +106,7 @@ export const ViewSellBill = (props) => {
   };
 
   var [selldeleteid, setselldeleteid] = useState("")
+  var [remarks, setRemarks] = useState('')
   const deletesell = (id) => {
     setselldeleteid(id)
   }
@@ -115,6 +125,14 @@ export const ViewSellBill = (props) => {
     document.getElementsByName("_id").checked = "";
   }, [isLoading, others]);
 
+
+  const handleButtonClick1 = (id) => {
+    console.log("params id", id);
+    data?.data?.data.filter((e) => e._id === id).map((f) => {
+      setRemarks(f.remark)
+    })
+
+  } 
   return (
     <>
       <div id="main">
@@ -197,6 +215,7 @@ export const ViewSellBill = (props) => {
                         <th>Items</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -208,6 +227,7 @@ export const ViewSellBill = (props) => {
                               <td>{itm.itemId.name}</td>
                               <td>{itm.qty}</td>
                               <td>{itm.price}</td>
+                              <td>{(itm.qty)*(itm.price)}</td>
                             </tr>
                           </>
                         );
@@ -229,6 +249,49 @@ export const ViewSellBill = (props) => {
           </div>
         </div>
       </div>
+      {/* ---------------------------------------------------------------- */}
+      <div
+        className="modal fade text-left"
+        id={`primary`}
+        // id="#primary"
+        tabIndex={-1}
+        role="dialog"
+        aria-labelledby="myModalLabel160"
+        aria-hidden="true"
+      >
+        <div
+          className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+          role="document"
+        >
+          <div className="modal-content">
+            <div className="modal-header bg-primary">
+              <h5 className="modal-title white" id="myModalLabel160">
+                Other details
+              </h5>
+            </div>
+            <div className="modal-body">
+              <tr className='d-flex flex-column'>
+                <td>
+                  <h6>Remark</h6>
+                  <p>
+                    {remarks}
+                  </p>
+                </td>
+              </tr>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-light-secondary"
+                data-bs-dismiss="modal"
+              >
+                x
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ---------------------------------------------------------------- */}
       <div
         class="modal fade text-left"

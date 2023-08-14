@@ -9,7 +9,9 @@ const itemSlice = createSlice({
     initialState,
     reducers: {
         addItems: (state, action) => {
-            state.value.push(action.payload)
+            action.payload.forEach(element => {
+                state.value.push(element)
+            });
         }
     }
 })

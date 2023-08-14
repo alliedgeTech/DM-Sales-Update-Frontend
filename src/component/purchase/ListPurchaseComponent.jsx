@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { addPurchase } from "../../redux/PurchaseSlice";
 
 export const ListPurchaseComponent = () => {
-  var { data, isLoading } = useGetPurchaseData();
-
+  
   const columns = [
     {
       field: "id",
@@ -18,46 +19,63 @@ export const ListPurchaseComponent = () => {
     { field: "date", headerName: "Date", width: 220 },
     { field: "vendor", headerName: "Vendor", width: 250 },
     { field: "total", headerName: "Amount", width: 230 },
-
     {
       field: "actions",
       headerName: "View Items",
       width: 100,
       renderCell: (params) => (
-        <button
-          className="btn btn-sm"
-          data-bs-toggle="modal"
-          data-bs-target="#primaryItems"
-          onClick={() => handleButtonClick(params.row._id)}
-        >
-          <i class="bi bi-box-arrow-up"></i>
-        </button>
+        <>
+          <button
+            type="button"
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target={`#primary`}
+            onClick={() => handleButtonClick1(params.row._id)}
+          >
+            <i class="bi bi-card-text text-primary"></i>
+          </button>
+          <button
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#primaryItems"
+            onClick={() => handleButtonClick(params.row._id)}
+            >
+            <i class="bi bi-box-arrow-up"></i>
+          </button>
+        </>
       ),
     },
   ];
+  
+  const store = useSelector((state) => state)
 
-  const [rowData, setRowData] = useState([]);
+  var [rowData, setRowData] = useState([]);
   var totalPrices = 0;
-  const setRows = (data) => {
+  const setRows = () => {
     var id = 0;
-    const completedData = data.map((element) => {
-      element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
-      return {
-        id: ++id,
-        _id: element._id,
-        invoice: element.invoice,
-        date: element.date,
-        vendor: element?.vendorId?.vendorName,
-        total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
-          return accumulator + currentValue;
-        }, 0)
-      };
-    });
-    setRowData(completedData);
+
+    if (store.purchase.value.length !== 0) {
+      const completedData = store.purchase.value.map((element) => {
+        element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
+        return {
+          id: ++id,
+          _id: element._id,
+          invoice: element.invoice,
+          date: element.date,
+          vendor: element?.vendorId?.vendorName,
+          total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+          }, 0)
+        };
+      });
+      if (completedData)
+        setRowData(completedData);
+    }
   };
 
   var [others, setothers] = useState([])
   var [totalPrice, settotalPrice] = useState(0)
+  var [remarks, setRemarks] = useState('')
   const handleButtonClick = (id) => {
     others = []
     setothers(others)
@@ -74,11 +92,19 @@ export const ListPurchaseComponent = () => {
   };
 
   useEffect(() => {
-    if (data && isLoading === false) {
-      setRows(data?.data?.data);
+    setDataToRedux()
+    if (data && isLoading === false && store.purchase.value.length !== 0) {
+      setRows();
     }
-  }, [isLoading, others]);
+  }, [isLoading, others, store.purchase.value]);
 
+  const handleButtonClick1 = (id) => {
+    console.log("params id", id);
+    data?.data?.data.filter((e) => e._id === id).map((f) => {
+      setRemarks(f.remark)
+    })
+
+  }
   return (
     <>
       <div id="main">
@@ -116,7 +142,8 @@ export const ListPurchaseComponent = () => {
                 <h4 className="card-title">Enter company wise items</h4>
               </div>
               <div className="card-body">
-                {rowData.length != 0 ? (
+                {rowData.length !== 0 && store.purchase.value?.length != 0 && isLoading === false ? (
+
                   <DataGrid
                     columnVisibilityModel={{
                       status: false,
@@ -142,6 +169,47 @@ export const ListPurchaseComponent = () => {
           </section>
         </div>
       </div>
+      <div
+        className="modal fade text-left"
+        id={`primary`}
+        // id="#primary"
+        tabIndex={-1}
+        role="dialog"
+        aria-labelledby="myModalLabel160"
+        aria-hidden="true"
+      >
+        <div
+          className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+          role="document"
+        >
+          <div className="modal-content">
+            <div className="modal-header bg-primary">
+              <h5 className="modal-title white" id="myModalLabel160">
+                Other details
+              </h5>
+            </div>
+            <div className="modal-body">
+              <tr className='d-flex flex-column'>
+                <td>
+                  <h6>Remark</h6>
+                  <p>
+                    {remarks}
+                  </p>
+                </td>
+              </tr>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-light-secondary"
+                data-bs-dismiss="modal"
+              >
+                x
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="modal fade text-left w-100" id="primaryItems" tabindex="-1" aria-labelledby="myModalLabel16" style={{ "display": "none" }} aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
           <div class="modal-content">
@@ -161,6 +229,7 @@ export const ListPurchaseComponent = () => {
                         <th>Items</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -172,6 +241,7 @@ export const ListPurchaseComponent = () => {
                               <td>{itm.itemId.name}</td>
                               <td>{itm.qty}</td>
                               <td>{itm.price}</td>
+                              <td>{(itm.qty) * (itm.price)}</td>
                             </tr>
                           </>
                         );
@@ -193,6 +263,7 @@ export const ListPurchaseComponent = () => {
           </div>
         </div>
       </div>
+
     </>
   );
 };
