@@ -11,6 +11,7 @@ export const SellBillPrintComponent = (props) => {
 
     const [note, setnote] = useState(0)
     useEffect(() => {
+        console.log(id, props);
         props.onClose()
         if (note === 0) {
             SellItems = props.items?.filter(itm => itm._id === id)[0];
@@ -19,7 +20,7 @@ export const SellBillPrintComponent = (props) => {
                 grandTotal += element.qty * element.price;
                 setgrandTotal(grandTotal)
             });
-            setnote(1)  
+            setnote(1)
         }
     }, [])
     return (
@@ -142,11 +143,11 @@ export const SellBillPrintComponent = (props) => {
                                                             return (
                                                                 <tr>
                                                                     <td>{++itmId}</td>
-                                                                    <td className="text-center">{itm.companyId.name}</td>
-                                                                    <td className="text-center">{itm.itemId.name}</td>
-                                                                    <td className="text-right">{itm.qty}</td>
-                                                                    <td className="text-right">{itm.price}</td>
-                                                                    <td className="text-right">{itm.qty * itm.price}</td>
+                                                                    <td className="text-center">{itm.companyId?.name}</td>
+                                                                    <td className="text-center">{itm.itemId?.name}</td>
+                                                                    <td className="text-right">{itm?.qty}</td>
+                                                                    <td className="text-right">{itm?.price}</td>
+                                                                    <td className="text-right">{itm?.qty * itm?.price}</td>
                                                                 </tr>
                                                             )
                                                         })

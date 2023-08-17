@@ -1,9 +1,10 @@
 import { useGetSellData } from "../../services/sellServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useDeleteSell } from "../../services/sellServices"
+import { useSelector } from "react-redux";
 
 export const ViewSellBill = (props) => {
   var { data, isLoading } = useGetSellData();
@@ -26,7 +27,7 @@ export const ViewSellBill = (props) => {
       width: 150,
       renderCell: (params) => (
         <>
-        <button
+          <button
             type="button"
             className="btn btn-sm"
             data-bs-toggle="modal"
@@ -64,6 +65,7 @@ export const ViewSellBill = (props) => {
   var totalPrices = 0;
   var [sellbilltotal, setsellbilltotal] = useState(0)
   const setRows = (data) => {
+    console.log("dataaa : ", data);
     var id = 0;
     sellbilltotal = 0;
     setsellbilltotal(sellbilltotal);
@@ -96,7 +98,7 @@ export const ViewSellBill = (props) => {
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
-    const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
+    const dts = store.sell.value?.filter((d) => d._id === id)[0].items;
     dts.forEach(itm => {
       calculation += (itm.price * itm.qty)
       settotalPrice(calculation)
@@ -115,24 +117,27 @@ export const ViewSellBill = (props) => {
     mutation.mutate(selldeleteid)
   }
 
+  const store = useSelector((state) => state)
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (data && isLoading === false) {
+    if (store.sell.value.length !== 0) {
       props.onclose()
-      props.sellItems(data?.data?.data);
-      setRows(data?.data?.data);
+      props.sellItems(store.sell.value);
+      setRows(store.sell.value);
+    } else {
+      navigate("/")
     }
-
+    console.log("Storess : ", store.sell.value);
     document.getElementsByName("_id").checked = "";
-  }, [isLoading, others]);
-
+  }, []);
 
   const handleButtonClick1 = (id) => {
     console.log("params id", id);
-    data?.data?.data.filter((e) => e._id === id).map((f) => {
+    store.sell.value.filter((e) => e._id === id).map((f) => {
       setRemarks(f.remark)
     })
-
-  } 
+  }
   return (
     <>
       <div id="main">
@@ -223,11 +228,11 @@ export const ViewSellBill = (props) => {
                         return (
                           <>
                             <tr>
-                              <td>{itm.companyId.name}</td>
-                              <td>{itm.itemId.name}</td>
-                              <td>{itm.qty}</td>
-                              <td>{itm.price}</td>
-                              <td>{(itm.qty)*(itm.price)}</td>
+                              <td>{itm.companyId?.name}</td>
+                              <td>{itm.itemId?.name}</td>
+                              <td>{itm?.qty}</td>
+                              <td>{itm?.price}</td>
+                              <td>{(itm?.qty) * (itm?.price)}</td>
                             </tr>
                           </>
                         );

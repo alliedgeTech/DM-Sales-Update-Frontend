@@ -1,13 +1,12 @@
-import { useGetPurchaseData } from "../../services/purchaseServices";
+// import { useGetPurchaseData } from "../../services/purchaseServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
-import { useDispatch, useSelector } from "react-redux";
-import { addPurchase } from "../../redux/PurchaseSlice";
+import { useSelector } from "react-redux";
 
 export const ListPurchaseComponent = () => {
-  
+
   const columns = [
     {
       field: "id",
@@ -39,21 +38,21 @@ export const ListPurchaseComponent = () => {
             data-bs-toggle="modal"
             data-bs-target="#primaryItems"
             onClick={() => handleButtonClick(params.row._id)}
-            >
+          >
             <i class="bi bi-box-arrow-up"></i>
           </button>
         </>
       ),
     },
   ];
-  
+
   const store = useSelector((state) => state)
+  const navigate = useNavigate();
 
   var [rowData, setRowData] = useState([]);
   var totalPrices = 0;
   const setRows = () => {
     var id = 0;
-
     if (store.purchase.value.length !== 0) {
       const completedData = store.purchase.value.map((element) => {
         element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
@@ -70,6 +69,8 @@ export const ListPurchaseComponent = () => {
       });
       if (completedData)
         setRowData(completedData);
+    } else {
+      navigate('/')
     }
   };
 
@@ -82,7 +83,8 @@ export const ListPurchaseComponent = () => {
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
-    const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
+    const dts = store.purchase.value?.filter((d) => d._id === id)[0].items;
+    console.log("itemssss : ", dts);
     dts.forEach(itm => {
       calculation += (itm.price * itm.qty)
       settotalPrice(calculation)
@@ -92,25 +94,22 @@ export const ListPurchaseComponent = () => {
   };
 
   useEffect(() => {
-    setDataToRedux()
-    if (data && isLoading === false && store.purchase.value.length !== 0) {
-      setRows();
-    }
-  }, [isLoading, others, store.purchase.value]);
+    console.log(store.purchase.value);
+    setRows();
+  }, [store.purchase.value]);
 
   const handleButtonClick1 = (id) => {
     console.log("params id", id);
-    data?.data?.data.filter((e) => e._id === id).map((f) => {
+    store.purchase.value.filter((e) => e._id === id).map((f) => {
       setRemarks(f.remark)
     })
-
   }
   return (
     <>
       <div id="main">
         <header className="mb-3">
           <a href="#" className="burger-btn d-block d-xl-none">
-            <i className="bi bi-justify fs-3" />
+            <i className="bi bi-justify fs-3" /> 
           </a>
         </header>
         <div className="page-heading">
@@ -142,7 +141,7 @@ export const ListPurchaseComponent = () => {
                 <h4 className="card-title">Enter company wise items</h4>
               </div>
               <div className="card-body">
-                {rowData.length !== 0 && store.purchase.value?.length != 0 && isLoading === false ? (
+                {rowData.length !== 0 && store.purchase.value?.length != 0 ? (
 
                   <DataGrid
                     columnVisibilityModel={{
@@ -172,7 +171,6 @@ export const ListPurchaseComponent = () => {
       <div
         className="modal fade text-left"
         id={`primary`}
-        // id="#primary"
         tabIndex={-1}
         role="dialog"
         aria-labelledby="myModalLabel160"
@@ -237,11 +235,11 @@ export const ListPurchaseComponent = () => {
                         return (
                           <>
                             <tr>
-                              <td>{itm.companyId.name}</td>
-                              <td>{itm.itemId.name}</td>
-                              <td>{itm.qty}</td>
-                              <td>{itm.price}</td>
-                              <td>{(itm.qty) * (itm.price)}</td>
+                              <td>{itm.companyId?.name}</td>
+                              <td>{itm.itemId?.name}</td>
+                              <td>{itm?.qty}</td>
+                              <td>{itm?.price}</td>
+                              <td>{(itm?.qty) * (itm.price)}</td>
                             </tr>
                           </>
                         );
