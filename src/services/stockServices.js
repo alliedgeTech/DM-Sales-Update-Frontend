@@ -5,11 +5,9 @@ const getStock = () => {
     return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock")
 }
 
-const itemWisePurchaseStock = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/purchasestock/"+id)
-}
-const itemWiseSellStock = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/sellstock/"+id)
+
+const stockhistory = () => {
+    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/getstockbycompany/"+id)
 }
 
 export const useGetStockData = () => {
@@ -19,16 +17,9 @@ export const useGetStockData = () => {
     })
 }
 
-export const useItemWisePurchaseStockData = () => {
-    return useQuery("itemWisePurchaseStockData", itemWisePurchaseStock,{
-    retry: 5,
-    retryDelay: 1000
-  })
-}
-
-export const useItemWiseSellStockData = () => {
-    return useQuery("useItemWiseSellStockData", itemWiseSellStock,{
-    retry: 5,
-    retryDelay: 1000
-  })
+export const useHistoryData = () => {
+    return useQuery("usehistory",stockhistory ,{
+        retry: 5,
+        retryDelay: 1000
+      })
 }

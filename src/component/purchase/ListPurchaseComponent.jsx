@@ -51,6 +51,13 @@ export const ListPurchaseComponent = () => {
   const store = useSelector((state) => state)
   const navigate = useNavigate();
 
+  var totalWithGST = store?.purchase?.value?.map((element)=>{
+    element?.items.map(ele => ((ele.qty * ele.price) + ((ele.qty * ele.price * ele.gstper) / 100)))
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  })
+  
+
+
   var [rowData, setRowData] = useState([]);
   var totalPrices = 0;
   const setRows = () => {
@@ -89,6 +96,7 @@ export const ListPurchaseComponent = () => {
     console.log("datatatatatat----",store);
     dts.forEach(itm => {
       calculation += ((itm.price * itm.qty)+((itm.price * itm.qty*itm.gstper)/100))
+      settotalPrice(Math.round(calculation*100/100))
       settotalPrice(calculation)
       others.push(itm)
       setothers(others)
