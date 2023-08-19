@@ -23,14 +23,17 @@ import { useState } from "react"
 import { DateViseSellPrice } from "./component/sell/DateViseSellPrice"
 import { ItemWiseStock } from "./component/stocks/ItemWiseStock"
 import { DateWiseItemList } from "./component/sell/DateWiseItemList"
+import axios from "axios"
 
 function App() {
 
   var [isOpen, setisOpen] = useState(true)
   var [sellItems, setsellItems] = useState([])
+
+  axios.defaults.baseURL = "http://localhost:9990/distributer/api/v1/public/";
+
   return (
     <>
-      {/* <AppContext.Provider value={{ sellItems }}> */}
       <Sidebar isOpen={isOpen} />
       <Routes>
         <Route path="/" element={<Deshboard />} />
@@ -70,7 +73,6 @@ function App() {
 
         <Route path="/*" element={<Error404 onClose={() => setisOpen(false)} />} />
       </Routes>
-      {/* </AppContext.Provider> */}
     </>
   )
 }

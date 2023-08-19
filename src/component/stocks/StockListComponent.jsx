@@ -1,8 +1,8 @@
-import { useGetStockData } from "../../services/stockServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
+import { useSelector } from "react-redux";
 
 export const StockListComponent = () => {
     var { data, isLoading } = useGetStockData();
@@ -20,12 +20,7 @@ export const StockListComponent = () => {
             renderCell: (params) => (
                 <>
                     <Link
-                        // className="btn btn-sm"
-                        // data-bs-toggle="modal"
-                        // data-bs-target="#primaryItems"
-                        // onClick={() => handleButtonClick(params.row._id)}
                         to={`itemwisestock/${params.row._id}`}
-                        // to={`itemwisestock/${data?.data?.data?.itemId}`}
                     >
                         <i class="bi bi-box-arrow-up-right"></i>
                     </Link>
@@ -40,7 +35,6 @@ export const StockListComponent = () => {
         var id = 0;
         console.log("data with itemID",data?.itemId)
         const completedData = data.map((element) => {
-            console.log("stock list", element);
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);
             return {
@@ -55,13 +49,16 @@ export const StockListComponent = () => {
         setRowData(completedData);
     };
 
-    var [others, setothers] = useState([])
+    const store = useSelector((state) => state)
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (data && isLoading === false) {
-            setRows(data?.data?.data);
+        if (store.stock.value.length !== 0) {
+            setRows(store.stock.value);
+        } else {
+            navigate("/");
         }
-    }, [isLoading, others]);
+    }, []);
 
     return (
         <>
@@ -121,9 +118,6 @@ export const StockListComponent = () => {
                                         </div>
                                     </div>
                                 )}
-                                {/* <div className="col-12 col-md-6 m-2">
-                                    <h5>Stock's total price : {stockPrice}</h5>
-                                </div> */}
                             </div>
                         </div>
                     </section>

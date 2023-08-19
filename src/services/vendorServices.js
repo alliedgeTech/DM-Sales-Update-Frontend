@@ -2,23 +2,23 @@ import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 
 const getVendorDataFromDb = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/vendor/getvendor")
+    return axios.get("vendor/getvendor")
 }
 
 const postVendorData = (vendor) => {
-    return axios.post("http://localhost:9990/distributer/api/v1/public/vendor/addvendor", vendor)
+    return axios.post("vendor/addvendor", vendor)
 }
 
 const getVendorById = (id) => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + id)
+    return axios.get("vendor/vendor/" + id)
 }
 
 const UpdateVendor = async (data) => {
-    return await axios.put("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + data.id, data.data)
+    return await axios.put("vendor/vendor/" + data.id, data.data)
 }
 
 const deleteVendor = (id) => {
-    return axios.delete("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + id)
+    return axios.delete("vendor/vendor/" + id)
 }
 
 export const usevendorData = () => {

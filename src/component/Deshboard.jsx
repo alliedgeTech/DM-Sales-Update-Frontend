@@ -13,6 +13,8 @@ import { useGetStockData } from '../services/stockServices';
 import { addStock } from '../redux/StockSlice';
 import { useGetPurchaseData } from '../services/purchaseServices';
 import { addPurchase } from '../redux/PurchaseSlice';
+import { useGetSellData } from './../services/sellServices';
+import { addSell } from '../redux/SellSlice';
 
 export const Deshboard = () => {
 
@@ -20,11 +22,13 @@ export const Deshboard = () => {
     var { data: itemData, isLoading: itemLoading } = useGetItems();
     var { data: stockData, isLoading: stockLoading } = useGetStockData();
     var { data: purchaseData, isLoading: purchaseLoading } = useGetPurchaseData();
+    var { data: sellData, isLoading: sellLoading } = useGetSellData();
 
     const itemsData = useSelector((state) => state.items.value)
     const companiesData = useSelector((state) => state.company.value)
     const stocksData = useSelector((state) => state.stock.value)
     const purchasesData = useSelector((state) => state.purchase.value)
+    const sellsData = useSelector((state) => state.sell.value)
 
     const dispatch = useDispatch();
 
@@ -42,10 +46,13 @@ export const Deshboard = () => {
         }
 
         if (purchaseData !== undefined && purchaseLoading === false && purchasesData.length === 0) {
-            console.log("purchase : ", purchaseData);
             dispatch(addPurchase(purchaseData.data.data));
         }
-    }, [itemsData, companiesData, companyLoading, itemLoading, stockLoading, purchaseLoading])
+
+        if (sellsData !== undefined && sellLoading === false && sellsData.length === 0) {
+            dispatch(addSell(sellData.data.data));
+        }
+    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
