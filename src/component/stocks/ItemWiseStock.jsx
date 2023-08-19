@@ -1,20 +1,18 @@
-import { useItemWisePurchaseStockData } from "../../services/stockServices";
-import { useItemWiseSellStockData } from "../../services/stockServices";
+import { useHistoryData } from "../../services/stockServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
 
 export const ItemWiseStock = () => {
-    var { purchasedata, isLoading } = useItemWisePurchaseStockData();
-    var { selldata, isLoading } = useItemWiseSellStockData();
+    var { data, isLoading } = useHistoryData();
 
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
-        { field: "date", headerName: "Date", width: 150 },
-        // { field: "company", headerName: "Company", width: 150 },
         { field: "type", headerName: "Type", width: 150 },
+        { field: "date", headerName: "Date", width: 150 },
+        { field: "company", headerName: "Company", width: 150 },
         { field: "item", headerName: "Items", width: 150 },
         { field: "qty", headerName: "Quantity", width: 150 },
         { field: "remainingStock", headerName: "Remainig Stock", width: 200 }
@@ -24,17 +22,18 @@ export const ItemWiseStock = () => {
     var [stockPrice, setstockPrice] = useState(0)
     const setRows = (data) => {
         var id = 0;
-        const completedData = purchasedata.map((element) => {
+        const completedData = data.map((element) => {
             console.log("purchase stock list", element);
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);
             return {
                 id: ++id,
                 _id: element?._id,
+                date: element?.date,
                 company: element?.companyId.name,
                 item: element?.itemId?.name,
                 qty: element?.qty,
-                uom: element?.uom
+                remainingAmt: element?.remainingAmt
             };
         });
         setRowData(completedData);
@@ -82,7 +81,7 @@ export const ItemWiseStock = () => {
                 <section className="section">
                     <div className="card">
                         <div className="card-header">
-                            <h4 className="card-title">Stocks</h4>
+                            <h4 className="card-title">Item Wise Stock Histroy</h4>
                         </div>
                         <div className="card-body">
                             {rowData.length != 0 ? (
@@ -97,13 +96,7 @@ export const ItemWiseStock = () => {
                                 />
                             ) : (
                                 <div className="d-flex justify-content-center align-item-center my-5">
-                                    <div
-                                        class="spinner-border"
-                                        style={{ width: "3rem", height: "3rem" }}
-                                        role="status"
-                                    >
-                                        <span class="visually-hidden"></span>
-                                    </div>
+                                    <h6>No Data Available</h6>
                                 </div>
                             )}
                             {/* <div className="col-12 col-md-6 m-2">

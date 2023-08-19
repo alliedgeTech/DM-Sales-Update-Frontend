@@ -3,6 +3,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useSelector } from "react-redux";
+import { useGetStockData } from "../../services/stockServices";
 
 export const StockListComponent = () => {
     var { data, isLoading } = useGetStockData();
@@ -10,7 +11,9 @@ export const StockListComponent = () => {
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
         { field: "company", headerName: "Company name", width: 250 },
+        { field: "companyId", headerName: "", width: 0 },
         { field: "item", headerName: "Items", width: 150 },
+        { field: "itemId", headerName: "", width: 0 },
         { field: "qty", headerName: "Quantity", width: 150 },
         { field: "uom", headerName: "Unit", width: 200 },
         {
@@ -19,29 +22,33 @@ export const StockListComponent = () => {
             width: 100,
             renderCell: (params) => (
                 <>
+                        {/* onClick={h} */}
                     <Link
                         to={`itemwisestock/${params.row._id}`}
+                        // to={`itemwisestock/${params.row._id}?clientID=${clientID}&companyId=${companyId}`}
                     >
                         <i class="bi bi-box-arrow-up-right"></i>
                     </Link>
                 </>
             ),
-        },
+        },  
     ];
 
     const [rowData, setRowData] = useState([]);
     var [stockPrice, setstockPrice] = useState(0)
     const setRows = (data) => {
         var id = 0;
-        console.log("data with itemID",data?.itemId)
+        console.log("data",data);
         const completedData = data.map((element) => {
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);
             return {
                 id: ++id,
                 _id: element?._id,
-                company: element?.companyId.name,
+                company: element?.companyId?.name,
+                companyId:element?.companyId?._id,
                 item: element?.itemId?.name,
+                itemId: element?.itemId?._id,
                 qty: element?.qty,
                 uom: element?.uom
             };
@@ -53,7 +60,7 @@ export const StockListComponent = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (store.stock.value.length !== 0) {
+        if (store?.stock?.value.length !== 0) {
             setRows(store.stock.value);
         } else {
             navigate("/");
@@ -99,10 +106,10 @@ export const StockListComponent = () => {
                             <div className="card-body">
                                 {rowData.length != 0 ? (
                                     <DataGrid
-                                        columnVisibilityModel={{
-                                            status: false,
-                                            _id: false,
-                                        }}
+                                        // columnVisibilityModel={{
+                                        //     status: true,
+                                        //     _id: false,
+                                        // }}
                                         columns={columns}
                                         rows={rowData}
                                         slots={{ toolbar: GridToolbar }}
