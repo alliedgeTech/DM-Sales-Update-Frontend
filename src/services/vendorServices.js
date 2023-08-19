@@ -9,10 +9,6 @@ const postVendorData = (vendor) => {
     return axios.post("vendor/addvendor", vendor)
 }
 
-const getVendorById = (id) => {
-    return axios.get("vendor/vendor/" + id)
-}
-
 const UpdateVendor = async (data) => {
     return await axios.put("vendor/vendor/" + data.id, data.data)
 }
@@ -45,7 +41,7 @@ export const useVendorData = () => {
         retryDelay: 2000
     })
 }
-export const useDeleteVendor = (id) => {
+export const useDeleteVendor = () => {
     return useMutation("deleteClient", deleteVendor, {
         retry: 5,
         retryDelay: 2000

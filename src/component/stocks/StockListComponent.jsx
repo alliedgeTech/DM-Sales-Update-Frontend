@@ -25,7 +25,7 @@ export const StockListComponent = () => {
             return {
                 id: ++id,
                 _id: element?._id,
-                company: element?.companyId.name,
+                company: element?.companyId?.name,
                 item: element?.itemId?.name,
                 qty: element?.qty,
                 uom: element?.uom
