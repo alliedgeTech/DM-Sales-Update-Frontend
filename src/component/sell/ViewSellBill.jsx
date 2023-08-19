@@ -65,7 +65,7 @@ export const ViewSellBill = (props) => {
   var totalPrices = 0;
   var [sellbilltotal, setsellbilltotal] = useState(0)
   const setRows = (data) => {
-    console.log("dataaa : ", data);
+    console.log("data--------",data);
     var id = 0;
     sellbilltotal = 0;
     setsellbilltotal(sellbilltotal);
@@ -219,20 +219,23 @@ export const ViewSellBill = (props) => {
                         <th>Company</th>
                         <th>Items</th>
                         <th>Quantity</th>
+                        <th>Unit</th>
                         <th>Price</th>
                         <th>Total</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {others?.map((itm) => {
+                      {others?.map((itm) => {4
+                      console.log("others_____",others);
                         return (
                           <>
                             <tr>
-                              <td>{itm.companyId?.name}</td>
-                              <td>{itm.itemId?.name}</td>
-                              <td>{itm?.qty}</td>
-                              <td>{itm?.price}</td>
-                              <td>{(itm?.qty) * (itm?.price)}</td>
+                              <td>{itm.companyId.name}</td>
+                              <td>{itm?.itemId?.name}</td>
+                              <td>{itm.qty}</td>
+                              <td>{itm?.uom}</td>
+                              <td>{itm.price}</td>
+                              <td>{(itm.qty)*(itm.price)}</td>
                             </tr>
                           </>
                         );

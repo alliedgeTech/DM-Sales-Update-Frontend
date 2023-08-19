@@ -34,7 +34,7 @@ export const useGetItemCompanyWise = (company) => {
   });
 };
 
-export const useAddPurchase = (data) => {
+export const useAddPurchase = () => {
   return useMutation("addPurchase", addPurchase, {
     retry: 5,
     retryDelay: 1000,

@@ -6,6 +6,8 @@ import "../../assets/css/style.css";
 import { useSelector } from "react-redux";
 
 export const ListPurchaseComponent = () => {
+  
+  
 
   const columns = [
     {
@@ -54,7 +56,7 @@ export const ListPurchaseComponent = () => {
   const setRows = () => {
     var id = 0;
     if (store.purchase.value.length !== 0) {
-      const completedData = store.purchase.value.map((element) => {
+      const completedData = store?.purchase?.value?.map((element) => {
         element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
         return {
           id: ++id,
@@ -62,7 +64,7 @@ export const ListPurchaseComponent = () => {
           invoice: element.invoice,
           date: element.date,
           vendor: element?.vendorId?.vendorName,
-          total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+          total: element?.items.map(ele => ((ele.qty * ele.price)+((ele.qty * ele.price*ele.gstper)/100))).reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
           }, 0)
         };
@@ -83,16 +85,15 @@ export const ListPurchaseComponent = () => {
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
-    const dts = store.purchase.value?.filter((d) => d._id === id)[0].items;
-    console.log("itemssss : ", dts);
+    const dts = store?.purchase?.value?.filter((d) => d._id === id)[0].items;
+    console.log("datatatatatat----",store);
     dts.forEach(itm => {
-      calculation += (itm.price * itm.qty)
+      calculation += ((itm.price * itm.qty)+((itm.price * itm.qty*itm.gstper)/100))
       settotalPrice(calculation)
       others.push(itm)
       setothers(others)
     })
   };
-
   useEffect(() => {
     console.log(store.purchase.value);
     setRows();
@@ -100,7 +101,7 @@ export const ListPurchaseComponent = () => {
 
   const handleButtonClick1 = (id) => {
     console.log("params id", id);
-    store.purchase.value.filter((e) => e._id === id).map((f) => {
+    store?.purchase?.value.filter((e) => e._id === id).map((f) => {
       setRemarks(f.remark)
     })
   }
@@ -227,6 +228,7 @@ export const ListPurchaseComponent = () => {
                         <th>Items</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>GST</th>
                         <th>Total</th>
                       </tr>
                     </thead>
@@ -235,11 +237,12 @@ export const ListPurchaseComponent = () => {
                         return (
                           <>
                             <tr>
-                              <td>{itm.companyId?.name}</td>
-                              <td>{itm.itemId?.name}</td>
-                              <td>{itm?.qty}</td>
-                              <td>{itm?.price}</td>
-                              <td>{(itm?.qty) * (itm.price)}</td>
+                              <td>{itm?.companyId?.name}</td>
+                              <td>{itm?.itemId?.name}</td>
+                              <td>{itm.qty}</td>
+                              <td>{itm.price}</td>
+                              <td>{itm.gstper}%</td>
+                              <td>{(itm.qty*itm.price)+((itm.qty*itm.price*itm.gstper)/100)}</td>
                             </tr>
                           </>
                         );
@@ -251,7 +254,7 @@ export const ListPurchaseComponent = () => {
             </div>
             <div class="modal-footer">
               <div className="text-left">
-                Total purchase price : {totalPrice}
+                Total Purchase price : {totalPrice}
               </div>
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>
