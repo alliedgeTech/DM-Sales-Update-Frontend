@@ -1,20 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useVendorData, useDeleteVendor } from '../../services/vendorServices'
 import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { notifyDone } from "../../assets/toster"
+import { useDispatch, useSelector } from 'react-redux';
 export const ListVendorComponent = () => {
 
-    var { data, isError, isLoading, refetch } = useVendorData()
-    const mutation = useDeleteVendor()
+    const mutation = useDeleteVendor();
+    const vendorData = useSelector((state) => state.vendor.value)
+    const dispatch = useDispatch()
+    const [note, setnote] = useState(0)
 
     useEffect(() => {
-        refetch()
-    }, [isLoading, mutation.data, mutation.isLoading])
+        if (mutation.isSuccess && note === 0) {
+            setnote(1)
+            notifyDone("vendor deleted successfully.")
+        }
+
+        if (mutation.isLoading === true && note === 1) {
+            setnote(0)
+        }
+    }, [mutation]);
 
     const deleteVendor = (id) => {
+        console.log("--------> ===> ", id);
         mutation.mutate(id);
-        notifyDone("vendor deleted successfully.")
+        dispatch(deleteVendor(id))
     }
 
     return (
@@ -67,7 +78,7 @@ export const ListVendorComponent = () => {
                                     <h4 className="card-title">Vendors </h4>
                                 </div>
                                 {
-                                    data?.data?.data === undefined || data?.data?.data === isLoading ? (
+                                    mutation.isLoading === true || vendorData.length === 0 ? (
                                         <div className='d-flex justify-content-center align-item-center my-5'>
                                             <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
                                                 <span class="visually-hidden"></span>
@@ -90,7 +101,7 @@ export const ListVendorComponent = () => {
                                                     <tbody>
 
                                                         {
-                                                            data?.data?.data?.map(vendor => {
+                                                            vendorData?.map(vendor => {
                                                                 return (
                                                                     <>
                                                                         <tr>

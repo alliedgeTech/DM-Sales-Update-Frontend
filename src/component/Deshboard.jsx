@@ -15,6 +15,10 @@ import { useGetPurchaseData } from '../services/purchaseServices';
 import { addPurchase } from '../redux/PurchaseSlice';
 import { useGetSellData } from './../services/sellServices';
 import { addSell } from '../redux/SellSlice';
+import { useClientData } from '../services/clientServices';
+import { useVendorData } from '../services/vendorServices';
+import { addClient } from '../redux/ClientSlice';
+import { addVendor } from '../redux/vendorSlice';
 
 export const Deshboard = () => {
 
@@ -23,12 +27,16 @@ export const Deshboard = () => {
     var { data: stockData, isLoading: stockLoading } = useGetStockData();
     var { data: purchaseData, isLoading: purchaseLoading } = useGetPurchaseData();
     var { data: sellData, isLoading: sellLoading } = useGetSellData();
+    var { data: clientData, isLoading: clientLoading } = useClientData();
+    var { data: vendorData, isLoading: vendorLoading } = useVendorData();
 
     const itemsData = useSelector((state) => state.items.value)
     const companiesData = useSelector((state) => state.company.value)
     const stocksData = useSelector((state) => state.stock.value)
     const purchasesData = useSelector((state) => state.purchase.value)
     const sellsData = useSelector((state) => state.sell.value)
+    const clientsData = useSelector((state) => state.client.value)
+    const vendorsData = useSelector((state) => state.vendor.value)
 
     const dispatch = useDispatch();
 
@@ -49,10 +57,19 @@ export const Deshboard = () => {
             dispatch(addPurchase(purchaseData.data.data));
         }
 
-        if (sellsData !== undefined && sellLoading === false && sellsData.length === 0) {
+        if (sellData !== undefined && sellLoading === false && sellsData.length === 0) {
             dispatch(addSell(sellData.data.data));
         }
-    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading])
+
+        if (clientData !== undefined && clientLoading === false && clientsData.length === 0) {
+            dispatch(addClient(clientData.data.data));
+        }
+
+        if (vendorData !== undefined && vendorLoading === false && vendorsData.length === 0) {
+            console.log("vendor ", vendorData);
+            dispatch(addVendor(vendorData.data.data));
+        }
+    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {

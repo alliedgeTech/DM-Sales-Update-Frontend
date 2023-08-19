@@ -3,17 +3,29 @@ import { useClientData, useDeleteClient } from "../../services/clientServices";
 import { Link } from "react-router-dom";
 import { notifyErorr } from "../../assets/toster";
 import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteClients } from "../../redux/ClientSlice";
 
 export const ListClientComponent = () => {
-  var { data, isError, isLoading, refetch } = useClientData();
+
   const mutation = useDeleteClient();
+  const clientData = useSelector((state) => state.client.value)
+  const dispatch = useDispatch();
+  const [note, setnote] = useState(0)
 
   useEffect(() => {
-    refetch();
-  }, [isLoading, mutation.data, mutation.isLoading]);
+    if (mutation.isSuccess && note === 0) {
+      setnote(1)
+    }
+
+    if (mutation.isLoading === true && note === 1) {
+      setnote(0)
+    }
+  }, [mutation.data, mutation.isLoading]);
 
   const deleteClient = (id) => {
     mutation.mutate(id);
+    dispatch(deleteClients(id))
     notifyErorr("Client deleted successfully.");
   };
 
@@ -66,9 +78,8 @@ export const ListClientComponent = () => {
                 <div className="card-header">
                   <h4 className="card-title">Clients </h4>
                 </div>
-                {data === undefined ||
-                data === null ||
-                mutation.isLoading === true ? (
+                {clientData.length === 0 ||
+                  mutation.isLoading === true ? (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
                       class="spinner-border"
@@ -92,7 +103,7 @@ export const ListClientComponent = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {data.data.data?.map((client) => {
+                          {clientData?.map((client) => {
                             return (
                               <>
                                 <tr>

@@ -4,6 +4,8 @@ import itemStore from "./ItemSlice"
 import stockStore from "./StockSlice"
 import PurchaseStore from "./PurchaseSlice";
 import sellStore from './SellSlice'
+import clientStore from "./ClientSlice";
+import vendorStore from "./vendorSlice";
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +13,8 @@ export const store = configureStore({
         items: itemStore,
         stock: stockStore,
         purchase: PurchaseStore,
-        sell: sellStore
+        sell: sellStore,
+        client: clientStore,
+        vendor: vendorStore
     }
 })
