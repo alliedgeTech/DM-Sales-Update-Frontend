@@ -7,7 +7,7 @@ const getStock = () => {
 
 
 const stockhistory = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/getstockbycompany/"+id)
+    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock-history/"+id)
 }
 
 export const useGetStockData = () => {
