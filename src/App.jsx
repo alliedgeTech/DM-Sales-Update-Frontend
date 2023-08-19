@@ -21,6 +21,8 @@ import { DebitSellBill } from "./component/Deshboard/DebitSellBill"
 import { SellBillPrintComponent } from "./component/sell/SellBillPrintComponent"
 import { useState } from "react"
 import { DateViseSellPrice } from "./component/sell/DateViseSellPrice"
+import { ItemWiseStock } from "./component/stocks/ItemWiseStock"
+import { DateWiseItemList } from "./component/sell/DateWiseItemList"
 
 function App() {
 
@@ -57,12 +59,14 @@ function App() {
         <Route path="/viewsellbill" element={<ViewSellBill sellItems={setsellItems} onclose={() => setisOpen(true)} />} />
         <Route path="/viewsellbill/generate-sell-bill/:id" element={<SellBillPrintComponent items={sellItems} onClose={() => setisOpen(false)} />} />
         <Route path="/datewisesellprice" element={<DateViseSellPrice/>}/>
+        <Route path="/datewiseItemlist" element={<DateWiseItemList/>}/>
         {/* Stock API */}
         <Route path="creditsellbill" element={<CreaditSellBill />} />
         <Route path="debitsellbill" element={<DebitSellBill />} />
 
         {/* Stock API */}
         <Route path="/list-stock" element={<StockListComponent />} />
+        <Route path='/list-stock/itemwisestock/:itemId' element={<ItemWiseStock/>} />
 
         <Route path="/*" element={<Error404 onClose={() => setisOpen(false)} />} />
       </Routes>

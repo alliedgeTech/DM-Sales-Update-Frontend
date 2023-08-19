@@ -17,6 +17,7 @@ export const DateViseSellPrice = () => {
   var { register, handleSubmit, formState: { errors } } = useForm();
   const [datewiseselllist, setdatewiseselllist] = useState([])
   const mutation = useDateWiseSellBill();
+  console.log("Mutation: " ,mutation);
 
   const submitData = (data) => {
     mutation.mutate(data)

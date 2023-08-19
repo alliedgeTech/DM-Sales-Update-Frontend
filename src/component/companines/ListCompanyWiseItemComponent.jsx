@@ -56,7 +56,7 @@ export const ListCompanyWiseItemComponent = () => {
             setRows(data?.data?.data)
         }
         if (mutation.data && note === false) {
-            notifyDone("item Deleted successfully.")
+            notifyErorr("item Deleted successfully.")
             setnote(true)
             refetch()
         }

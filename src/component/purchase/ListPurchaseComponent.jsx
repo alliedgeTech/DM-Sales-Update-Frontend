@@ -1,13 +1,15 @@
 import { useGetPurchaseData } from "../../services/purchaseServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import "../../assets/css/style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { addPurchase } from "../../redux/PurchaseSlice";
 
 export const ListPurchaseComponent = () => {
   
+  
+  var navigate = useNavigate();
   const columns = [
     {
       field: "id",
@@ -48,14 +50,14 @@ export const ListPurchaseComponent = () => {
   ];
   
   const store = useSelector((state) => state)
-
+ console.log("store>>>>>>>>>>",store);
   var [rowData, setRowData] = useState([]);
   var totalPrices = 0;
   const setRows = () => {
     var id = 0;
 
     if (store.purchase.value.length !== 0) {
-      const completedData = store.purchase.value.map((element) => {
+      const completedData = store?.purchase?.value?.map((element) => {
         element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
         return {
           id: ++id,
@@ -63,13 +65,16 @@ export const ListPurchaseComponent = () => {
           invoice: element.invoice,
           date: element.date,
           vendor: element?.vendorId?.vendorName,
-          total: element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+          total: element?.items.map(ele => ((ele.qty * ele.price)+((ele.qty * ele.price*ele.gstper)/100))).reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
           }, 0)
         };
       });
       if (completedData)
         setRowData(completedData);
+    }
+    else {
+      navigate('/')
     }
   };
 
@@ -82,25 +87,23 @@ export const ListPurchaseComponent = () => {
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
-    const dts = data?.data?.data?.filter((d) => d._id === id)[0].items;
+    const dts = store?.purchase?.value?.filter((d) => d._id === id)[0].items;
+    console.log("datatatatatat----",store);
     dts.forEach(itm => {
-      calculation += (itm.price * itm.qty)
+      calculation += ((itm.price * itm.qty)+((itm.price * itm.qty*itm.gstper)/100))
       settotalPrice(calculation)
       others.push(itm)
       setothers(others)
     })
   };
-
   useEffect(() => {
-    setDataToRedux()
-    if (data && isLoading === false && store.purchase.value.length !== 0) {
-      setRows();
-    }
-  }, [isLoading, others, store.purchase.value]);
+    console.log(store.purchase.value);
+    setRows();
+  }, [store.purchase.value]);
 
   const handleButtonClick1 = (id) => {
     console.log("params id", id);
-    data?.data?.data.filter((e) => e._id === id).map((f) => {
+    store?.purchase?.value.filter((e) => e._id === id).map((f) => {
       setRemarks(f.remark)
     })
 
@@ -142,7 +145,7 @@ export const ListPurchaseComponent = () => {
                 <h4 className="card-title">Enter company wise items</h4>
               </div>
               <div className="card-body">
-                {rowData.length !== 0 && store.purchase.value?.length != 0 && isLoading === false ? (
+                {rowData.length !== 0 && store.purchase.value?.length != 0? (
 
                   <DataGrid
                     columnVisibilityModel={{
@@ -229,6 +232,7 @@ export const ListPurchaseComponent = () => {
                         <th>Items</th>
                         <th>Quantity</th>
                         <th>Price</th>
+                        <th>GST</th>
                         <th>Total</th>
                       </tr>
                     </thead>
@@ -237,11 +241,12 @@ export const ListPurchaseComponent = () => {
                         return (
                           <>
                             <tr>
-                              <td>{itm.companyId.name}</td>
-                              <td>{itm.itemId.name}</td>
+                              <td>{itm?.companyId?.name}</td>
+                              <td>{itm?.itemId?.name}</td>
                               <td>{itm.qty}</td>
                               <td>{itm.price}</td>
-                              <td>{(itm.qty) * (itm.price)}</td>
+                              <td>{itm.gstper}%</td>
+                              <td>{(itm.qty*itm.price)+((itm.qty*itm.price*itm.gstper)/100)}</td>
                             </tr>
                           </>
                         );
@@ -253,7 +258,7 @@ export const ListPurchaseComponent = () => {
             </div>
             <div class="modal-footer">
               <div className="text-left">
-                Total purchase price : {totalPrice}
+                Total Purchase price : {totalPrice}
               </div>
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>

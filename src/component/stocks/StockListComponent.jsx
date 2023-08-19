@@ -6,20 +6,39 @@ import "../../assets/css/style.css";
 
 export const StockListComponent = () => {
     var { data, isLoading } = useGetStockData();
-
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
-        { field: "company", headerName: "Company name", width: 300 },
-        { field: "item", headerName: "Items", width: 250 },
-        { field: "qty", headerName: "Quantity", width: 250 },
-        { field: "uom", headerName: "Unit", width: 200 }
+        { field: "company", headerName: "Company name", width: 250 },
+        { field: "item", headerName: "Items", width: 150 },
+        { field: "qty", headerName: "Quantity", width: 150 },
+        { field: "uom", headerName: "Unit", width: 200 },
+        {
+            field: "actions",
+            headerName: "View Items",
+            width: 100,
+            renderCell: (params) => (
+                <>
+                    <Link
+                        // className="btn btn-sm"
+                        // data-bs-toggle="modal"
+                        // data-bs-target="#primaryItems"
+                        // onClick={() => handleButtonClick(params.row._id)}
+                        to={`itemwisestock/${params.row._id}`}
+                        // to={`itemwisestock/${data?.data?.data?.itemId}`}
+                    >
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </Link>
+                </>
+            ),
+        },
     ];
 
     const [rowData, setRowData] = useState([]);
     var [stockPrice, setstockPrice] = useState(0)
     const setRows = (data) => {
         var id = 0;
+        console.log("data with itemID",data?.itemId)
         const completedData = data.map((element) => {
             console.log("stock list", element);
             stockPrice += (element.price * element.qty);

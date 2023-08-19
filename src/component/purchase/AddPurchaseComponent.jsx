@@ -23,6 +23,12 @@ export const AddPurchaseComponent = () => {
         message: "maximum words length is 200.",
       },
     },
+    gstper:{
+      required:{
+        value: true,
+        message: "GST No is required.",
+      }
+    },
     companyId: {
       required: {
         value: true,
@@ -104,7 +110,7 @@ export const AddPurchaseComponent = () => {
   var navigate = useNavigate();
 
   var {
-    register: vendorRegister,
+    register: vendorRegister, 
     handleSubmit: vendorSubmit,
     formState: { errors: vendorError },
   } = useForm();
@@ -123,6 +129,7 @@ export const AddPurchaseComponent = () => {
 
   var [purchaseItems, setPurchaseItems] = useState([]);
   const submitData = (data) => {
+    console.log("data..---->>>",data);
     data.id = ids;
     setids((ids += 1));
     setPurchaseItems([...purchaseItems, data]);
@@ -150,14 +157,23 @@ export const AddPurchaseComponent = () => {
     setPurchaseItems(purchaseItems);
   };
 
-  const setTotalRs = (price) => {
+  const setTotalRs = (gstper) => {
     var qty = document.getElementById("qty").value;
-    if (qty <= 0) {
-    } else {
-      var p = price * qty;
-      document.getElementById("totalPrice").value = p;
-    }
-  };
+    var price = document.getElementById("price").value;
+    // alert((qty)*(price)*(gstper))
+      if (qty <= 0) {
+      } 
+      else if(gstper==0)
+      {
+        var p = (price * qty);
+        document.getElementById("totalPrice").value = p;
+      }
+      else {
+          var p = (price*qty)+((price * qty* gstper)/100);
+          document.getElementById("totalPrice").value = p;
+        }
+      };
+    
 
   var billMutation = useGetUniqueBillNo();
   const getBillUnique = (value) => {
@@ -254,7 +270,7 @@ export const AddPurchaseComponent = () => {
               }}
             >
               <div className="card-header">
-                <h4 className="card-title">Vendor and ohter info </h4>
+                <h4 className="card-title">Vendor and other info </h4>
               </div>
               <div className="card-body">
                 <form onSubmit={vendorSubmit(submitBeforeData)}>
@@ -437,13 +453,26 @@ export const AddPurchaseComponent = () => {
                             className="form-control"
                             id="price"
                             placeholder="Enter quantity."
-                            onKeyUpCapture={(event) =>
-                              setTotalRs(event.target.value)
-                            }
+                           
                             {...register("price", validation.price)}
                           />
                           <span className="text-danger font-weight-bold">
                             {errors?.price?.message}
+                          </span>
+                        </div>
+                        <div className="form-group mandatory">
+                          <label htmlFor="totalPrice" class="form-label">
+                            Total price
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="totalPrice"
+                            disabled="true"
+                          // {...register("totalprice", { value: totalPrice })}
+                          />
+                          <span className="text-danger font-weight-bold">
+                            {errors?.totalPrice?.message}
                           </span>
                         </div>
                       </div>
@@ -489,21 +518,31 @@ export const AddPurchaseComponent = () => {
                           </span>
                         </div>
                         <div className="form-group mandatory">
-                          <label htmlFor="totalPrice" class="form-label">
-                            Total price
+                          <label htmlFor="item" class="form-label">
+                           Select GST
                           </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="totalPrice"
-                            disabled="true"
-                          // {...register("totalprice", { value: totalPrice })}
-                          />
+                          <select 
+                           class="form-select"
+                           id="gstper"
+                           onChangeCapture={(event) =>
+                            setTotalRs(event.target.value)
+                          }
+                          // onVolumeChange={changeGstValue}
+                           {...register("gstper", validation.gstper)}
+                           >
+                            
+                            <option >Select GST Per</option>
+                            <option value={0}>0%</option>
+                            <option value={5}>5%</option>
+                            <option value={12}>12%</option>
+                            <option value={18}>18%</option>
+                            <option value={28}>28%</option>
+                          </select>
                           <span className="text-danger font-weight-bold">
-                            {errors?.totalPrice?.message}
+                            {errors?.gstper?.message}
                           </span>
                         </div>
-                        <div class="d-flex justify-content-between form-group">
+                        <div class="d-flex justify-content-between form-group mt-5">
                           <div className="">
                             <button
                               type="submit"
@@ -573,6 +612,7 @@ export const AddPurchaseComponent = () => {
                           <th>Quantity</th>
                           <th>Uom</th>
                           <th>Price</th>
+                          <th>GST</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -598,6 +638,7 @@ export const AddPurchaseComponent = () => {
                                 <td className="text-bold-500">{item.qty}</td>
                                 <td>{item.uom}</td>
                                 <td>{item.price}</td>
+                                <td>{item.gstper}%</td>
                                 <td>
                                   <button
                                     type="button"
