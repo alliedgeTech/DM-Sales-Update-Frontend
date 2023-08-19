@@ -36,13 +36,13 @@ export const useEditVendor = (id, vendor) => {
 }
 export const useVendorData = () => {
 
-    return useQuery("getClient", getVendorDataFromDb, {
+    return useQuery("getVendor", getVendorDataFromDb, {
         retry: 5,
         retryDelay: 2000
     })
 }
 export const useDeleteVendor = () => {
-    return useMutation("deleteClient", deleteVendor, {
+    return useMutation("deleteVendor", deleteVendor, {
         retry: 5,
         retryDelay: 2000
     })
