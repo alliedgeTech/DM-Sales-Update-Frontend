@@ -69,7 +69,7 @@ export const DebitSellBill = () => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 0 ? "Debit" : "?",
-        total: element?.total
+        total: Math.round(element?.total)
       };
     })
     setRowData(completedData);
@@ -157,7 +157,7 @@ export const DebitSellBill = () => {
                   </div>
                 )}
                 <div className="col-12 col-md-6 m-2">
-                  <h5>Total Debit Bill Price : {debitprice}</h5>
+                  <h5>Total Debit Bill Price : {Math.round(debitprice)}</h5>
                 </div>
               </div>
             </div>

@@ -71,9 +71,9 @@ export const ListPurchaseComponent = () => {
           invoice: element.invoice,
           date: element.date,
           vendor: element?.vendorId?.vendorName,
-          total: element?.items.map(ele => ((ele.qty * ele.price)+((ele.qty * ele.price*ele.gstper)/100))).reduce((accumulator, currentValue) => {
+          total: Math.round(element?.items.map(ele => ((ele.qty * ele.price)+((ele.qty * ele.price*ele.gstper)/100))).reduce((accumulator, currentValue) => {
             return accumulator + currentValue;
-          }, 0)
+          }, 0))
         };
       });
       if (completedData)
@@ -96,7 +96,6 @@ export const ListPurchaseComponent = () => {
     console.log("datatatatatat----",store);
     dts.forEach(itm => {
       calculation += ((itm.price * itm.qty)+((itm.price * itm.qty*itm.gstper)/100))
-      settotalPrice(Math.round(calculation*100/100))
       settotalPrice(calculation)
       others.push(itm)
       setothers(others)
@@ -250,7 +249,7 @@ export const ListPurchaseComponent = () => {
                               <td>{itm.qty}</td>
                               <td>{itm.price}</td>
                               <td>{itm.gstper}%</td>
-                              <td>{(itm.qty*itm.price)+((itm.qty*itm.price*itm.gstper)/100)}</td>
+                              <td>{Math.round((itm.qty*itm.price)+((itm.qty*itm.price*itm.gstper)/100))}</td>
                             </tr>
                           </>
                         );
@@ -262,7 +261,7 @@ export const ListPurchaseComponent = () => {
             </div>
             <div class="modal-footer">
               <div className="text-left">
-                Total Purchase price : {totalPrice}
+                Total Purchase price : {Math.round(totalPrice)}
               </div>
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>

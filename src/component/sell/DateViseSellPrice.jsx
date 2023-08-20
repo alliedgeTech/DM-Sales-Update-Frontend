@@ -31,6 +31,7 @@ export const DateViseSellPrice = () => {
 
   useEffect(() => {
     if (mutation.data && mutation.isLoading === false) {
+      console.log("mutation data",mutation.data);
       setitem(mutation.data.data.data)
       var tempupi=0,tempcash=0,tempCheque=0,tempdebit=0,temptotalsellAmt=0;
       item.forEach((itm)=>{
@@ -54,7 +55,7 @@ export const DateViseSellPrice = () => {
                 })
                 setCheque(tempCheque)
           }
-          else if(itm.paymentMode=="")
+          else if(itm.paymentType==0)
           {
                 itm.items.forEach((x)=>{
                   tempdebit+=x.price*x.qty
@@ -180,20 +181,20 @@ export const DateViseSellPrice = () => {
                     </tbody>
                   </table>
                   <div className="col-12 col-md-6 m-2">
-                <h6>Total of UPI : {sellupipayment}</h6>
+                <h6>Total of UPI : {Math.round(sellupipayment)}</h6>
               </div>
               <div className="col-12 col-md-6 m-2">
-                <h6>Total of Cash : {cash}</h6>
+                <h6>Total of Cash : {Math.round(cash)}</h6>
               </div>
               <div className="col-12 col-md-6 m-2">
-                <h6>Total of Cheque : {Cheque}</h6>
+                <h6>Total of Cheque : {Math.round(Cheque)}</h6>
               </div>
               <div className="col-12 col-md-6 m-2">
-                <h6>Total of Debit : {debit}</h6>
+                <h6>Total of Debit : {Math.round(debit)}</h6>
               </div>
               <p>--------------------------------</p>
               <div className="col-12 col-md-6 m-2">
-                <h6>Total Sell Amount :{(+sellupipayment)+(+cash)+(+Cheque)+(+debit)}</h6>
+                <h6>Total Sell Amount :{Math.round((+sellupipayment)+(+cash)+(+Cheque)+(+debit))}</h6>
               </div>
                 </div>
               </div>

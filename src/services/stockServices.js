@@ -1,13 +1,14 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 
 const getStock = () => {
     return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock")
 }
 
 
-const stockhistory = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/getstockbycompany/"+id)
+const stockhistory = (id) => {
+    console.log("id param", id.itemId);
+    return axios.put("http://localhost:9990/distributer/api/v1/public/stock/stock-history/" + id.itemId)
 }
 
 export const useGetStockData = () => {
@@ -17,9 +18,9 @@ export const useGetStockData = () => {
     })
 }
 
-export const useHistoryData = () => {
-    return useQuery("usehistory",stockhistory ,{
+export const useHistoryData = (id) => {
+    return useMutation("usehistory", stockhistory, {
         retry: 5,
-        retryDelay: 1000
-      })
+        retryDelay: 2000
+    })
 }

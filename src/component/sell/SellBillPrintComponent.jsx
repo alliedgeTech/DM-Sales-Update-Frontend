@@ -147,7 +147,7 @@ export const SellBillPrintComponent = (props) => {
                                                                     <td className="text-center">{itm.itemId?.name}</td>
                                                                     <td className="text-right">{itm?.qty}</td>
                                                                     <td className="text-right">{itm?.price}</td>
-                                                                    <td className="text-right">{itm?.qty * itm?.price}</td>
+                                                                    <td className="text-right">{Math.round(itm?.qty * itm?.price)}</td>
                                                                 </tr>
                                                             )
                                                         })
@@ -161,7 +161,7 @@ export const SellBillPrintComponent = (props) => {
                                                         <td className="no-line">
                                                             <strong className='text-black'>Grand Total</strong>
                                                         </td>
-                                                        <td className="text-black"><b>{grandTotal}</b></td>
+                                                        <td className="text-black"><b>{Math.round(grandTotal)}</b></td>
                                                     </tr>
                                                     <br />
                                                     <br />

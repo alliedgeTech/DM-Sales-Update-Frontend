@@ -51,7 +51,7 @@ export const DateWiseItemList = () => {
                     qty: element?.qty,
                     uom: element?.uom,
                     price: element?.price,
-                    total:((element?.qty)*(element?.price))
+                    total:Math.round(((element?.qty)*(element?.price)))
                 };
                 array.push(thisData);
             });
@@ -166,7 +166,7 @@ export const DateWiseItemList = () => {
                                     </div>
                                 )}
                                 <div className="col-12 col-md-6 m-2">
-                                    <h5>Total selling Price : {total}</h5>
+                                    <h5>Total selling Price : {Math.round(total)}</h5>
                                 </div>
                             </div>
                         </div>
