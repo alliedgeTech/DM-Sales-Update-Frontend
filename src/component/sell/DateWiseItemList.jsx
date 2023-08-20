@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useDateWiseSellBill } from "../../services/sellServices"
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 export const DateWiseItemList = () => {
     const validation = {
         date: {
@@ -76,6 +76,15 @@ export const DateWiseItemList = () => {
         setitemdate(data.date)
         setRowData
     }
+
+    const CustomToolbar = () => {
+        return (
+          <GridToolbarContainer>
+            <GridToolbar />
+            <h5 style={{paddingTop:"10px"}}>Date Wise Item Summary:{itemdate}</h5>
+          </GridToolbarContainer>
+        );
+      };
     return (
         <>
             <div id="main">
@@ -152,7 +161,10 @@ export const DateWiseItemList = () => {
                                         }}
                                         columns={columns}
                                         rows={rowData}
-                                        slots={{ toolbar: GridToolbar }}
+                                        // slots={{ toolbar: GridToolbar }}
+                                        components={{
+                                            Toolbar: CustomToolbar,
+                                          }}
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">

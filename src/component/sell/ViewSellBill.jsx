@@ -1,6 +1,6 @@
 import { useGetSellData } from "../../services/sellServices";
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useDeleteSell } from "../../services/sellServices"
@@ -18,7 +18,7 @@ export const ViewSellBill = (props) => {
     { field: "_id", headerName: "", width: "0" },
     { field: "sellbillno", headerName: "Bill no", width: 150 },
     { field: "date", headerName: "Date", width: 150 },
-    { field: "client", headerName: "Client", width: 250 },
+    { field: "client", headerName: "Client", width: 200 },
     { field: "paymentType", headerName: "PaymentType", width: 150 },
     { field: "total", headerName: "Amount", width: 150 },
     {
@@ -138,6 +138,16 @@ export const ViewSellBill = (props) => {
       setRemarks(f.remark)
     })
   }
+
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+        <h5 style={{paddingTop:"12px"}}>Sell Bill List Total:{Math.round(sellbilltotal)}</h5>
+      </GridToolbarContainer>
+    );
+  };
+  
   return (
     <>
       <div id="main">
@@ -179,8 +189,10 @@ export const ViewSellBill = (props) => {
                   <DataGrid
                     columns={columns}
                     rows={rowData}
-                    slots={{ toolbar: GridToolbar }}
-                  />
+                    components={{
+                      Toolbar: CustomToolbar,
+                    }}
+                    />
                 ) : (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div

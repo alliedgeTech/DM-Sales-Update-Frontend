@@ -1,7 +1,7 @@
 import { useGetSellData } from "../../services/sellServices";
 import { useForm } from "react-hook-form"
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useUpdateDebitMoney } from "../../services/sellServices"
@@ -98,6 +98,14 @@ export const DebitSellBill = () => {
     setdebitpriceid(id);
   }
 
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+        <h5 style={{paddingTop:"12px"}}>DebitSell Bill List Total: {Math.round(debitprice)}</h5>
+      </GridToolbarContainer>
+    );
+  };
   return (
     <>
       <div id="main">
@@ -143,7 +151,10 @@ export const DebitSellBill = () => {
                     }}
                     columns={columns}
                     rows={rowData}
-                    slots={{ toolbar: GridToolbar }}
+                    // slots={{ toolbar: GridToolbar }}
+                    components={{
+                      Toolbar: CustomToolbar,
+                    }}
                   />
                 ) : (
                   <div className="d-flex justify-content-center align-item-center my-5">

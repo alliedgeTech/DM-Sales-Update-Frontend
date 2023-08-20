@@ -1,6 +1,6 @@
 import { useGetSellData } from "../../services/sellServices";
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
 
@@ -72,6 +72,15 @@ export const CreaditSellBill = () => {
         }
     }, [isLoading]);
 
+    const CustomToolbar = () => {
+        return (
+          <GridToolbarContainer>
+            <GridToolbar />
+            <h5 style={{paddingTop:"12px"}}>CreditSell Bill List Total: {Math.round(creditprice)}</h5>
+          </GridToolbarContainer>
+        );
+      };
+      
 
     return (
         <>
@@ -118,7 +127,9 @@ export const CreaditSellBill = () => {
                                         }}
                                         columns={columns}
                                         rows={rowData}
-                                        slots={{ toolbar: GridToolbar }}
+                                        components={{
+                                            Toolbar: CustomToolbar,
+                                          }}
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">

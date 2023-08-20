@@ -1,6 +1,6 @@
 // import { useGetPurchaseData } from "../../services/purchaseServices";
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useSelector } from "react-redux";
@@ -59,11 +59,16 @@ export const ListPurchaseComponent = () => {
 
 
   var [rowData, setRowData] = useState([]);
+  var [purchase, setpurchase] = useState(0)
   var totalPrices = 0;
   const setRows = () => {
     var id = 0;
     if (store.purchase.value.length !== 0) {
       const completedData = store?.purchase?.value?.map((element) => {
+        purchase += element?.items.map(ele => ((ele.qty * ele.price)+((ele.qty * ele.price*ele.gstper)/100))).reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0)
+        setpurchase(purchase)
         element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
         return {
           id: ++id,
@@ -112,6 +117,16 @@ export const ListPurchaseComponent = () => {
       setRemarks(f.remark)
     })
   }
+
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+        <h5 style={{paddingTop:"12px"}}>Purchase Bill List Total:{Math.round(purchase)}</h5>
+      </GridToolbarContainer>
+    );
+  };
+  
   return (
     <>
       <div id="main">
@@ -158,7 +173,10 @@ export const ListPurchaseComponent = () => {
                     }}
                     columns={columns}
                     rows={rowData}
-                    slots={{ toolbar: GridToolbar }}
+                    // slots={{ toolbar: GridToolbar }}
+                    components={{
+                      Toolbar: CustomToolbar,
+                    }}
                   />
                 ) : (
                   <div className="d-flex justify-content-center align-item-center my-5">
@@ -172,6 +190,9 @@ export const ListPurchaseComponent = () => {
                   </div>
                 )}
               </div>
+              <div className="col-12 col-md-6 m-2">
+                  <h5>Total Sell Bill Price : {Math.round(purchase)}</h5>
+                </div>
             </div>
           </section>
         </div>
