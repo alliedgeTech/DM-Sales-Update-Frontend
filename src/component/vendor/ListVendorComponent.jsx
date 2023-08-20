@@ -85,7 +85,6 @@ export const ListVendorComponent = () => {
                                             </div>
                                         </div>
                                     ) : (
-
                                         <div className="card-content p-2">
                                             <div className="table-responsive">
                                                 <table className="table mb-0">

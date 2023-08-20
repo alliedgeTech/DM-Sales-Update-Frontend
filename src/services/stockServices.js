@@ -7,7 +7,7 @@ const getStock = () => {
 
 
 const stockhistory = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock-history/"+id)
+    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock-history/" + id)
 }
 
 export const useGetStockData = () => {
@@ -18,8 +18,8 @@ export const useGetStockData = () => {
 }
 
 export const useHistoryData = () => {
-    return useQuery("usehistory",stockhistory ,{
+    return useQuery("usehistory", stockhistory, {
         retry: 5,
         retryDelay: 1000
-      })
+    })
 }

@@ -1,4 +1,4 @@
-import { useGetSellData } from "../../services/sellServices";
+import { useGetSellData, useGetSellPriceHistory } from "../../services/sellServices";
 import { useForm } from "react-hook-form"
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -9,18 +9,30 @@ import { useUpdateDebitMoney } from "../../services/sellServices"
 
 export const DebitSellBill = () => {
 
-
   const validation = {
     debitMoney: {
       required: {
         value: true,
-        message: "pleaase Add Money"
+        message: "Please Add Money"
+      },
+    },
+    type: {
+      required: {
+        value: true,
+        message: "Please select the payment type."
+      },
+    },
+    date: {
+      required: {
+        value: true,
+        message: "Please select the Date."
       },
     }
   }
 
   var { register, handleSubmit, formState: { errors } } = useForm();
-  var { data, isLoading, refetch } = useGetSellData();
+  const { data, isLoading, refetch } = useGetSellData();
+  const { data: sellHistoryData, isLoading: sellHistoryLoading, refetch: historyRefetch } = useGetSellPriceHistory();
 
   const columns = [
     {
@@ -39,17 +51,30 @@ export const DebitSellBill = () => {
       headerName: "View Items",
       width: 100,
       renderCell: (params) => (
-        <button
-          className="btn btn-sm"
-          data-bs-toggle="modal"
-          data-bs-target="#primaryItems"
-          onClick={() => handleButtonClick(params.row._id, params.row.total)}
-        >
-          <i class="bi bi-box-arrow-up"></i>
-        </button>
+        <>
+          <button
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#primaryItems"
+            onClick={() => handleButtonClick(params.row._id, params.row.total)}
+          >
+            <i class="bi bi-box-arrow-up"></i>
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target={`#primary`}
+            onClick={() => setrowId(params.row._id)}
+          >
+            <i class="bi bi-card-text text-primary"></i>
+          </button>
+        </>
       ),
     },
   ];
+
+  const [rowId, setrowId] = useState("")
 
   const [rowData, setRowData] = useState([]);
 
@@ -78,7 +103,9 @@ export const DebitSellBill = () => {
 
   var mutation = useUpdateDebitMoney();
   const adddebitPrice = (data) => {
-    mutation.mutate({ "_Id": debitpriceid, price: data.debitMoney })
+    data._Id = debitpriceid;
+    console.log(data);
+    mutation.mutate(data)
     document.getElementById("forms").reset();
   }
 
@@ -90,11 +117,13 @@ export const DebitSellBill = () => {
     }
     else if (mutation.data && mutation.isLoading === true) {
       refetch()
+      historyRefetch();
     }
+    console.log(sellHistoryData);
   }, [isLoading, mutation]);
 
   const [debitpriceid, setdebitpriceid] = useState("")
-  const handleButtonClick = (id, total) => {
+  const handleButtonClick = (id) => {
     setdebitpriceid(id);
   }
 
@@ -190,23 +219,50 @@ export const DebitSellBill = () => {
                   <form onSubmit={handleSubmit(adddebitPrice)} id='forms'>
                     <div className="col-md-12 px-2">
                       <div class="form-group mandatory">
-                        <label for="first-name-column" class="form-label">Add Money</label>
+                        <label for="addDebitMoney" class="form-label">Add Amount</label>
                         <input type="number"
                           id="addDebitMoney"
                           class="form-control"
-                          placeholder="Add Debit Money"
+                          placeholder="Add Debit amount"
                           name="fname-column"
                           data-parsley-required="true"
                           {...register("debitMoney", validation.debitMoney)}
                         />
-                      </div>
-                      <div className="d-flex justify-content-between">
                         <span className="text-danger font-weight-bold">
                           {errors?.debitMoney?.message}
                         </span>
+                      </div>
+                      <div class="form-group mandatory">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date"
+                          id="date"
+                          class="form-control"
+                          data-parsley-required="true"
+                          {...register("date", validation.date)}
+                        />
+                        <span className="text-danger font-weight-bold">
+                          {errors?.date?.message}
+                        </span>
+                      </div>
+                      <fieldset class="form-group mandatory">
+                        <label htmlFor="paymentMode" class="form-label">Select Payment Mode</label>
+                        <select class="form-select" id="type"
+                          {...register("type", validation.type)}>
+                          <option value="">Select PaymentMode</option>
+                          <option value="Cash">Cash</option>
+                          <option value="UPI">UPI</option>
+                          <option value="Cheque">Cheque</option>
+                          <option value="Credit Card">Credit Card</option>
+                          <option value="Debit Card">Debit Card</option>
+                        </select>
+                        <span className="text-danger font-weight-bold">
+                          {errors?.type?.message}
+                        </span>
+                      </fieldset>
+                      <div className="d-flex flex-row-reverse">
                         <button type="submit"
-                          class="btn btn-primary me-2 mb-4"
-                          data-bs-dismiss="modal"
+                          class="btn btn-primary w-25"
+                          data-bs-dismiss={errors?.type?.message?.length !== 0 ? "no" : "modal"}
                         >Add
                         </button>
                       </div>
@@ -219,6 +275,60 @@ export const DebitSellBill = () => {
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>
                 <span class="d-none d-sm-block">Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade text-left w-100" id="primary" tabindex="-1" aria-labelledby="myModalLabel16" style={{ "display": "none" }} aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header bg-primary">
+              <h5 className="modal-title white" id="myModalLabel160">
+                Sell's history
+              </h5>
+            </div>
+            <div className="modal-body">
+              <tr className='d-flex flex-column'>
+                <td>
+                  <div className="card-content p-2">
+                    <div className="table-responsive">
+                      <table className="table mb-0">
+                        <thead className="thead-dark">
+                          <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            sellHistoryData?.data?.data?.filter(d => d.sellId === rowId).map(hist => {
+                              return (
+                                <>
+                                  <tr>
+                                    <td>{hist?.date}</td>
+                                    <td>{hist?.type}</td>
+                                    <td>{hist?.amount}</td>
+                                  </tr>
+                                </>
+                              )
+                            })
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-light-secondary"
+                data-bs-dismiss="modal"
+              >
+                x
               </button>
             </div>
           </div>

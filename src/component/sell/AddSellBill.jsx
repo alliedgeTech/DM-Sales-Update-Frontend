@@ -148,7 +148,7 @@ export const AddSellBill = () => {
   }
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
-  const [paymentwise, setpaymentwise] = useState([])
+  // const [paymentwise, setpaymentwise] = useState([])
   const submitData = (data) => {
     data.id = ids;
     setids((ids += 1));
@@ -169,18 +169,15 @@ export const AddSellBill = () => {
     }
   };
 
+
+  var [paymentDisable, setpaymentDisable] = useState(true)
   const getPaymentWise = (data) => {
-    if (data !== "" && data !== null) {
-      document.getElementById("paymentMode").disabled = false;
-      setpaymentwise(data);
-      if (data === 1) {
-        document.getElementById("paymentMode").disabled = true
-      } else {
-        document.getElementById("paymentMode").disabled = false
-      }
+    if (data == 1) {
+      setpaymentDisable(false)
     } else {
-      document.getElementById("paymentMode").disabled = true;
+      setpaymentDisable(true)
     }
+    console.log(data, paymentDisable);
   };
 
   const deleteItems = (id) => {
@@ -235,7 +232,7 @@ export const AddSellBill = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-  }, [itemsData, companiesData, stocksData, companyId, mutation]);
+  }, [itemsData, companiesData, stocksData, companyId, mutation, paymentDisable]);
 
   return (
     <>
@@ -305,7 +302,6 @@ export const AddSellBill = () => {
                           {clientError?.clientId?.message}
                         </span>
                       </fieldset>
-                      {/* --------------------------------------------------------------------------------------------------- */}
                       <fieldset class="form-group mandatory">
                         <label htmlFor="paymentType" class="form-label">Select Payment Type:</label>
                         <select class="form-select" id="paymentType"
@@ -322,7 +318,6 @@ export const AddSellBill = () => {
                           {clientError?.paymentType?.message}
                         </span>
                       </fieldset>
-                      {/* ---------------------------------------------------------------------------------------------------------- */}
 
                       <div className="form-group mandatory">
                         <label htmlFor="date" class="form-label">
@@ -350,7 +345,7 @@ export const AddSellBill = () => {
                           className="form-control"
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
-                          //// onBlurCapture={(event) => disableInvoice(event.target.value)}
+                          //// onBlurCapture={(event)  => disableInvoice(event.target.value)}
                           {...clientRegister("sellbillno", validation.sellbillno)}
                         />
                         <span className="text-danger font-weight-bold">
@@ -360,8 +355,8 @@ export const AddSellBill = () => {
 
                       <div className="form-group mandatory">
                         <fieldset class="form-group mandatory">
-                          <label htmlFor="paymentMode" class="form-label">Select Payment Mode:</label>
-                          <select class="form-select" id="paymentMode" disabled="true"
+                          <label htmlFor="paymentMode" class="form-label">Select Payment Mode</label>
+                          <select class="form-select" id="paymentMode" disabled={paymentDisable}
                             {...clientRegister("paymentMode")}>
                             <option value="">Select PaymentMode</option>
                             <option value="Cash">Cash</option>

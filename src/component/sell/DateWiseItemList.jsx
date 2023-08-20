@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useDateWiseSellBill } from "../../services/sellServices"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+
 export const DateWiseItemList = () => {
     const validation = {
         date: {
@@ -13,8 +14,6 @@ export const DateWiseItemList = () => {
         }
     }
     const mutation = useDateWiseSellBill();
-    //   var { data, isLoading, refetch } = useDateWiseSellBill();
-
 
     var { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -35,9 +34,7 @@ export const DateWiseItemList = () => {
     const [rowData, setRowData] = useState([]);
     var [total, settotal] = useState(0)
     const setRows = (data) => {
-        console.log("Data_____________",data);
         var id = 0; total = 0;
-        console.log("data____", data);
         var array = [];
         data?.forEach((element1) => {
             element1.items?.forEach((element) => {
@@ -59,11 +56,9 @@ export const DateWiseItemList = () => {
      setRowData([...rowData, ...array]);
     };
 
-    //   var [note, setnote] = useState(1)&& note === 
     useEffect(() => {
         if (mutation.data && mutation.isLoading === false) {
             setRows(mutation.data.data.data);
-            //   setnote(0)
         }
         else if (mutation.data && mutation.isLoading === true) {
             refetch()

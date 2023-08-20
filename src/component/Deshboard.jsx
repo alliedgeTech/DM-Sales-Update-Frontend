@@ -13,12 +13,13 @@ import { useGetStockData } from '../services/stockServices';
 import { addStock } from '../redux/StockSlice';
 import { useGetPurchaseData } from '../services/purchaseServices';
 import { addPurchase } from '../redux/PurchaseSlice';
-import { useGetSellData } from './../services/sellServices';
+import { useGetSellData, useGetSellPriceHistory } from './../services/sellServices';
 import { addSell } from '../redux/SellSlice';
 import { useClientData } from '../services/clientServices';
 import { useVendorData } from '../services/vendorServices';
 import { addClient } from '../redux/ClientSlice';
 import { addVendor } from '../redux/vendorSlice';
+import { addSellHistory } from '../redux/sellPriceHistorySlice';
 
 export const Deshboard = () => {
 
@@ -29,6 +30,7 @@ export const Deshboard = () => {
     var { data: sellData, isLoading: sellLoading } = useGetSellData();
     var { data: clientData, isLoading: clientLoading } = useClientData();
     var { data: vendorData, isLoading: vendorLoading } = useVendorData();
+    var { data: sellPriceHistoryData, isLoading: sellPriceHistoryLoading } = useGetSellPriceHistory();
 
     const itemsData = useSelector((state) => state.items.value)
     const companiesData = useSelector((state) => state.company.value)
@@ -37,6 +39,7 @@ export const Deshboard = () => {
     const sellsData = useSelector((state) => state.sell.value)
     const clientsData = useSelector((state) => state.client.value)
     const vendorsData = useSelector((state) => state.vendor.value)
+    const sellPriceHistories = useSelector((state) => state.sellPriceHistory.value)
 
     const dispatch = useDispatch();
 
@@ -66,10 +69,14 @@ export const Deshboard = () => {
         }
 
         if (vendorData !== undefined && vendorLoading === false && vendorsData.length === 0) {
-            console.log("vendor ", vendorData);
             dispatch(addVendor(vendorData.data.data));
         }
-    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading])
+
+        if (sellPriceHistoryData !== undefined && sellPriceHistoryLoading === false && sellPriceHistories.length === 0) {
+            dispatch(addSellHistory(sellPriceHistoryData.data.data));
+        }
+        console.log("===>> ",sellPriceHistoryData);
+    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading, sellPriceHistoryLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
