@@ -10,7 +10,6 @@ export const ItemWiseStock = () => {
     var id = useParams();
     console.log("id", id);
     var mutation = useHistoryData();
-    // var { data, isLoading } = (id);
 
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
