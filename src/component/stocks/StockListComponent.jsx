@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useGetStockData } from "../../services/stockServices";
 
 export const StockListComponent = () => {
-    var { data, isLoading } = useGetStockData();
+    // var { data, isLoading } = useGetStockData();
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
