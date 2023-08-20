@@ -45,9 +45,6 @@ export const ItemWiseStock = () => {
         setRowData(completedData);
     };
 
-    // var [others, setothers] = useState([])
-    // const mutation = useMutation();
-
     useEffect(() => {
         if (!mutation.data && mutation.isLoading === false) {
             mutation.mutate(id)
