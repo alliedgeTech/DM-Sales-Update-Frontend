@@ -19,7 +19,7 @@ import { useClientData } from '../services/clientServices';
 import { useVendorData } from '../services/vendorServices';
 import { addClient } from '../redux/ClientSlice';
 import { addVendor } from '../redux/vendorSlice';
-import { addSellHistory } from '../redux/sellPriceHistorySlice';
+// import { addSellHistory } from '../redux/sellPriceHistorySlice';
 
 export const Deshboard = () => {
 
@@ -30,7 +30,7 @@ export const Deshboard = () => {
     var { data: sellData, isLoading: sellLoading } = useGetSellData();
     var { data: clientData, isLoading: clientLoading } = useClientData();
     var { data: vendorData, isLoading: vendorLoading } = useVendorData();
-    var { data: sellPriceHistoryData, isLoading: sellPriceHistoryLoading } = useGetSellPriceHistory();
+    // var { data: sellPriceHistoryData, isLoading: sellPriceHistoryLoading } = useGetSellPriceHistory();
 
     const itemsData = useSelector((state) => state.items.value)
     const companiesData = useSelector((state) => state.company.value)
@@ -39,7 +39,7 @@ export const Deshboard = () => {
     const sellsData = useSelector((state) => state.sell.value)
     const clientsData = useSelector((state) => state.client.value)
     const vendorsData = useSelector((state) => state.vendor.value)
-    const sellPriceHistories = useSelector((state) => state.sellPriceHistory.value)
+    // const sellPriceHistories = useSelector((state) => state.sellPriceHistory.value)
 
     const dispatch = useDispatch();
 
@@ -72,11 +72,7 @@ export const Deshboard = () => {
             dispatch(addVendor(vendorData.data.data));
         }
 
-        if (sellPriceHistoryData !== undefined && sellPriceHistoryLoading === false && sellPriceHistories.length === 0) {
-            dispatch(addSellHistory(sellPriceHistoryData.data.data));
-        }
-        console.log("===>> ",sellPriceHistoryData);
-    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading, sellPriceHistoryLoading])
+    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {
