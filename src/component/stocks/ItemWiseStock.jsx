@@ -2,15 +2,16 @@ import { useHistoryData } from "../../services/stockServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
+import { useMutation } from "react-query";
 import "../../assets/css/style.css";
 
 export const ItemWiseStock = () => {
-
+    
     var id = useParams();
     console.log("id", id);
     var mutation = useHistoryData();
     // var { data, isLoading } = (id);
-
+    console.log("ssssss",mutation.mutate);  
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
@@ -49,7 +50,7 @@ export const ItemWiseStock = () => {
 
     useEffect(() => {
         if (!mutation.data && mutation.isLoading === false) {
-            mutation.mutate(id)
+            mutation.mutate(id)            
         }
         if (mutation.data && mutation.isLoading === false) {
             setRows(mutation.data?.data?.data);

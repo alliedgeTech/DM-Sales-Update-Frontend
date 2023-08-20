@@ -6,7 +6,7 @@ const getStock = () => {
 }
 
 
-const stockhistory = () => {
+const stockhistory = (id) => {
 //     return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock-history/" + id)
 // const stockhistory = (id) => {
     console.log("id param", id.itemId);
@@ -20,7 +20,7 @@ export const useGetStockData = () => {
     })
 }
 
-export const useHistoryData = () => {
+export const useHistoryData = (id) => {
     return useQuery("usehistory", stockhistory, {
         retry: 5,
         retryDelay: 1000

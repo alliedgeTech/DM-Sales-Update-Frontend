@@ -2,7 +2,6 @@ import { React, useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useDateWiseSellBill } from "../../services/sellServices"
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 export const DateWiseItemList = () => {
     const validation = {
@@ -13,7 +12,7 @@ export const DateWiseItemList = () => {
             },
         }
     }
-    const mutation = useDateWiseSellBill();
+    const mutation = useDateWiseSellBill(id);
 
     var { register, handleSubmit, formState: { errors } } = useForm();
 
