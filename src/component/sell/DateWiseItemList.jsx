@@ -12,7 +12,7 @@ export const DateWiseItemList = () => {
             },
         }
     }
-    const mutation = useDateWiseSellBill(id);
+    const mutation = useDateWiseSellBill();
 
     var { register, handleSubmit, formState: { errors } } = useForm();
 
