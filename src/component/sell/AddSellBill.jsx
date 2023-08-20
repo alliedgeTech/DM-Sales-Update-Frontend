@@ -71,7 +71,7 @@ export const AddSellBill = () => {
         message: `Maximum ${StockQuantity} quantity is required.`,
       },
       pattern: {
-        value: /^[0-9]+$/,
+        value: /^[0-9.]+$/,
         message: "Only numbers are allowed.",
       },
     },
@@ -85,7 +85,7 @@ export const AddSellBill = () => {
         message: "Minimum one rs is required.",
       },
       pattern: {
-        value: /^[0-9]+$/,
+        value: /^[0-9.]+$/,
         message: "Only numbers are allowed.",
       },
     },

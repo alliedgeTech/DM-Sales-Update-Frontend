@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { useDateWiseSellBill } from "../../services/sellServices"
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 export const DateWiseItemList = () => {
     const validation = {
         date: {
@@ -48,7 +48,7 @@ export const DateWiseItemList = () => {
                     qty: element?.qty,
                     uom: element?.uom,
                     price: element?.price,
-                    total:((element?.qty)*(element?.price))
+                    total:Math.round(((element?.qty)*(element?.price)))
                 };
                 array.push(thisData);
             });
@@ -71,6 +71,15 @@ export const DateWiseItemList = () => {
         setitemdate(data.date)
         setRowData
     }
+
+    const CustomToolbar = () => {
+        return (
+          <GridToolbarContainer>
+            <GridToolbar />
+            <h5 style={{paddingTop:"10px"}}>Date Wise Item Summary:{itemdate}</h5>
+          </GridToolbarContainer>
+        );
+      };
     return (
         <>
             <div id="main">
@@ -147,7 +156,10 @@ export const DateWiseItemList = () => {
                                         }}
                                         columns={columns}
                                         rows={rowData}
-                                        slots={{ toolbar: GridToolbar }}
+                                        // slots={{ toolbar: GridToolbar }}
+                                        components={{
+                                            Toolbar: CustomToolbar,
+                                          }}
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">
@@ -161,7 +173,7 @@ export const DateWiseItemList = () => {
                                     </div>
                                 )}
                                 <div className="col-12 col-md-6 m-2">
-                                    <h5>Total selling Price : {total}</h5>
+                                    <h5>Total selling Price : {Math.round(total)}</h5>
                                 </div>
                             </div>
                         </div>

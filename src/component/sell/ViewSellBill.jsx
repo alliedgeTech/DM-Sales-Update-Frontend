@@ -1,6 +1,6 @@
 import { useGetSellData } from "../../services/sellServices";
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useDeleteSell } from "../../services/sellServices"
@@ -18,7 +18,7 @@ export const ViewSellBill = (props) => {
     { field: "_id", headerName: "", width: "0" },
     { field: "sellbillno", headerName: "Bill no", width: 150 },
     { field: "date", headerName: "Date", width: 150 },
-    { field: "client", headerName: "Client", width: 250 },
+    { field: "client", headerName: "Client", width: 200 },
     { field: "paymentType", headerName: "PaymentType", width: 150 },
     { field: "total", headerName: "Amount", width: 150 },
     {
@@ -84,7 +84,7 @@ export const ViewSellBill = (props) => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 1 ? "Credit" : "Debit",
-        total: element?.total
+        total: Math.round((element?.total*100)/100)
       };
     });
     setRowData(completedData);
@@ -101,7 +101,7 @@ export const ViewSellBill = (props) => {
     const dts = store.sell.value?.filter((d) => d._id === id)[0].items;
     dts.forEach(itm => {
       calculation += (itm.price * itm.qty)
-      settotalPrice(calculation)
+      settotalPrice(Math.round(calculation*100)/100)
       others.push(itm)
       setothers(others)
     })
@@ -138,6 +138,16 @@ export const ViewSellBill = (props) => {
       setRemarks(f.remark)
     })
   }
+
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+        <h5 style={{paddingTop:"12px"}}>Sell Bill List Total:{Math.round(sellbilltotal)}</h5>
+      </GridToolbarContainer>
+    );
+  };
+  
   return (
     <>
       <div id="main">
@@ -179,8 +189,10 @@ export const ViewSellBill = (props) => {
                   <DataGrid
                     columns={columns}
                     rows={rowData}
-                    slots={{ toolbar: GridToolbar }}
-                  />
+                    components={{
+                      Toolbar: CustomToolbar,
+                    }}
+                    />
                 ) : (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
@@ -194,7 +206,7 @@ export const ViewSellBill = (props) => {
 
                 )}
                 <div className="col-12 col-md-6 m-2">
-                  <h5>Total Sell Bill Price : {sellbilltotal}</h5>
+                  <h5>Total Sell Bill Price : {Math.round(sellbilltotal)}</h5>
                 </div>
               </div>
             </div>
@@ -235,7 +247,7 @@ export const ViewSellBill = (props) => {
                               <td>{itm.qty}</td>
                               <td>{itm?.uom}</td>
                               <td>{itm.price}</td>
-                              <td>{(itm.qty)*(itm.price)}</td>
+                              <td>{Math.round(itm.qty * itm.price)}</td>
                             </tr>
                           </>
                         );
@@ -247,7 +259,7 @@ export const ViewSellBill = (props) => {
             </div>
             <div class="modal-footer">
               <div className="text-left">
-                Total sell price : {totalPrice}
+                Total sell price : {Math.round(totalPrice)}
               </div>
               <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                 <i class="bx bx-x d-block d-sm-none"></i>
