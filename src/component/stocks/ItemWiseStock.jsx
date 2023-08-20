@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
 import "../../assets/css/style.css";
+import { useMutation } from "react-query";
 
 export const ItemWiseStock = () => {
 
@@ -25,7 +26,7 @@ export const ItemWiseStock = () => {
     const [rowData, setRowData] = useState([]);
     var [stockPrice, setstockPrice] = useState(0)
     const setRows = (data) => {
-        console.log("setRows Data",data);
+        console.log("setRows Data", data);
         var id = 0;
         const completedData = data.map((element) => {
             console.log("purchase stock list", element);
@@ -39,13 +40,14 @@ export const ItemWiseStock = () => {
                 company: element?.companyId.name,
                 item: element?.itemId?.name,
                 inQty: element?.inQty,
-                currentQty: element.type === "purchase" ? (element?.inQty+element.currentQty) : (element.currentQty-element?.inQty)
+                currentQty: element.type === "purchase" ? (element?.inQty + element.currentQty) : (element.currentQty - element?.inQty)
             };
         });
         setRowData(completedData);
     };
 
     // var [others, setothers] = useState([])
+    // const mutation = useMutation();
 
     useEffect(() => {
         if (!mutation.data && mutation.isLoading === false) {
