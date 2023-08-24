@@ -24,6 +24,8 @@ import { DateViseSellPrice } from "./component/sell/DateViseSellPrice"
 import { ItemWiseStock } from "./component/stocks/ItemWiseStock"
 import { DateWiseItemList } from "./component/sell/DateWiseItemList"
 import axios from "axios"
+import { DateWiseAddMoneyList } from "./component/Deshboard/DateWiseAddMoneyList"
+import { MYWiseAddMoneyList } from "./component/Deshboard/MYWiseAddMoneyList"
 
 function App() {
 
@@ -63,6 +65,11 @@ function App() {
         <Route path="/viewsellbill/generate-sell-bill/:id" element={<SellBillPrintComponent items={sellItems} onClose={() => setisOpen(false)} />} />
         <Route path="/datewisesellprice" element={<DateViseSellPrice/>}/>
         <Route path="/datewiseItemlist" element={<DateWiseItemList/>}/>
+        <Route path="/datewiseaddmoneylist" element={<DateWiseAddMoneyList/>}/> 
+        <Route path="/mywiseaddmoneylist" element={<MYWiseAddMoneyList/>}/>
+
+
+
         {/* Stock API */}
         <Route path="creditsellbill" element={<CreaditSellBill />} />
         <Route path="debitsellbill" element={<DebitSellBill />} />

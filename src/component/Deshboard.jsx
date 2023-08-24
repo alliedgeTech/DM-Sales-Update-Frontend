@@ -154,13 +154,13 @@ export const Deshboard = () => {
                                             <div className="card-body px-4 py-4-5">
                                                 <div className="row">
                                                     <div className="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                        <div className="stats-icon green mb-2">
-                                                            <i className="iconly-boldAdd-User" />
+                                                        <div className="stats-icon blue mb-2">
+                                                            <i className="iconly-boldProfile" />
                                                         </div>
                                                     </div>
                                                     <div className="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                         <h6 className="text-muted font-semibold">Following</h6>
-                                                        <h6 className="font-extrabold mb-0">80.000</h6>
+                                                        <h6 className="font-extrabold mb-0">783.000</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -171,19 +171,48 @@ export const Deshboard = () => {
                                             <div className="card-body px-4 py-4-5">
                                                 <div className="row">
                                                     <div className="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                        <div className="stats-icon red mb-2">
-                                                            <i className="iconly-boldBookmark" />
+                                                        <div className="stats-icon blue mb-2">
+                                                            <i className="iconly-boldProfile" />
                                                         </div>
                                                     </div>
                                                     <div className="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                        <h6 className="text-muted font-semibold">Saved Post</h6>
-                                                        <h6 className="font-extrabold mb-0">112</h6>
+                                                        <h6 className="text-muted font-semibold">Saved</h6>
+                                                        <h6 className="font-extrabold mb-0">70</h6>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                {/* --------------------- */}
+                                <div className="row">
+                                    <div className="card"></div>
+                                    <div className=" col-md-4 card pt-4">
+                                        <div className="card-content pb-4">
+                                            <div className="name ms-4 mb-0">
+                                                <h5 className="mb-0 text-gray ">Date Wise Add Debit Money List</h5>
+                                            </div>
+                                            <div className="px-4">
+                                                <Link to='/datewiseaddmoneylist' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                                    View Add MoneyList 
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className=" col-md-4 card pt-4 ">
+                                        <div className="card-content pb-4 pl-2">
+                                            <div className="name ms-4 mb-0">
+                                                <h5 className="mb-0 text-gray">Month/Year Wise Add DebitMoney List</h5>
+                                            </div>
+                                            <div className="px-4">
+                                                <Link to='/mywiseaddmoneylist' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                                    Month/year wise List
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className="row">
                                     <div className="col-12">
                                         <div className="card">
@@ -361,6 +390,7 @@ export const Deshboard = () => {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </section>
                     </div>

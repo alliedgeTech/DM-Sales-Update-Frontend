@@ -2,7 +2,6 @@ import { useHistoryData } from "../../services/stockServices";
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
-import { useMutation } from "react-query";
 import "../../assets/css/style.css";
 import { useMutation } from "react-query";
 

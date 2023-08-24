@@ -160,7 +160,6 @@ export const AddPurchaseComponent = () => {
   const setTotalRs = (gstper) => {
     var qty = document.getElementById("qty").value;
     var price = document.getElementById("price").value;
-    // alert((qty)*(price)*(gstper))
       if (qty <= 0) {
       } 
       else if(gstper==0)
@@ -171,6 +170,7 @@ export const AddPurchaseComponent = () => {
       else {
           var p = (price*qty)+((price * qty* gstper)/100);
           document.getElementById("totalPrice").value = p;
+
         }
       };
     
@@ -321,7 +321,7 @@ export const AddPurchaseComponent = () => {
                             Invoice (Bill number)
                           </label>
                           <span className="text-danger font-weight-bold mx-2" style={{ display: billError == true ? "none" : "block" }}>
-                            Please, enter unique bill number
+                          <b>  Please, enter unique bill number</b>
                           </span>
                         </div>
                         <input
@@ -613,6 +613,7 @@ export const AddPurchaseComponent = () => {
                           <th>Uom</th>
                           <th>Price</th>
                           <th>GST</th>
+                          <th>Total</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -639,6 +640,7 @@ export const AddPurchaseComponent = () => {
                                 <td>{item.uom}</td>
                                 <td>{item.price}</td>
                                 <td>{item.gstper}%</td>
+                                <td>{item.gstper=="0" ? Math.round((item.price*item.qty)) : Math.round((item.price*item.qty)+((item.price * item.qty* item.gstper)/100))}</td>
                                 <td>
                                   <button
                                     type="button"

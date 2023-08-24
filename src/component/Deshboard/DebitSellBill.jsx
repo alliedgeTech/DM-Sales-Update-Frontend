@@ -33,7 +33,8 @@ export const DebitSellBill = () => {
   var { register, handleSubmit, formState: { errors } } = useForm();
   const { data, isLoading, refetch } = useGetSellData();
   const { data: sellHistoryData, isLoading: sellHistoryLoading, refetch: historyRefetch } = useGetSellPriceHistory();
-
+  var [adddebittotal, setadddebittotal] = useState(0)
+  // const [first, setfirst] = useState(second)
   const columns = [
     {
       field: "id",
@@ -41,8 +42,10 @@ export const DebitSellBill = () => {
       width: 70,
     },
     { field: "_id", headerName: "", width: "0" },
+    { field: "sellbillnoId", headerName: "", width: 0 },
     { field: "sellbillno", headerName: "Bill no", width: 120 },
     { field: "date", headerName: "Date", width: 150 },
+    { field: "clientId", headerName: "", width:0 },
     { field: "client", headerName: "Client", width: 230 },
     { field: "paymentType", headerName: "PaymentType", width: 200 },
     { field: "total", headerName: "Amount", width: 150 },
@@ -56,6 +59,7 @@ export const DebitSellBill = () => {
             className="btn btn-sm"
             data-bs-toggle="modal"
             data-bs-target="#primaryItems"
+            // onClick={() => handleButtonClick(params.row._id, params.row.total,params.row.clientId,params.row.sellbillnoId)}
             onClick={() => handleButtonClick(params.row._id, params.row.total)}
           >
             <i class="bi bi-box-arrow-up"></i>
@@ -104,7 +108,9 @@ export const DebitSellBill = () => {
   var mutation = useUpdateDebitMoney();
   const adddebitPrice = (data) => {
     data._Id = debitpriceid;
-    console.log(data);
+
+    console.log("899999999999:",data);
+
     mutation.mutate(data)
     document.getElementById("forms").reset();
   }
@@ -119,7 +125,13 @@ export const DebitSellBill = () => {
       refetch()
       historyRefetch();
     }
-    console.log(sellHistoryData);
+    else if(sellHistoryData){
+      var amount=0;
+      sellHistoryData?.data?.data?.filter(d => d.sellId === rowId).map((d)=>{
+         amount += d.amount
+        })
+        setadddebittotal(amount)
+    }
   }, [isLoading, mutation]);
 
   const [debitpriceid, setdebitpriceid] = useState("")
@@ -131,7 +143,7 @@ export const DebitSellBill = () => {
     return (
       <GridToolbarContainer>
         <GridToolbar />
-        <h5 style={{paddingTop:"12px"}}>DebitSell Bill List Total: {Math.round(debitprice)}</h5>
+        <h5 style={{ paddingTop: "12px" }}>DebitSell Bill List Total: {Math.round(debitprice)}</h5>
       </GridToolbarContainer>
     );
   };
@@ -270,6 +282,14 @@ export const DebitSellBill = () => {
                           {errors?.type?.message}
                         </span>
                       </fieldset>
+                      <div class="form-group mandatory">
+                        <label for="receiptno" class="form-label">Receipt No</label>
+                        <input type="string"
+                          id="receiptno"
+                          class="form-control"
+                          {...register("receiptno")}
+                        />
+                      </div>
                       <div className="d-flex flex-row-reverse">
                         <button type="submit"
                           class="btn btn-primary w-25"
@@ -296,7 +316,7 @@ export const DebitSellBill = () => {
           <div class="modal-content">
             <div class="modal-header bg-primary">
               <h5 className="modal-title white" id="myModalLabel160">
-                Sell's history
+               Add Money History for Debit Sell
               </h5>
             </div>
             <div className="modal-body">
@@ -310,6 +330,7 @@ export const DebitSellBill = () => {
                             <th>Date</th>
                             <th>Type</th>
                             <th>Amount</th>
+                            <th>Receipt No</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -321,6 +342,7 @@ export const DebitSellBill = () => {
                                     <td>{hist?.date}</td>
                                     <td>{hist?.type}</td>
                                     <td>{hist?.amount}</td>
+                                    <td>{hist?.receiptno}</td>
                                   </tr>
                                 </>
                               )
@@ -334,6 +356,10 @@ export const DebitSellBill = () => {
               </tr>
             </div>
             <div className="modal-footer">
+              <div className="text-left m-4">
+                <b>Total Add Money for Debit Sell : {Math.round(adddebittotal)}</b>
+                
+              </div>
               <button
                 type="button"
                 className="btn btn-light-secondary"

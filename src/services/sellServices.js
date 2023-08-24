@@ -28,6 +28,7 @@ const datewisesellbill = (data) => {
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellprice", data)
 }
 const updateDebitMoney = (data) => {
+  console.log("updateDebitMoney", data)
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/update-money", data)
 }
 
@@ -35,8 +36,24 @@ const getPriceHistory = () => {
   return axios.get("http://localhost:9990/distributer/api/v1/public/sell/get-price-history");
 }
 
+const getsellBillNumber = (sellbill) => {
+  return axios.put(
+    "http://localhost:9990/distributer/api/v1/public/sell/get-sellbill", { data: sellbill }
+  );
+};
+
+const datewiseaddmoney = (data) => {
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-datewiseaddmoney", data)
+}
+
+const MYWiseAddMoney = (data) => {
+  console.log("data in service file",data);
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-between", data)
+}
+
+
 export const useGetItemCompanyWise = (company) => {
-  return useQuery("getItemCompanyWise", getItemCompanyWise, {
+  return useQuery("ge tItemCompanyWise", getItemCompanyWise, {
     retry: 5,
     retryDelay: 1000,
   });
@@ -63,7 +80,7 @@ export const useDeleteSell = (id) => {
   })
 }
 
-export const useUpdateDebitMoney = (id) => {
+export const useUpdateDebitMoney = () => {
   return useMutation("updateClient", updateDebitMoney, {
     retry: 5,
     retryDelay: 1000
@@ -79,6 +96,27 @@ export const useDateWiseSellBill = (data) => {
 
 export const useGetSellPriceHistory = () => {
   return useQuery("sellPriceHistory", getPriceHistory, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
+
+export const useGetUniqueBillNo = (data) => {
+  return useMutation("getsellbillData", getsellBillNumber, {
+    retry: 5,
+    retryDelay: 1000,
+  });
+};
+
+export const useDateWiseAddMoney = (data) => {
+  return useMutation("datewisesell", datewiseaddmoney, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
+
+export const useMYWiseAddMoney = (data) => {
+  return useMutation("datewisesell", MYWiseAddMoney, {
     retry: 5,
     retryDelay: 1000
   })

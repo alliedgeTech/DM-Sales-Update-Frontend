@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer } from "react-toastify";
 import { notifyDone } from "../../assets/toster";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddSell } from "../../services/sellServices";
+import { useAddSell, useGetUniqueBillNo } from "../../services/sellServices";
 import { useGetStockData } from '../../services/stockServices';
 import { addStock } from '../../redux/StockSlice';
 
@@ -148,17 +148,18 @@ export const AddSellBill = () => {
   }
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
-  // const [paymentwise, setpaymentwise] = useState([])
+
+  
   const submitData = (data) => {
     data.id = ids;
     setids((ids += 1));
     setsellItem([...sellItem, data]);
     document.getElementById("forms").reset();
   };
-
+  
   var itemsData = useSelector((state) => state.items.value);
   var companiesData = useSelector((state) => state.company.value);
-
+  
   var [companyId, setcompanyId] = useState("");
   const getItemCompanyWise = (data) => {
     if (data !== "" && data !== null) {
@@ -168,8 +169,8 @@ export const AddSellBill = () => {
       document.getElementById("items").disabled = true;
     }
   };
-
-
+  
+  
   var [paymentDisable, setpaymentDisable] = useState(true)
   const getPaymentWise = (data) => {
     if (data == 1) {
@@ -179,14 +180,14 @@ export const AddSellBill = () => {
     }
     console.log(data, paymentDisable);
   };
-
+  
   const deleteItems = (id) => {
     sellItem = sellItem.filter((item) => item.id !== id);
     setsellItem(sellItem);
   };
-
+  
   var [totalPrice, setTotalPrice] = useState(0);
-
+  
   const setTotalRs = (price) => {
     var qty = document.getElementById("qty").value;
     if (qty <= 0) {
@@ -196,20 +197,28 @@ export const AddSellBill = () => {
       document.getElementById("totalPrice").value = p;
     }
   };
-
+  
   const mutation = useAddSell();
   const addDataIntoPurchase = () => {
     clientDetails.items = sellItem;
     setclientDetails(clientDetails);
     mutation.mutate(clientDetails);
   };
-
+  
   const setInstock = (data) => {
     StockQuantity = stocksData.find(ele => ele.itemId._id === data)?.qty
     setStockQuantity(StockQuantity)
   }
-
+  
   var [note, setnote] = useState(0);
+  
+  var [sellbillError, setsellbillError] = useState(true)
+  var billMutation = useGetUniqueBillNo();
+  const getBillUnique = (value) => {
+    if (value && value.length >= 2) {
+      billMutation.mutate(value);
+    }
+  }
   useEffect(() => {
     if (stockData !== undefined && stockLoading === false && stocksData.length === 0) {
       stockData.data.data.forEach(element => {
@@ -232,7 +241,15 @@ export const AddSellBill = () => {
     if (itemsData.length === 0 && companiesData.length === 0) {
       navigate("/");
     }
-  }, [itemsData, companiesData, stocksData, companyId, mutation, paymentDisable]);
+    if (billMutation.data) {
+      console.log("bill mutation -> ", billMutation.data.data.data);
+      if (billMutation.data.data.data === false) {
+        setsellbillError(false)
+      } else {
+        setsellbillError(true)
+      }
+    }
+  }, [itemsData, companiesData, stocksData, companyId, mutation, paymentDisable,billMutation]);
 
   return (
     <>
@@ -337,15 +354,21 @@ export const AddSellBill = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group mandatory">
+                      <div className="d-flex justify-content-between">
                         <label htmlFor="invoice" class="form-label">
                           SellBill number
                         </label>
+                        <span className="text-danger font-weight-bold mx-2" style={{ display: sellbillError == true ? "none" : "block" }}>
+                            <b>Please, enter unique sellbill number</b>
+                          </span>
+                          </div>
                         <input
                           type="number"
                           className="form-control"
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
                           //// onBlurCapture={(event)  => disableInvoice(event.target.value)}
+                          onKeyUp={(event) => getBillUnique(event.target.value)}
                           {...clientRegister("sellbillno", validation.sellbillno)}
                         />
                         <span className="text-danger font-weight-bold">
@@ -626,6 +649,7 @@ export const AddSellBill = () => {
                           <th>Quantity</th>
                           <th>Uom</th>
                           <th>Price</th>
+                          <th>Total</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -651,6 +675,7 @@ export const AddSellBill = () => {
                                 <td className="text-bold-500">{item.qty}</td>
                                 <td>{item.uom}</td>
                                 <td>{item.price}</td>
+                                <td>{Math.round(item.qty*item.price)}</td>
                                 <td>
                                   <button
                                     type="button"
