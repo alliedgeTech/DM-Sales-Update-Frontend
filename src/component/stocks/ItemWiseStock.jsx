@@ -6,12 +6,11 @@ import "../../assets/css/style.css";
 import { useMutation } from "react-query";
 
 export const ItemWiseStock = () => {
-    
+
     var id = useParams();
     console.log("id", id);
     var mutation = useHistoryData();
-    // var { data, isLoading } = (id);
-    console.log("ssssss",mutation.mutate);  
+
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
@@ -46,12 +45,9 @@ export const ItemWiseStock = () => {
         setRowData(completedData);
     };
 
-    // var [others, setothers] = useState([])
-    // const mutation = useMutation();
-
     useEffect(() => {
         if (!mutation.data && mutation.isLoading === false) {
-            mutation.mutate(id)            
+            mutation.mutate(id)
         }
         if (mutation.data && mutation.isLoading === false) {
             setRows(mutation.data?.data?.data);

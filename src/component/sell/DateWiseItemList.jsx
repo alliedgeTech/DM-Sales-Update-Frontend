@@ -37,7 +37,7 @@ export const DateWiseItemList = () => {
         var array = [];
         data?.forEach((element1) => {
             element1.items?.forEach((element) => {
-                total += ((element?.qty)*(element?.price))
+                total += ((element?.qty) * (element?.price))
                 settotal(total)
                 let thisData = {
                     id: ++id,
@@ -47,12 +47,12 @@ export const DateWiseItemList = () => {
                     qty: element?.qty,
                     uom: element?.uom,
                     price: element?.price,
-                    total:Math.round(((element?.qty)*(element?.price)))
+                    total: Math.round(((element?.qty) * (element?.price)))
                 };
                 array.push(thisData);
             });
         });
-     setRowData([...rowData, ...array]);
+        setRowData(array);
     };
 
     useEffect(() => {
@@ -68,17 +68,16 @@ export const DateWiseItemList = () => {
     const submitData = (data) => {
         mutation.mutate(data)
         setitemdate(data.date)
-        setRowData
     }
 
     const CustomToolbar = () => {
         return (
-          <GridToolbarContainer>
-            <GridToolbar />
-            <h5 style={{paddingTop:"10px"}}>Date Wise Item Summary:{itemdate}</h5>
-          </GridToolbarContainer>
+            <GridToolbarContainer>
+                <GridToolbar />
+                <h5 style={{ paddingTop: "10px" }}>Date Wise Item Summary:{itemdate}</h5>
+            </GridToolbarContainer>
         );
-      };
+    };
     return (
         <>
             <div id="main">
@@ -158,7 +157,7 @@ export const DateWiseItemList = () => {
                                         // slots={{ toolbar: GridToolbar }}
                                         components={{
                                             Toolbar: CustomToolbar,
-                                          }}
+                                        }}
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">
