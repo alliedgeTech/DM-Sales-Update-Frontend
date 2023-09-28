@@ -58,20 +58,21 @@ export const FiltersComponet = () => {
         credittotal = 0
         setcredittotal(credittotal)
         if (personChange === "purchase") {
-            var id = 0;
+            var id = 0,temp=0;
+            setTemp(temp)
             const completedData = data?.map((element) => {
                 temp += element?.items.map(ele => ((ele.qty * ele.price) + ((ele.qty * ele.price * ele.gstper) / 100))).reduce((accumulator, currentValue) => {
                     return accumulator + currentValue;
                 }, 0)
                 setTemp(temp)
-                element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
+                element?.items?.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
                 return {
                     id: ++id,
                     _id: element._id,
                     invoice: element.invoice,
                     date: element.date,
                     vendor: element?.vendorId?.vendorName,
-                    total: Math.round(element?.items.map(ele => ((ele.qty * ele.price) + ((ele.qty * ele.price * ele.gstper) / 100))).reduce((accumulator, currentValue) => {
+                    total: Math.round(element?.items?.map(ele => ((ele.qty * ele.price) + ((ele.qty * ele.price * ele.gstper) / 100))).reduce((accumulator, currentValue) => {
                         return accumulator + currentValue;
                     }, 0))
                 };
@@ -82,15 +83,18 @@ export const FiltersComponet = () => {
             setsellbilltotal(sellbilltotal);
             const completedData = data.map((element) => {
                 sellbilltotal += element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
-                    return accumulator + currentValue;
+                    return +accumulator + +currentValue;
                 }, 0)
                 setsellbilltotal(sellbilltotal);
                 var date = element.date.substring(0, 10).split("-");
                 date = `${date[2]}/${date[1]}/${date[0]}`;
-                element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
-                debittoal += +element?.items?.map((e) => e.qty * e.price)
+                element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += +ele)
+                var mainPrice = element?.items.reduce((accumulator, currentValue) => {
+                    return accumulator + (currentValue.price * currentValue.qty);
+                }, 0);
+                debittoal += mainPrice
                 setdebittoal(debittoal)
-                credittotal += +element?.items?.map(itm => itm.qty * itm.price) - (element?.total)
+                credittotal += mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total)
                 setcredittotal(credittotal)
                 return {
                     id: ++id,
@@ -99,8 +103,9 @@ export const FiltersComponet = () => {
                     date: date,
                     client: element?.clientId?.name,
                     paymentType: element.paymentType === 1 ? "Credit" : "Debit",
-                    total: Math.round(element?.items?.map(itm => itm.qty * itm.price) - (element?.total)) === 0 ? "By cash" : Math.round(element?.items?.map(itm => itm.qty * itm.price) - (element?.total)),
-                    dbtamount: Math.round(element?.items?.map(itm => itm.qty * itm.price))
+                    total: mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total),
+                    dbtamount: mainPrice
+
                 };
             });
             setRowData(completedData);
