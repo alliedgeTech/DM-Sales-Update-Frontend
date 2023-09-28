@@ -6,73 +6,22 @@ import { Line } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { Chart, LineController, LinearScale, PointElement, LineElement, CategoryScale } from 'chart.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetCompanys, useGetItems } from '../services/companyAndItemServices';
-import { addCompany } from '../redux/CompanySlice';
-import { addItems } from '../redux/ItemSlice';
 import { useGetStockData } from '../services/stockServices';
 import { addStock } from '../redux/StockSlice';
-import { useGetPurchaseData } from '../services/purchaseServices';
-import { addPurchase } from '../redux/PurchaseSlice';
-import { useGetSellData, useGetSellPriceHistory } from './../services/sellServices';
-import { addSell } from '../redux/SellSlice';
-import { useClientData } from '../services/clientServices';
-import { useVendorData } from '../services/vendorServices';
-import { addClient } from '../redux/ClientSlice';
-import { addVendor } from '../redux/vendorSlice';
-// import { addSellHistory } from '../redux/sellPriceHistorySlice';
 
 export const Deshboard = () => {
 
-    var { data: companyData, isLoading: companyLoading } = useGetCompanys();
-    var { data: itemData, isLoading: itemLoading } = useGetItems();
     var { data: stockData, isLoading: stockLoading } = useGetStockData();
-    var { data: purchaseData, isLoading: purchaseLoading } = useGetPurchaseData();
-    var { data: sellData, isLoading: sellLoading } = useGetSellData();
-    var { data: clientData, isLoading: clientLoading } = useClientData();
-    var { data: vendorData, isLoading: vendorLoading } = useVendorData();
-    // var { data: sellPriceHistoryData, isLoading: sellPriceHistoryLoading } = useGetSellPriceHistory();
 
-    const itemsData = useSelector((state) => state.items.value)
-    const companiesData = useSelector((state) => state.company.value)
     const stocksData = useSelector((state) => state.stock.value)
-    const purchasesData = useSelector((state) => state.purchase.value)
-    const sellsData = useSelector((state) => state.sell.value)
-    const clientsData = useSelector((state) => state.client.value)
-    const vendorsData = useSelector((state) => state.vendor.value)
-    // const sellPriceHistories = useSelector((state) => state.sellPriceHistory.value)
-
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (companyData !== undefined && companyLoading === false && companiesData.length === 0) {
-            dispatch(addCompany(companyData.data.data));
-        }
-
-        if (itemData !== undefined && itemLoading === false && itemsData.length === 0) {
-            dispatch(addItems(itemData.data.data));
-        }
-
         if (stockData !== undefined && stockLoading === false && stocksData.length === 0) {
             dispatch(addStock(stockData.data.data));
         }
 
-        if (purchaseData !== undefined && purchaseLoading === false && purchasesData.length === 0) {
-            dispatch(addPurchase(purchaseData.data.data));
-        }
-
-        if (sellData !== undefined && sellLoading === false && sellsData.length === 0) {
-            dispatch(addSell(sellData.data.data));
-        }
-
-        if (clientData !== undefined && clientLoading === false && clientsData.length === 0) {
-            dispatch(addClient(clientData.data.data));
-        }
-
-        if (vendorData !== undefined && vendorLoading === false && vendorsData.length === 0) {
-            dispatch(addVendor(vendorData.data.data));
-        }
-
-    }, [companyLoading, itemLoading, stockLoading, purchaseLoading, sellLoading, clientLoading, vendorLoading])
+    }, [ stockLoading])
 
     Chart.register(LineController, LinearScale, PointElement, LineElement, CategoryScale);
     const data = {

@@ -22,7 +22,6 @@ const getPurchase = () => {
 };
 
 const getBillNumber = (invoice) => {
-  console.log("invoice",invoice);
   return axios.put(
     "http://localhost:9990/distributer/api/v1/public/purchase/get-bill", { data: invoice }
   );

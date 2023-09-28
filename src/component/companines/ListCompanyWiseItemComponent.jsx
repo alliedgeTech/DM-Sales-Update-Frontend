@@ -46,7 +46,6 @@ export const ListCompanyWiseItemComponent = () => {
 
     const mutation = useDeleteItem();
     const deleteItems = (id) => {
-        console.log("++", id);
         mutation.mutate(id);
     }
 

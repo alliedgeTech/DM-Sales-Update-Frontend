@@ -23,10 +23,8 @@ export const DateWiseItemList = () => {
             width: 70,
         },
         { field: "_id", headerName: "", width: "0" },
-        { field: "company", headerName: "company", width: 200 },
-        { field: "item", headerName: "Items", width: 200 },
-        { field: "qty", headerName: "Quantity", width: 100 },
-        { field: "uom", headerName: "Unit", width: 100 },
+        { field: "item", headerName: "Items", width: 330 },
+        { field: "qty", headerName: "Quantity", width: 130 },
         { field: "price", headerName: "Price", width: 100 },
         { field: "total", headerName: "Total", width: 150 },
     ];
@@ -34,24 +32,24 @@ export const DateWiseItemList = () => {
     var [total, settotal] = useState(0)
     const setRows = (data) => {
         var id = 0; total = 0;
+        settotal(total)
         var array = [];
-        data?.forEach((element1) => {
-            element1.items?.forEach((element) => {
-                total += ((element?.qty) * (element?.price))
+            data?.forEach((element) => {
+             total += +element?.total
                 settotal(total)
                 let thisData = {
                     id: ++id,
-                    _id: element?._id,
+                    // _id: element?._id,
                     company: element?.companyId?.name,
                     item: element?.itemId?.name,
                     qty: element?.qty,
                     uom: element?.uom,
                     price: element?.price,
-                    total: Math.round(((element?.qty) * (element?.price)))
+                    total: element?.total
                 };
                 array.push(thisData);
             });
-        });
+        // });
         setRowData(array);
     };
 
@@ -74,7 +72,7 @@ export const DateWiseItemList = () => {
         return (
             <GridToolbarContainer>
                 <GridToolbar />
-                <h5 style={{ paddingTop: "10px" }}>Date Wise Item Summary:{itemdate}</h5>
+                <h5 style={{ paddingTop: "10px", fontSize:"17px"}}>Date Wise Total Summary:{itemdate} | Total selling Price : {Math.round(total)}</h5>
             </GridToolbarContainer>
         );
     };
@@ -143,13 +141,13 @@ export const DateWiseItemList = () => {
                     <section className="section">
                         <div className="card">
                             <div className="card-header">
-                                <h4 className="card-title"> Date Wise Item Summary :{itemdate}</h4>
+                                <h4 className="card-title"> Date Wise Quantity & Total Summary :{itemdate}</h4>
                             </div>
                             <div className="card-body">
                                 {rowData.length != 0 ? (
                                     <DataGrid
                                         columnVisibilityModel={{
-                                            status: false,
+                                            status: true,
                                             _id: false,
                                         }}
                                         columns={columns}
@@ -161,13 +159,7 @@ export const DateWiseItemList = () => {
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">
-                                        <div
-                                            class="spinner-border"
-                                            style={{ width: "3rem", height: "3rem" }}
-                                            role="status"
-                                        >
-                                            <span class="visually-hidden"></span>
-                                        </div>
+                                         <div> NO DATA AVAILABLE</div>
                                     </div>
                                 )}
                                 <div className="col-12 col-md-6 m-2">

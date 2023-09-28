@@ -30,25 +30,28 @@ export const DebitSellBill = () => {
     }
   }
 
+
+
+  var [rowId, setrowId] = useState("")
   var { register, handleSubmit, formState: { errors } } = useForm();
   const { data, isLoading, refetch } = useGetSellData();
   const { data: sellHistoryData, isLoading: sellHistoryLoading, refetch: historyRefetch } = useGetSellPriceHistory();
   var [adddebittotal, setadddebittotal] = useState(0)
-  // const [first, setfirst] = useState(second)
   const columns = [
     {
       field: "id",
       headerName: "ID",
-      width: 70,
+      width: 50,
     },
     { field: "_id", headerName: "", width: "0" },
     { field: "sellbillnoId", headerName: "", width: 0 },
-    { field: "sellbillno", headerName: "Bill no", width: 120 },
-    { field: "date", headerName: "Date", width: 150 },
-    { field: "clientId", headerName: "", width:0 },
+    { field: "sellbillno", headerName: "Bill no", width: 90 },
+    { field: "date", headerName: "Date", width: 110 },
+    { field: "clientId", headerName: "", width: 0 },
     { field: "client", headerName: "Client", width: 230 },
-    { field: "paymentType", headerName: "PaymentType", width: 200 },
-    { field: "total", headerName: "Amount", width: 150 },
+    { field: "paymentType", headerName: "PaymentType", width: 125 },
+    { field: "total", headerName: "Amount", width: 125 },
+    { field: "mainTotal", headerName: "Main_Amount", width: 140 },
     {
       field: "actions",
       headerName: "View Items",
@@ -69,7 +72,7 @@ export const DebitSellBill = () => {
             className="btn btn-sm"
             data-bs-toggle="modal"
             data-bs-target={`#primary`}
-            onClick={() => setrowId(params.row._id)}
+            onClick={() => handleHistory(params.row._id)}
           >
             <i class="bi bi-card-text text-primary"></i>
           </button>
@@ -78,16 +81,23 @@ export const DebitSellBill = () => {
     },
   ];
 
-  const [rowId, setrowId] = useState("")
-
   const [rowData, setRowData] = useState([]);
+  const [rowData1, setRowData1] = useState([]);
+  var [debitsellhistory, setdebitsellhistory] = useState(0)
+  const [client, setclient] = useState("")
+  const [sellbillno, setsellbillno] = useState("")
 
   var [debitprice, setdebitprice] = useState(0)
+  var [totaldebitprice, settotaldebitprice] = useState(0)
   const setRows = (data) => {
     var id = 0;
     const completedData = data.filter(element => element.paymentType === 0).map(element => {
       debitprice += +element?.total;
       setdebitprice(debitprice);
+      totaldebitprice += +element?.items?.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, 0)
+      settotaldebitprice(totaldebitprice)
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
       //   id += 1;
@@ -98,26 +108,69 @@ export const DebitSellBill = () => {
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 0 ? "Debit" : "?",
-        total: Math.round(element?.total)
+        total: Math.round(element?.total),
+        mainTotal: Math.round(element?.items?.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0))
       };
     })
     setRowData(completedData);
   };
 
 
+  //----------------------------------------------------------------
+
+  const column1 = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 70,
+    },
+    { field: "date", headerName: "Date", width: 200 },
+    { field: "type", headerName: "Type", width: 200 },
+    { field: "total", headerName: "Amount", width: 200 },
+    { field: "receiptNo", headerName: "Receipt No", width: 200 },
+
+  ]
+
+  const handleHistory = (data) => {
+    setrowId(data)
+    setclient(rowData.filter((itm) => itm._id === data).map(e => e?.client))
+    setsellbillno(rowData.filter((itm) => itm._id === data).map(e => e?.sellbillno))
+    debitsellhistory = 0
+    setdebitsellhistory(debitsellhistory)
+    var id1 = 0
+    var sellHistorys = sellHistoryData?.data?.data?.filter(a => a.sellId === data).map((d) => {
+      debitsellhistory += d?.amount;
+      setdebitsellhistory(debitsellhistory);
+      var date = d.date.substring(0, 10).split("-");
+      date = `${date[2]}/${date[1]}/${date[0]}`;
+      return {
+        id: ++id1,
+        date: date,
+        type: d?.type,
+        total: d?.amount,
+        receiptNo: d?.receiptno
+      }
+    })
+    setRowData1(sellHistorys)
+  }
+  //----------------------------------------------------------------
+
+
+
   var mutation = useUpdateDebitMoney();
   const adddebitPrice = (data) => {
     data._Id = debitpriceid;
-
-    console.log("899999999999:",data);
-
     mutation.mutate(data)
     document.getElementById("forms").reset();
+    window.location.reload();
   }
 
   var [note, setnote] = useState(1)
   useEffect(() => {
     if (data && isLoading === false && note === 1) {
+      refetch();
       setRows(data?.data?.data);
       setnote(0)
     }
@@ -125,14 +178,14 @@ export const DebitSellBill = () => {
       refetch()
       historyRefetch();
     }
-    else if(sellHistoryData){
-      var amount=0;
-      sellHistoryData?.data?.data?.filter(d => d.sellId === rowId).map((d)=>{
-         amount += d.amount
-        })
-        setadddebittotal(amount)
+    else if (sellHistoryData?.data?.data.length !== 0 && sellHistoryLoading === false && sellHistoryData?.data?.data !== undefined && note !== 0) {
+      var amount = 0;
+      sellHistoryData?.data?.data?.filter(d => d.sellId === rowId).map((d) => {
+        amount += d.amount
+      })
+      setadddebittotal(amount)
     }
-  }, [isLoading, mutation]);
+  }, [isLoading, mutation, sellHistoryLoading]);
 
   const [debitpriceid, setdebitpriceid] = useState("")
   const handleButtonClick = (id) => {
@@ -144,6 +197,14 @@ export const DebitSellBill = () => {
       <GridToolbarContainer>
         <GridToolbar />
         <h5 style={{ paddingTop: "12px" }}>DebitSell Bill List Total: {Math.round(debitprice)}</h5>
+      </GridToolbarContainer>
+    );
+  };
+  const CustomToolbar1 = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+        <h5 style={{ paddingTop: "12px", fontSize: "14px" }}>DebitSell Bill List Total:{debitsellhistory} | SellbillNo :{sellbillno} | ClientName :{client}</h5>
       </GridToolbarContainer>
     );
   };
@@ -209,7 +270,9 @@ export const DebitSellBill = () => {
                   </div>
                 )}
                 <div className="col-12 col-md-6 m-2">
-                  <h5>Total Debit Bill Price : {Math.round(debitprice)}</h5>
+                  <h5>| Total Debit Bill Price : {Math.round(debitprice)}</h5>
+                  <h5>| Total for Main_Amount of Debit Sell : {Math.round(totaldebitprice)}</h5>
+                  <h5></h5>
                 </div>
               </div>
             </div>
@@ -316,49 +379,38 @@ export const DebitSellBill = () => {
           <div class="modal-content">
             <div class="modal-header bg-primary">
               <h5 className="modal-title white" id="myModalLabel160">
-               Add Money History for Debit Sell
+                Add Money History for Debit Sell
               </h5>
             </div>
             <div className="modal-body">
-              <tr className='d-flex flex-column'>
-                <td>
-                  <div className="card-content p-2">
-                    <div className="table-responsive">
-                      <table className="table mb-0">
-                        <thead className="thead-dark">
-                          <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Receipt No</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            sellHistoryData?.data?.data?.filter(d => d.sellId === rowId).map(hist => {
-                              return (
-                                <>
-                                  <tr>
-                                    <td>{hist?.date}</td>
-                                    <td>{hist?.type}</td>
-                                    <td>{hist?.amount}</td>
-                                    <td>{hist?.receiptno}</td>
-                                  </tr>
-                                </>
-                              )
-                            })
-                          }
-                        </tbody>
-                      </table>
-                    </div>
+              {rowData1.length != 0 ? (
+                <DataGrid
+                  columnVisibilityModel={{
+                    status: false,
+                    _id: false,
+                  }}
+                  columns={column1}
+                  rows={rowData1}
+                  // slots={{ toolbar: GridToolbar }}
+                  components={{
+                    Toolbar: CustomToolbar1,
+                  }}
+                />
+              ) : (
+                <div className="d-flex justify-content-center align-item-center my-5">
+                  <div
+                    class="spinner-border"
+                    style={{ width: "3rem", height: "3rem" }}
+                    role="status"
+                  >
+                    <span class="visually-hidden"></span>
                   </div>
-                </td>
-              </tr>
+                </div>
+              )}
             </div>
             <div className="modal-footer">
               <div className="text-left m-4">
-                <b>Total Add Money for Debit Sell : {Math.round(adddebittotal)}</b>
-                
+                <b>Total Add Money for Debit Sell : {Math.round(debitsellhistory)}</b>
               </div>
               <button
                 type="button"

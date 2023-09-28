@@ -5,7 +5,8 @@ import { ToastContainer } from "react-toastify";
 import { notifyDone } from "../../assets/toster";
 import { useVendorData } from "../../services/vendorServices";
 import { useSelector } from "react-redux";
-import { useAddPurchase, useGetUniqueBillNo } from "../../services/purchaseServices";
+import { useAddPurchase, useGetItemCompanyWise, useGetUniqueBillNo } from "../../services/purchaseServices";
+import { useGetCompanys, useGetItems } from "../../services/companyAndItemServices";
 
 export const AddPurchaseComponent = () => {
   const validation = {
@@ -23,8 +24,8 @@ export const AddPurchaseComponent = () => {
         message: "maximum words length is 200.",
       },
     },
-    gstper:{
-      required:{
+    gstper: {
+      required: {
         value: true,
         message: "GST No is required.",
       }
@@ -71,11 +72,7 @@ export const AddPurchaseComponent = () => {
       required: {
         value: true,
         message: "Price is required.",
-      },
-      min: {
-        value: 1,
-        message: "Minimum one rs is required.",
-      },
+      }
     },
     invoice: {
       required: {
@@ -110,7 +107,7 @@ export const AddPurchaseComponent = () => {
   var navigate = useNavigate();
 
   var {
-    register: vendorRegister, 
+    register: vendorRegister,
     handleSubmit: vendorSubmit,
     formState: { errors: vendorError },
   } = useForm();
@@ -129,7 +126,6 @@ export const AddPurchaseComponent = () => {
 
   var [purchaseItems, setPurchaseItems] = useState([]);
   const submitData = (data) => {
-    console.log("data..---->>>",data);
     data.id = ids;
     setids((ids += 1));
     setPurchaseItems([...purchaseItems, data]);
@@ -139,8 +135,13 @@ export const AddPurchaseComponent = () => {
 
   const { data: vendorData, isLoading: vendorLoading } = useVendorData();
 
-  var itemsData = useSelector((state) => state.items.value);
-  var companiesData = useSelector((state) => state.company.value);
+  // var itemsData = useSelector((state) => state.items.value);
+  // var companiesData = useSelector((state) => state.company.value);
+
+  var {data:itemsData ,isLoading:itemDataLoading} = useGetItems();
+  var { data: companiesData, isLoading: companiesDataLoading } = useGetCompanys();
+
+
 
   var [companyId, setcompanyId] = useState("");
   const getItemCompanyWise = (data) => {
@@ -160,20 +161,19 @@ export const AddPurchaseComponent = () => {
   const setTotalRs = (gstper) => {
     var qty = document.getElementById("qty").value;
     var price = document.getElementById("price").value;
-      if (qty <= 0) {
-      } 
-      else if(gstper==0)
-      {
-        var p = (price * qty);
-        document.getElementById("totalPrice").value = p;
-      }
-      else {
-          var p = (price*qty)+((price * qty* gstper)/100);
-          document.getElementById("totalPrice").value = p;
+    if (qty <= 0) {
+    }
+    else if (gstper == 0) {
+      var p = (price * qty);
+      document.getElementById("totalPrice").value = p;
+    }
+    else {
+      var p = (price * qty) + ((price * qty * gstper) / 100);
+      document.getElementById("totalPrice").value = p;
 
-        }
-      };
-    
+    }
+  };
+
 
   var billMutation = useGetUniqueBillNo();
   const getBillUnique = (value) => {
@@ -205,11 +205,10 @@ export const AddPurchaseComponent = () => {
     if (mutation.isLoading) {
       setnote(0);
     }
-    if (itemsData.length === 0 && companiesData.length === 0) {
+    if (itemsData?.data?.data?.length === 0 && companiesData?.data?.data?.length === 0) {
       navigate("/");
     }
     if (billMutation.data) {
-      console.log("bill mutation -> ", billMutation.data.data.data);
       if (billMutation.data.data.data === false) {
         setbillError(false)
       } else {
@@ -321,7 +320,7 @@ export const AddPurchaseComponent = () => {
                             Invoice (Bill number)
                           </label>
                           <span className="text-danger font-weight-bold mx-2" style={{ display: billError == true ? "none" : "block" }}>
-                          <b>  Please, enter unique bill number</b>
+                            <b>  Please, enter unique bill number</b>
                           </span>
                         </div>
                         <input
@@ -417,7 +416,7 @@ export const AddPurchaseComponent = () => {
                             }}
                           >
                             <option value="">Select company</option>
-                            {companiesData.map((company) => {
+                            {companiesData?.data?.data?.map((company) => {
                               return (
                                 <option value={company._id}>
                                   {company.name}
@@ -453,7 +452,7 @@ export const AddPurchaseComponent = () => {
                             className="form-control"
                             id="price"
                             placeholder="Enter quantity."
-                           
+
                             {...register("price", validation.price)}
                           />
                           <span className="text-danger font-weight-bold">
@@ -488,7 +487,7 @@ export const AddPurchaseComponent = () => {
                             disabled="true"
                           >
                             <option value="">First select company</option>
-                            {itemsData?.map((item) => {
+                            {itemsData?.data?.data?.map((item) => {
                               if (item?.companyId?._id == companyId) {
                                 return (
                                   <option key={item._id} value={item._id}>
@@ -519,18 +518,18 @@ export const AddPurchaseComponent = () => {
                         </div>
                         <div className="form-group mandatory">
                           <label htmlFor="item" class="form-label">
-                           Select GST
+                            Select GST
                           </label>
-                          <select 
-                           class="form-select"
-                           id="gstper"
-                           onChangeCapture={(event) =>
-                            setTotalRs(event.target.value)
-                          }
-                          // onVolumeChange={changeGstValue}
-                           {...register("gstper", validation.gstper)}
-                           >
-                            
+                          <select
+                            class="form-select"
+                            id="gstper"
+                            onChangeCapture={(event) =>
+                              setTotalRs(event.target.value)
+                            }
+                            // onVolumeChange={changeGstValue}
+                            {...register("gstper", validation.gstper)}
+                          >
+
                             <option >Select GST Per</option>
                             <option value={0}>0%</option>
                             <option value={5}>5%</option>
@@ -624,14 +623,14 @@ export const AddPurchaseComponent = () => {
                               <tr>
                                 <td className="text-bold-500">
                                   {
-                                    companiesData?.find(
+                                    companiesData?.data?.data?.find(
                                       (ele) => ele._id === item.companyId
                                     )?.name
                                   }
                                 </td>
                                 <td>
                                   {
-                                    itemsData?.find(
+                                    itemsData?.data?.data?.find(
                                       (itm) => itm._id === item.itemId
                                     )?.name
                                   }
@@ -640,7 +639,7 @@ export const AddPurchaseComponent = () => {
                                 <td>{item.uom}</td>
                                 <td>{item.price}</td>
                                 <td>{item.gstper}%</td>
-                                <td>{item.gstper=="0" ? Math.round((item.price*item.qty)) : Math.round((item.price*item.qty)+((item.price * item.qty* item.gstper)/100))}</td>
+                                <td>{item.gstper == "0" ? Math.round((item.price * item.qty)) : Math.round((item.price * item.qty) + ((item.price * item.qty * item.gstper) / 100))}</td>
                                 <td>
                                   <button
                                     type="button"

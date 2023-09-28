@@ -9,23 +9,23 @@ import { deleteClients } from "../../redux/ClientSlice";
 export const ListClientComponent = () => {
 
   const mutation = useDeleteClient();
-  const clientData = useSelector((state) => state.client.value)
-  const dispatch = useDispatch();
+  const { data: clientData, isLoading: clientLoading, refetch} = useClientData();
+
   const [note, setnote] = useState(0)
 
   useEffect(() => {
     if (mutation.isSuccess && note === 0) {
+      refetch();
       setnote(1)
     }
 
     if (mutation.isLoading === true && note === 1) {
       setnote(0)
     }
-  }, [mutation.data, mutation.isLoading]);
+  }, [mutation.data, mutation.isLoading,clientData]);
 
   const deleteClient = (id) => {
     mutation.mutate(id);
-    dispatch(deleteClients(id))
     notifyErorr("Client deleted successfully.");
   };
 
@@ -78,8 +78,8 @@ export const ListClientComponent = () => {
                 <div className="card-header">
                   <h4 className="card-title">Clients </h4>
                 </div>
-                {clientData.length === 0 ||
-                  mutation.isLoading === true ? (
+                {clientLoading === 0 ||
+                  mutation.isLoading === true || clientData?.data?.data === undefined || clientData === true ?  (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
                       class="spinner-border"
@@ -103,7 +103,7 @@ export const ListClientComponent = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {clientData?.map((client) => {
+                          {clientData?.data?.data.map((client) => {
                             return (
                               <>
                                 <tr>

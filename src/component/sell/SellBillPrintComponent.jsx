@@ -11,7 +11,6 @@ export const SellBillPrintComponent = (props) => {
 
     const [note, setnote] = useState(0)
     useEffect(() => {
-        console.log(id, props);
         props.onClose()
         if (note === 0) {
             SellItems = props.items?.filter(itm => itm._id === id)[0];
@@ -121,10 +120,10 @@ export const SellBillPrintComponent = (props) => {
                                                             <strong>ID</strong>
                                                         </td>
                                                         <td className="text-center">
-                                                            <strong>ITEM</strong>
+                                                            <strong>COMPANY</strong>
                                                         </td>
                                                         <td className="text-center">
-                                                            <strong>DESCRIPTION</strong>
+                                                            <strong>ITEM</strong>
                                                         </td>
                                                         <td className="text-right">
                                                             <strong>QUANTITY</strong>
@@ -161,7 +160,7 @@ export const SellBillPrintComponent = (props) => {
                                                         <td className="no-line">
                                                             <strong className='text-black'>Grand Total</strong>
                                                         </td>
-                                                        <td className="text-black"><b>{Math.round(grandTotal)}</b></td>
+                                                        <td className="text-black"><b>{Math.round(grandTotal)}/-</b></td>
                                                     </tr>
                                                     <br />
                                                     <br />

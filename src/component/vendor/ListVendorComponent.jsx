@@ -1,31 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { useVendorData, useDeleteVendor } from '../../services/vendorServices'
+import { useVendorData, useDeleteVendor, usevendorData } from '../../services/vendorServices'
 import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
-import { notifyDone } from "../../assets/toster"
+import { notifyDone, notifyErorr } from "../../assets/toster"
 import { useDispatch, useSelector } from 'react-redux';
 export const ListVendorComponent = () => {
 
     const mutation = useDeleteVendor();
-    const vendorData = useSelector((state) => state.vendor.value)
-    const dispatch = useDispatch()
+    const { data: vendorData, isLoading: vendorLoading, refetch} = useVendorData();
     const [note, setnote] = useState(0)
 
     useEffect(() => {
         if (mutation.isSuccess && note === 0) {
             setnote(1)
-            notifyDone("vendor deleted successfully.")
+            notifyErorr("vendor deleted successfully.")
+            refetch()
         }
 
         if (mutation.isLoading === true && note === 1) {
             setnote(0)
         }
-    }, [mutation]);
+    }, [mutation, vendorData]);
 
     const deleteVendor = (id) => {
-        console.log("--------> ===> ", id);
         mutation.mutate(id);
-        dispatch(deleteVendor(id))
     }
 
     return (
@@ -78,7 +76,7 @@ export const ListVendorComponent = () => {
                                     <h4 className="card-title">Vendors </h4>
                                 </div>
                                 {
-                                    mutation.isLoading === true || vendorData.length === 0 ? (
+                                    mutation.isLoading === true || vendorData?.data?.data === undefined || vendorLoading === true ? (
                                         <div className='d-flex justify-content-center align-item-center my-5'>
                                             <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
                                                 <span class="visually-hidden"></span>
@@ -100,7 +98,7 @@ export const ListVendorComponent = () => {
                                                     <tbody>
 
                                                         {
-                                                            vendorData?.map(vendor => {
+                                                            vendorData?.data?.data?.map(vendor => {
                                                                 return (
                                                                     <>
                                                                         <tr>

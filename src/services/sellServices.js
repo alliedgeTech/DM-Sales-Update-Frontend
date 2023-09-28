@@ -25,10 +25,13 @@ const deletesell = (id) => {
 }
 
 const datewisesellbill = (data) => {
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellitem", data)
+}
+const datewisesellprice = (data) => {
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellprice", data)
 }
+
 const updateDebitMoney = (data) => {
-  console.log("updateDebitMoney", data)
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/update-money", data)
 }
 
@@ -47,7 +50,6 @@ const datewiseaddmoney = (data) => {
 }
 
 const MYWiseAddMoney = (data) => {
-  console.log("data in service file",data);
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-between", data)
 }
 
@@ -93,6 +95,12 @@ export const useDateWiseSellBill = (data) => {
     retryDelay: 1000
   })
 }
+export const useDateWiseSellBillprice = (data) => {
+  return useMutation("datewisesell", datewisesellprice, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
 
 export const useGetSellPriceHistory = () => {
   return useQuery("sellPriceHistory", getPriceHistory, {
@@ -121,3 +129,4 @@ export const useMYWiseAddMoney = (data) => {
     retryDelay: 1000
   })
 }
+

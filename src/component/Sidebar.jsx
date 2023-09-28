@@ -144,8 +144,9 @@ export const Sidebar = (props) => {
                                         <Link to='/datewisesellprice'>DateWise SellPrice</Link>
                                     </li>
                                     <li className="submenu-item ">
-                                        <Link to='/datewiseItemlist'>DateWise Item Summary</Link>
+                                        <Link to='/datewiseItemlist'>DateWise Total Summary</Link>
                                     </li>
+                                    
                                 </ul>
                             </li>
                             <li className="sidebar-title">Stocks</li>

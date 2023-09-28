@@ -5,10 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useDeleteSell } from "../../services/sellServices"
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
 
 export const ViewSellBill = (props) => {
-  var { data, isLoading } = useGetSellData();
+  var { data: sellData, isLoading: sellDataLoading, refetch } = useGetSellData();
   const mutation = useDeleteSell();
+  const [closes, setCloses] = useState(true)
   const columns = [
     {
       field: "id",
@@ -16,11 +18,12 @@ export const ViewSellBill = (props) => {
       width: 30,
     },
     { field: "_id", headerName: "", width: "0" },
-    { field: "sellbillno", headerName: "Bill no", width: 150 },
-    { field: "date", headerName: "Date", width: 150 },
-    { field: "client", headerName: "Client", width: 200 },
-    { field: "paymentType", headerName: "PaymentType", width: 150 },
-    { field: "total", headerName: "Amount", width: 150 },
+    { field: "sellbillno", headerName: "Bill no", width: 120 },
+    { field: "date", headerName: "Date", width: 140 },
+    { field: "client", headerName: "Client", width: 150 },
+    { field: "paymentType", headerName: "PaymentType", width: 120 },
+    { field: "total", headerName: "Current Amount", width: 150 },
+    { field: "maintotal", headerName: "Main Amount", width: 150 },
     {
       field: "actions",
       headerName: "View Items",
@@ -65,29 +68,32 @@ export const ViewSellBill = (props) => {
   var totalPrices = 0;
   var [sellbilltotal, setsellbilltotal] = useState(0)
   const setRows = (data) => {
-    console.log("data--------",data);
     var id = 0;
     sellbilltotal = 0;
     setsellbilltotal(sellbilltotal);
     const completedData = data.map((element) => {
-      sellbilltotal += element?.items.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+      sellbilltotal += element?.items?.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
         return accumulator + currentValue;
       }, 0)
       setsellbilltotal(sellbilltotal);
       var date = element.date.substring(0, 10).split("-");
       date = `${date[2]}/${date[1]}/${date[0]}`;
       element?.items.map(ele => ele.qty * ele.price).forEach(ele => totalPrices += ele)
-      return {
+       return {
         id: ++id,
         _id: element._id,
         sellbillno: element.sellbillno,
         date: date,
         client: element?.clientId?.name,
         paymentType: element.paymentType === 1 ? "Credit" : "Debit",
-        total: Math.round((element?.total*100)/100)
+        total: Math.round((element?.total * 100) / 100),
+        maintotal:Math.round(element?.items?.map(ele => ele.qty * ele.price).reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0))
       };
     });
     setRowData(completedData);
+    setCloses(false);
   };
 
   var [others, setothers] = useState([])
@@ -98,10 +104,10 @@ export const ViewSellBill = (props) => {
     totalPrice = 0
     settotalPrice(totalPrice)
     let calculation = 0
-    const dts = store.sell.value?.filter((d) => d._id === id)[0].items;
+    const dts = sellData?.data?.data?.filter((d) => d._id === id)[0].items;
     dts.forEach(itm => {
       calculation += (itm.price * itm.qty)
-      settotalPrice(Math.round(calculation*100)/100)
+      settotalPrice(Math.round(calculation * 100) / 100)
       others.push(itm)
       setothers(others)
     })
@@ -117,24 +123,30 @@ export const ViewSellBill = (props) => {
     mutation.mutate(selldeleteid)
   }
 
-  const store = useSelector((state) => state)
   const navigate = useNavigate();
 
+  const [note, setNote] = useState(true);
   useEffect(() => {
-    if (store.sell.value.length !== 0) {
+    if (sellData?.data?.data !== 0 && sellData?.data?.data !== undefined && sellDataLoading === false && closes) {
       props.onclose()
-      props.sellItems(store.sell.value);
-      setRows(store.sell.value);
-    } else {
-      navigate("/")
+      props.sellItems(sellData?.data?.data);
+      setRows(sellData?.data?.data);
+      setCloses(false)
     }
-    console.log("Storess : ", store.sell.value);
+    if (mutation.isSuccess === true && note === true) {
+      toast.success("sell deleted successfully");
+      refetch();
+      setNote(false)
+    }
+    if (mutation.isLoading && note === false) {
+      setNote(true)
+      setCloses(true)
+    }
     document.getElementsByName("_id").checked = "";
-  }, []);
+  }, [sellDataLoading, mutation]);
 
   const handleButtonClick1 = (id) => {
-    console.log("params id", id);
-    store.sell.value.filter((e) => e._id === id).map((f) => {
+    sellData?.data?.data?.filter((e) => e._id === id).map((f) => {
       setRemarks(f.remark)
     })
   }
@@ -143,13 +155,25 @@ export const ViewSellBill = (props) => {
     return (
       <GridToolbarContainer>
         <GridToolbar />
-        <h5 style={{paddingTop:"12px"}}>Sell Bill List Total:{Math.round(sellbilltotal)}</h5>
+        <h5 style={{ paddingTop: "12px" }}>Sell Bill List Total:{Math.round(sellbilltotal)}</h5>
       </GridToolbarContainer>
     );
   };
-  
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div id="main">
         <header className="mb-3">
           <a href="#" className="burger-btn d-block d-xl-none">
@@ -192,7 +216,7 @@ export const ViewSellBill = (props) => {
                     components={{
                       Toolbar: CustomToolbar,
                     }}
-                    />
+                  />
                 ) : (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
@@ -237,8 +261,7 @@ export const ViewSellBill = (props) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {others?.map((itm) => {4
-                      console.log("others_____",others);
+                      {others?.map((itm) => {
                         return (
                           <>
                             <tr>

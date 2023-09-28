@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddSell, useGetUniqueBillNo } from "../../services/sellServices";
 import { useGetStockData } from '../../services/stockServices';
 import { addStock } from '../../redux/StockSlice';
+import { useGetCompanys, useGetItems } from '../../services/companyAndItemServices';
 
 export const AddSellBill = () => {
 
@@ -80,10 +81,6 @@ export const AddSellBill = () => {
         value: true,
         message: "Price is required.",
       },
-      min: {
-        value: 1,
-        message: "Minimum one rs is required.",
-      },
       pattern: {
         value: /^[0-9.]+$/,
         message: "Only numbers are allowed.",
@@ -126,11 +123,16 @@ export const AddSellBill = () => {
   const navigate = useNavigate();
 
   const { data: stockData, isLoading: stockLoading } = useGetStockData();
-  const dispatch = useDispatch();
-  const stocksData = useSelector((state) => state.stock.value)
-
+  // const dispatch = useDispatch();
+  // const stocksData = useSelector((state) => state.stock.value)
+  
+  
+  // var itemsData = useSelector((state) => state.items.value);
+  // var companiesData = useSelector((state) => state.company.value);
+  
   const { data: clientData, isLoading: clientLoading } = useClientData();
-
+  var {data:itemsData ,isLoading:itemDataLoading} = useGetItems();
+  var { data: companiesData, isLoading: companiesDataLoading } = useGetCompanys();
   var {
     register: clientRegister,
     handleSubmit: clientSubmit,
@@ -157,8 +159,6 @@ export const AddSellBill = () => {
     document.getElementById("forms").reset();
   };
   
-  var itemsData = useSelector((state) => state.items.value);
-  var companiesData = useSelector((state) => state.company.value);
   
   var [companyId, setcompanyId] = useState("");
   const getItemCompanyWise = (data) => {
@@ -178,7 +178,6 @@ export const AddSellBill = () => {
     } else {
       setpaymentDisable(true)
     }
-    console.log(data, paymentDisable);
   };
   
   const deleteItems = (id) => {
@@ -206,7 +205,7 @@ export const AddSellBill = () => {
   };
   
   const setInstock = (data) => {
-    StockQuantity = stocksData.find(ele => ele.itemId._id === data)?.qty
+    StockQuantity = stockData?.data?.data?.find(ele => ele.itemId._id === data)?.qty
     setStockQuantity(StockQuantity)
   }
   
@@ -220,9 +219,9 @@ export const AddSellBill = () => {
     }
   }
   useEffect(() => {
-    if (stockData !== undefined && stockLoading === false && stocksData.length === 0) {
+    if (stockData !== undefined && stockLoading === false && stockData?.data?.data?.length === 0) {
       stockData.data.data.forEach(element => {
-        dispatch(addStock(element));
+        // dispatch(addStock(element));
       });
     }
     if (mutation.isSuccess) {
@@ -238,18 +237,17 @@ export const AddSellBill = () => {
     if (mutation.isLoading) {
       setnote(0);
     }
-    if (itemsData.length === 0 && companiesData.length === 0) {
+    if (itemsData?.data?.data?.length === 0 && companiesData?.data?.data?.length === 0) {
       navigate("/");
     }
     if (billMutation.data) {
-      console.log("bill mutation -> ", billMutation.data.data.data);
       if (billMutation.data.data.data === false) {
         setsellbillError(false)
       } else {
         setsellbillError(true)
       }
     }
-  }, [itemsData, companiesData, stocksData, companyId, mutation, paymentDisable,billMutation]);
+  }, [itemsData, companiesData, stockData, companyId, mutation, paymentDisable,billMutation]);
 
   return (
     <>
@@ -471,7 +469,7 @@ export const AddSellBill = () => {
                             }}
                           >
                             <option value="">Select company</option>
-                            {companiesData.map((company) => {
+                            {companiesData?.data?.data?.map((company) => {
                               return (
                                 <option value={company._id}>
                                   {company.name}
@@ -535,7 +533,7 @@ export const AddSellBill = () => {
                             onChange={(event) => setInstock(event.target.value)}
                           >
                             <option value="">First select company</option>
-                            {stocksData?.map((item) => {
+                            {stockData?.data?.data?.map((item) => {
                               if (item?.itemId?.companyId === companyId) {
                                 return (
                                   <option key={item?.itemId._id} value={item?.itemId._id}>
@@ -660,14 +658,14 @@ export const AddSellBill = () => {
                               <tr>
                                 <td className="text-bold-500">
                                   {
-                                    companiesData?.find(
+                                    companiesData?.data?.data?.find(
                                       (ele) => ele._id === item.companyId
                                     )?.name
                                   }
                                 </td>
                                 <td>
                                   {
-                                    itemsData?.find(
+                                    itemsData?.data?.data?.find(
                                       (itm) => itm._id === item.itemId
                                     )?.name
                                   }
@@ -819,7 +817,7 @@ export const AddSellBill = () => {
                     </button>
                   </div>
                   <div class="modal-body">
-                    Are you sure you want to process to purchase?
+                    Are you sure you want to process to Sell?
                   </div>
                   <div class="modal-footer">
                     <button

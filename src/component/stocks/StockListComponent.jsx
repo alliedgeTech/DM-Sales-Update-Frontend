@@ -10,9 +10,9 @@ export const StockListComponent = () => {
     const columns = [
         { field: "id", headerName: "ID", width: 90 },
         { field: "_id", headerName: "", width: "0" },
-        { field: "company", headerName: "Company name", width: 250 },
-        { field: "companyId", headerName: "", width: 0 },
-        { field: "item", headerName: "Items", width: 150 },
+        // { field: "company", headerName: "Company name", width: 250 },
+        // { field: "companyId", headerName: "", width: 0 },
+        { field: "item", headerName: "Items", width: 350 },
         { field: "itemId", headerName: "", width: 0 },
         { field: "qty", headerName: "Quantity", width: 150 },
         { field: "uom", headerName: "Unit", width: 200 },
@@ -38,7 +38,6 @@ export const StockListComponent = () => {
     var [stockPrice, setstockPrice] = useState(0)
     const setRows = (data) => {
         var id = 0;
-        console.log("data",data);
         const completedData = data.map((element) => {
             stockPrice += (element.price * element.qty);
             setstockPrice(stockPrice);

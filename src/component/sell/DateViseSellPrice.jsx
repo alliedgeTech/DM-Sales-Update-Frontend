@@ -1,7 +1,8 @@
 import { React, useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { useDateWiseSellBill } from "../../services/sellServices"
+import { useDateWiseSellBill, useDateWiseSellBillprice } from "../../services/sellServices"
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 export const DateViseSellPrice = () => {
 
 
@@ -16,11 +17,12 @@ export const DateViseSellPrice = () => {
   var id = 0
   var { register, handleSubmit, formState: { errors } } = useForm();
   const [datewiseselllist, setdatewiseselllist] = useState([])
-  const mutation = useDateWiseSellBill();
-  console.log("Mutation: " ,mutation);
+  const mutation = useDateWiseSellBillprice();
+  // console.log("Mutation:::: ", mutation);
 
   const submitData = (data) => {
     mutation.mutate(data)
+    setitemdate(data.date)
   }
 
   var [item, setitem] = useState([])
@@ -28,50 +30,120 @@ export const DateViseSellPrice = () => {
   var [cash, setcash] = useState([])
   var [Cheque, setCheque] = useState([])
   var [debit, setdebit] = useState([])
+  var [itemdate, setitemdate] = useState('')
 
+  var [rowData, setRowData] = useState([]);
+  var [total, settotal] = useState(0)
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 70,
+    },
+    { field: "_id", headerName: "", width: "0" },
+    { field: "sellbillno", headerName: "Sellbillno", width: 200 },
+    { field: "paymentType", headerName: "PaymentType", width: 200 },
+    { field: "paymentMode", headerName: "PaymentMode", width: 200 },
+    { field: "total", headerName: "Total", width: 150 },
+  ];
+
+  const setRows = (data) => {
+    var id = 0; total = 0;
+    var array = [];
+    settotal(total)
+    data?.forEach((element1) => {
+      total += +((element1?.items || []).reduce((accumulator, currentValue) => {
+        return accumulator + (currentValue.price * currentValue.qty);
+      }, 0));
+      settotal(total)
+      let thisData = {
+        id: ++id,
+        _id: element1?._id,
+        sellbillno: element1?.sellbillno,
+        paymentType: element1?.paymentType === 1 ? "Credit" : "Debit",
+        paymentMode: element1?.paymentMode === "" ? "--" : element1.paymentMode,
+        total: Math.round(((element1?.items || []).reduce((accumulator, currentValue) => {
+          return accumulator + (currentValue.price * currentValue.qty);
+        }, 0))
+        )
+
+      };
+      array.push(thisData);
+    });
+    setRowData(array);
+  };
+
+  const [note, setnote] = useState(true)
   useEffect(() => {
-    if (mutation.data && mutation.isLoading === false) {
-      console.log("mutation data",mutation.data);
-      setitem(mutation.data.data.data)
-      var tempupi=0,tempcash=0,tempCheque=0,tempdebit=0,temptotalsellAmt=0;
-      item.forEach((itm)=>{
-          if(itm.paymentMode=="UPI"){
-            itm.items.forEach((e)=>{
-                tempupi+=e.price*e.qty
-            })
-            setsellupipayment(tempupi)  
-          }
-          else if(itm.paymentMode=="Cash")
-          {
-                itm.items.forEach((c)=>{
-                  tempcash+=c.price*c.qty
-                })
-              setcash(tempcash)
-          }
-          else if(itm.paymentMode=="Cheque")
-          {
-                itm.items.forEach((a)=>{
-                  tempCheque+=a.price*a.qty
-                })
-                setCheque(tempCheque)
-          }
-          else if(itm.paymentType==0)
-          {
-                itm.items.forEach((x)=>{
-                  tempdebit+=x.price*x.qty
-                })
-                setdebit(tempdebit)
-          }
-          else if(itm.paymentMode){
-             itm.items.forEach((i)=>{
-               temptotalsellAmt=i.price*i.qty
-             })
-            settotalsellAmt(temptotalsellAmt)
-          }
+    if (mutation?.data && mutation?.isLoading === false && note) {
+      setnote(false)
+      setRows(mutation?.data?.data?.data)
+      item = mutation?.data?.data?.data;
+      setitem(item)
+      var tempupi = 0, tempcash = 0, tempCheque = 0, tempdebit = 0, temptotalsellAmt = 0;
+      item.forEach((itm) => {
+        if (itm.paymentMode == "UPI") {
+          itm.items.forEach((e) => {
+            tempupi += e.price * e.qty
+          })
+          setsellupipayment(tempupi)
+        }
+        else if (itm.paymentMode == "Cash") {
+          itm.items.forEach((c) => {
+            tempcash += c.price * c.qty
+          })
+          setcash(tempcash)
+        }
+        else if (itm.paymentMode == "Cheque") {
+          itm.items.forEach((a) => {
+            tempCheque += a.price * a.qty
+          })
+          setCheque(tempCheque)
+        }
+        else if (itm.paymentType == 0) {
+          itm.items.forEach((x) => {
+            tempdebit += x.price * x.qty
+          })
+          setdebit(tempdebit)
+        }
+        else if (itm.paymentMode) {
+          itm.items.forEach((i) => {
+            temptotalsellAmt = i.price * i.qty
+          })
+          settotalsellAmt(temptotalsellAmt)
+        }
       })
     }
   }, [mutation])
 
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <div style={{ paddingTop: "10px" }}>
+          <h5>Date Wise Quantity & Total Summary: {itemdate}</h5>
+          <div className="col-12 col-md-6 m-2">
+            <h6>Total of UPI : {Math.round(sellupipayment)}</h6>
+          </div>
+          <div className="col-12 col-md-6 m-2">
+            <h6>Total of Cash : {Math.round(cash)}</h6>
+          </div>
+          <div className="col-12 col-md-6 m-2">
+            <h6>Total of Cheque : {Math.round(Cheque)}</h6>
+          </div>
+          <div className="col-12 col-md-6 m-2">
+            <h6>Total of Debit : {Math.round(debit)}</h6>
+          </div>
+          <p>--------------------------------</p>
+          <div className="col-12 col-md-6 m-2">
+            <h6>Total Sell Amount :{Math.round((+sellupipayment) + (+cash) + (+Cheque) + (+debit))}</h6>
+          </div>
+        </div>
+        <GridToolbar />
+
+      </GridToolbarContainer>
+    );
+  };
   return (
     <>
       <div id="main">
@@ -134,73 +206,34 @@ export const DateViseSellPrice = () => {
               </div >
             </div >
           </section >
+          <section className="section">
+            <div className="card">
+              
+              <div className="card-body">
+                {rowData.length != 0 ? (
+                  <DataGrid
+                    columnVisibilityModel={{
+                      status: false,
+                      _id: false,
+                    }}
 
-          <div className="card">
-            <div className="card-header">
-              <h4 className="card-title">Sell Items </h4>
+                    columns={columns}
+                    rows={rowData}
+
+                    // slots={{ toolbar: GridToolbar }}
+                    components={{
+                      Toolbar:CustomToolbar
+                    }}
+                  />
+                ) : (
+                  <div className="d-flex justify-content-center align-item-center my-5">
+                    <div> NO DATA AVAILABLE</div>
+                  </div>
+                )}
+              </div>
             </div>
-            {item.length === 0 ? (
-              <div className="d-flex justify-content-center align-item-center my-5">
-                No items added
-              </div>
-            ) : (
-              <div className="card-content p-2">
-                <div className="table-responsive">
-                  <div className="d-flex justify-content-evenly"></div>
-                  <table className="table mb-0">
-                    <thead className="thead-dark">
-                      <tr>
-                        <th>Id</th>
-                        <th>Sell Bill NO</th>
-                        <th>Payment Type</th>
-                        <th>Payment Mode</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        item?.map((data) => {
+          </section>
 
-                          return (
-                            <>
-                              <tr>
-                                <td>{++id}</td>
-                                <td>{data.sellbillno}</td>
-                                <td>{data.paymentType === 1 ? "Credit" : "Debit"}</td>
-                                <td>{data.paymentMode === "" ? "--" : data.paymentMode}</td>
-                                <td>{
-                                  data.items.reduce((accumulator, currentValue) => {
-                                    return accumulator + (currentValue.price * currentValue.qty);
-                                  }, 0)
-                                }</td>
-                              </tr>
-                            </>
-                          )
-                        })
-                      }
-                    </tbody>
-                  </table>
-                  <div className="col-12 col-md-6 m-2">
-                <h6>Total of UPI : {Math.round(sellupipayment)}</h6>
-              </div>
-              <div className="col-12 col-md-6 m-2">
-                <h6>Total of Cash : {Math.round(cash)}</h6>
-              </div>
-              <div className="col-12 col-md-6 m-2">
-                <h6>Total of Cheque : {Math.round(Cheque)}</h6>
-              </div>
-              <div className="col-12 col-md-6 m-2">
-                <h6>Total of Debit : {Math.round(debit)}</h6>
-              </div>
-              <p>--------------------------------</p>
-              <div className="col-12 col-md-6 m-2">
-                <h6>Total Sell Amount :{Math.round((+sellupipayment)+(+cash)+(+Cheque)+(+debit))}</h6>
-              </div>
-                </div>
-              </div>
-            )}
-             
-          </div>
         </div >
       </div >
     </>

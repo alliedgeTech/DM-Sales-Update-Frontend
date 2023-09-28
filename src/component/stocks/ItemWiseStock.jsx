@@ -8,7 +8,6 @@ import { useMutation } from "react-query";
 export const ItemWiseStock = () => {
 
     var id = useParams();
-    console.log("id", id);
     var mutation = useHistoryData();
 
     const columns = [
@@ -22,27 +21,38 @@ export const ItemWiseStock = () => {
         { field: "currentQty", headerName: "Current Stock", width: 200 }
     ]
 
+    const [debit, setDebit] = useState([]);
+    const [credit, setCredit] = useState([]);
     const [rowData, setRowData] = useState([]);
     var [stockPrice, setstockPrice] = useState(0)
+
     const setRows = (data) => {
-        console.log("setRows Data", data);
         var id = 0;
-        const completedData = data.map((element) => {
-            console.log("purchase stock list", element);
-            stockPrice += (element.price * element.qty);
-            setstockPrice(stockPrice);
-            return {
-                id: ++id,
-                _id: element?._id,
-                date: element?.date,
-                type: element?.type,
-                company: element?.companyId.name,
-                item: element?.itemId?.name,
-                inQty: element?.inQty,
-                currentQty: element.type === "purchase" ? (element?.inQty + element.currentQty) : (element.currentQty - element?.inQty)
-            };
-        });
-        setRowData(completedData);
+        // data.forEach(element => {
+        //     if(element.type === "purchase" )
+        // });
+        const groupedData = data.reduce((result, element) => {
+            const existingEntry = result.find((entry) => entry.date === element.date);
+
+            if (existingEntry) {
+                existingEntry.currentQty +=
+                    element.type === "purchase" ? element.inQty : -element.inQty;
+            } else {
+                result.push({
+                    id: ++id,
+                    _id: element?._id,
+                    date: element?.date,
+                    type: element?.type,
+                    company: element?.companyId.name,
+                    item: element?.itemId?.name,
+                    inQty: element?.inQty,
+                    currentQty:
+                        element.type === "purchase" ? element.inQty : -element.inQty,
+                });
+            }
+            return result;
+        }, []);
+        setRowData(groupedData);
     };
 
     useEffect(() => {

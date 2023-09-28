@@ -56,11 +56,9 @@ export const DateWiseAddMoneyList = () => {
       }
     })
     setRowData(completedData)
-    console.log("rowData",rowData);
   }
   useEffect(() => {
     if (mutation.data && mutation.isLoading === false) {
-      console.log("mutation Data", mutation.data.data.data);
       setRows(mutation.data.data.data);
     }
     else if (mutation.data && mutation.isLoading === true) {

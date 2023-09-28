@@ -14,7 +14,7 @@ const vendorSlice = createSlice({
             });
         },
         deleteVendor: (state, action) => {
-            console.log("---> ", action.payload);
+            // console.log("---> ", action.payload);
             state.value = state.value.filter(vendor => vendor._id !== action.payload)
         }
     }
