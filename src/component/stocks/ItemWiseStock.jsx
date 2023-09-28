@@ -26,6 +26,8 @@ export const ItemWiseStock = () => {
     const [rowData, setRowData] = useState([]);
     var [stockPrice, setstockPrice] = useState(0)
 
+    var temp = true;
+    var currentQty = 0;
     const setRows = (data) => {
         var id = 0;
         // data.forEach(element => {
@@ -53,6 +55,27 @@ export const ItemWiseStock = () => {
             return result;
         }, []);
         setRowData(groupedData);
+        // const completedData = data?.map((element) => {
+        //     if (temp === true) {
+        //         currentQty = data[0].inQty;
+        //         temp = false
+        //     } else {
+        //         currentQty = element.type === "purchase" ? (currentQty + element?.inQty) : (currentQty - element?.inQty)
+        //         console.log("=======> ", currentQty);
+        //     }
+        //     return {
+        //         id: ++id,
+        //         _id: element?._id,
+        //         date: element?.date,
+        //         type: element?.type,
+        //         company: element?.company?.name,
+        //         item: element?.item?.name,
+        //         inQty: element?.inQty,
+        //         // currentQty: element.type === "purchase" ? (element?.inQty + currentQty) : (currentQty - element?.inQty)
+        //         currentQty: currentQty,
+        //     };
+        // });
+        // setRowData(completedData);
     };
 
     useEffect(() => {

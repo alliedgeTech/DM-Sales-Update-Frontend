@@ -151,7 +151,7 @@ export const AddSellBill = () => {
   var [ids, setids] = useState(1);
   var [sellItem, setsellItem] = useState([]);
 
-  
+
   const submitData = (data) => {
     data.id = ids;
     setids((ids += 1));
@@ -169,8 +169,8 @@ export const AddSellBill = () => {
       document.getElementById("items").disabled = true;
     }
   };
-  
-  
+
+
   var [paymentDisable, setpaymentDisable] = useState(true)
   const getPaymentWise = (data) => {
     if (data == 1) {
@@ -179,14 +179,14 @@ export const AddSellBill = () => {
       setpaymentDisable(true)
     }
   };
-  
+
   const deleteItems = (id) => {
     sellItem = sellItem.filter((item) => item.id !== id);
     setsellItem(sellItem);
   };
-  
+
   var [totalPrice, setTotalPrice] = useState(0);
-  
+
   const setTotalRs = (price) => {
     var qty = document.getElementById("qty").value;
     if (qty <= 0) {
@@ -196,21 +196,21 @@ export const AddSellBill = () => {
       document.getElementById("totalPrice").value = p;
     }
   };
-  
+
   const mutation = useAddSell();
   const addDataIntoPurchase = () => {
     clientDetails.items = sellItem;
     setclientDetails(clientDetails);
     mutation.mutate(clientDetails);
   };
-  
+
   const setInstock = (data) => {
     StockQuantity = stockData?.data?.data?.find(ele => ele.itemId._id === data)?.qty
     setStockQuantity(StockQuantity)
   }
-  
+
   var [note, setnote] = useState(0);
-  
+
   var [sellbillError, setsellbillError] = useState(true)
   var billMutation = useGetUniqueBillNo();
   const getBillUnique = (value) => {
@@ -352,20 +352,19 @@ export const AddSellBill = () => {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group mandatory">
-                      <div className="d-flex justify-content-between">
-                        <label htmlFor="invoice" class="form-label">
-                          SellBill number
-                        </label>
-                        <span className="text-danger font-weight-bold mx-2" style={{ display: sellbillError == true ? "none" : "block" }}>
+                        <div className="d-flex justify-content-between">
+                          <label htmlFor="invoice" class="form-label">
+                            SellBill number
+                          </label>
+                          <span className="text-danger font-weight-bold mx-2" style={{ display: sellbillError == true ? "none" : "block" }}>
                             <b>Please, enter unique sellbill number</b>
                           </span>
-                          </div>
+                        </div>
                         <input
                           type="number"
                           className="form-control"
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
-                          //// onBlurCapture={(event)  => disableInvoice(event.target.value)}
                           onKeyUp={(event) => getBillUnique(event.target.value)}
                           {...clientRegister("sellbillno", validation.sellbillno)}
                         />
@@ -416,8 +415,6 @@ export const AddSellBill = () => {
                 </form>
               </div>
             </div>
-
-            {/* --------------------------------------------------------------------------------------------------------------- */}
             <div
               className="card fadeUp"
               style={{
@@ -673,7 +670,7 @@ export const AddSellBill = () => {
                                 <td className="text-bold-500">{item.qty}</td>
                                 <td>{item.uom}</td>
                                 <td>{item.price}</td>
-                                <td>{Math.round(item.qty*item.price)}</td>
+                                <td>{Math.round(item.qty * item.price)}</td>
                                 <td>
                                   <button
                                     type="button"

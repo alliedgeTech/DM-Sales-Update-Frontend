@@ -133,25 +133,23 @@ export const Deshboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* --------------------- */}
                                 <div className="row">
-                                    <div className="card"></div>
-                                    <div className=" col-md-4 card pt-4">
+                                    <div className="col-md-5 card pt-4 mx-3">
                                         <div className="card-content pb-4">
                                             <div className="name ms-4 mb-0">
-                                                <h5 className="mb-0 text-gray ">Date Wise Add Debit Money List</h5>
+                                                <h5 className="mb-0 text-gray ">Date Wise Debit Money List</h5>
                                             </div>
                                             <div className="px-4">
                                                 <Link to='/datewiseaddmoneylist' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
-                                                    View Add MoneyList 
+                                                    View Add MoneyList
                                                 </Link>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className=" col-md-4 card pt-4 ">
+                                    <div className=" col-md-6 card pt-4 mx-3">
                                         <div className="card-content pb-4 pl-2">
                                             <div className="name ms-4 mb-0">
-                                                <h5 className="mb-0 text-gray">Month/Year Wise Add DebitMoney List</h5>
+                                                <h5 className="mb-0 text-gray">Month/Year Wise DebitMoney List</h5>
                                             </div>
                                             <div className="px-4">
                                                 <Link to='/mywiseaddmoneylist' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
@@ -160,149 +158,31 @@ export const Deshboard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="col-12">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                <h4>Profit calculation</h4>
+                                    <div className=" col-md-6 card pt-4">
+                                        <div className="card-content pb-4 pl-2">
+                                            <div className="name ms-4 mb-0">
+                                                <h5 className="mb-0 text-gray">Filters</h5>
                                             </div>
-                                            <div className="card-body">
-                                                <Line data={data} options={options} />
+                                            <div className="px-4">
+                                                <Link to='/filter' className="btn btn-block btn-xl btn-outline-primary font-bold mt-3">
+                                                    Filters
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <div className="card">
+                                                <div className="card-header">
+                                                    <h4>Profit calculation</h4>
+                                                </div>
+                                                <div className="card-body">
+                                                    <Line data={data} options={options} />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="row">
-                                    <div className="col-12 col-xl-4">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                <h4>Profile Visit</h4>
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <div className="d-flex align-items-center">
-                                                            <svg
-                                                                className="bi text-primary"
-                                                                width={32}
-                                                                height={32}
-                                                                fill="blue"
-                                                                style={{ width: 10 }}
-                                                            >
-                                                                <use xlinkHref="assets/images/bootstrap-icons.svg#circle-fill" />
-                                                            </svg>
-                                                            <h5 className="mb-0 ms-3">Europe</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <h5 className="mb-0">862</h5>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div id="chart-europe" />
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <div className="d-flex align-items-center">
-                                                            <svg
-                                                                className="bi text-success"
-                                                                width={32}
-                                                                height={32}
-                                                                fill="blue"
-                                                                style={{ width: 10 }}
-                                                            >
-                                                                <use xlinkHref="assets/images/bootstrap-icons.svg#circle-fill" />
-                                                            </svg>
-                                                            <h5 className="mb-0 ms-3">America</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <h5 className="mb-0">375</h5>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div id="chart-america" />
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <div className="d-flex align-items-center">
-                                                            <svg
-                                                                className="bi text-danger"
-                                                                width={32}
-                                                                height={32}
-                                                                fill="blue"
-                                                                style={{ width: 10 }}
-                                                            >
-                                                                <use xlinkHref="assets/images/bootstrap-icons.svg#circle-fill" />
-                                                            </svg>
-                                                            <h5 className="mb-0 ms-3">Indonesia</h5>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <h5 className="mb-0">1025</h5>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div id="chart-indonesia" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-12 col-xl-8">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                <h4>Latest Comments</h4>
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="table-responsive">
-                                                    <table className="table table-hover table-lg">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Name</th>
-                                                                <th>Comment</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td className="col-3">
-                                                                    <div className="d-flex align-items-center">
-                                                                        <div className="avatar avatar-md">
-                                                                            <img src="assets/images/faces/5.jpg" />
-                                                                        </div>
-                                                                        <p className="font-bold ms-3 mb-0">Si Cantik</p>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="col-auto">
-                                                                    <p className=" mb-0">
-                                                                        Congratulations on your graduation!
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td className="col-3">
-                                                                    <div className="d-flex align-items-center">
-                                                                        <div className="avatar avatar-md">
-                                                                            <img src="assets/images/faces/2.jpg" />
-                                                                        </div>
-                                                                        <p className="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="col-auto">
-                                                                    <p className=" mb-0">
-                                                                        Wow amazing design! Can you make another tutorial
-                                                                        for this design?
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
                             </div>
                             <div className="col-12 col-lg-3">
                                 <div className="card">

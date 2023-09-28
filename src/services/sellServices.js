@@ -7,6 +7,7 @@ const getItemCompanyWise = (company) => {
     company
   );
 };
+
 const addsell = (data) => {
   return axios.post(
     "http://localhost:9990/distributer/api/v1/public/sell/add-sell",
@@ -17,6 +18,14 @@ const addsell = (data) => {
 const getsell = () => {
   return axios.get(
     "http://localhost:9990/distributer/api/v1/public/sell/get-sell"
+  );
+};
+
+const getFilterData = (data) => {
+  return axios.get(
+    "http://localhost:9990/distributer/api/v1/public/sell/search", {
+    params: data
+  }
   );
 };
 
@@ -130,3 +139,9 @@ export const useMYWiseAddMoney = (data) => {
   })
 }
 
+export const useGetFilterdData = (data) => {
+  return useQuery("getSearchedData", getFilterData, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
