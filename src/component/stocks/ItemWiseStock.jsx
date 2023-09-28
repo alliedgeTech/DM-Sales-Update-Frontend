@@ -22,24 +22,30 @@ export const ItemWiseStock = () => {
         { field: "currentQty", headerName: "Current Stock", width: 200 }
     ]
 
+    var temp = true;
     const [rowData, setRowData] = useState([]);
-    var [stockPrice, setstockPrice] = useState(0)
+    var currentQty = 0;
     const setRows = (data) => {
         console.log("setRows Data", data);
         var id = 0;
-        const completedData = data.map((element) => {
-            console.log("purchase stock list", element);
-            stockPrice += (element.price * element.qty);
-            setstockPrice(stockPrice);
+        const completedData = data?.map((element) => {
+            if (temp === true) {
+                currentQty = data[0].inQty;
+                temp = false
+            } else {
+                currentQty = element.type === "purchase" ? (currentQty + element?.inQty) : (currentQty - element?.inQty)
+                console.log("=======> ", currentQty);
+            }
             return {
                 id: ++id,
                 _id: element?._id,
                 date: element?.date,
                 type: element?.type,
-                company: element?.companyId.name,
-                item: element?.itemId?.name,
+                company: element?.company?.name,
+                item: element?.item?.name,
                 inQty: element?.inQty,
-                currentQty: element.type === "purchase" ? (element?.inQty + element.currentQty) : (element.currentQty - element?.inQty)
+                // currentQty: element.type === "purchase" ? (element?.inQty + currentQty) : (currentQty - element?.inQty)
+                currentQty: currentQty,
             };
         });
         setRowData(completedData);

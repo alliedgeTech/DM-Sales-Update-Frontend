@@ -26,6 +26,8 @@ import { DateWiseItemList } from "./component/sell/DateWiseItemList"
 import axios from "axios"
 import { DateWiseAddMoneyList } from "./component/Deshboard/DateWiseAddMoneyList"
 import { MYWiseAddMoneyList } from "./component/Deshboard/MYWiseAddMoneyList"
+import { FiltersComponet } from "./component/Deshboard/FiltersComponet"
+import { DateWiseItemWise } from "./component/sell/DateWiseItemWise"
 
 function App() {
 
@@ -39,6 +41,7 @@ function App() {
       <Sidebar isOpen={isOpen} />
       <Routes>
         <Route path="/" element={<Deshboard />} />
+        <Route path="/filter" element={<FiltersComponet />} />
 
         {/* Client API */}
         <Route path='/client' element={<ClientComponent />}></Route>
@@ -63,12 +66,11 @@ function App() {
         <Route path="/addsellbill" element={<AddSellBill />} />
         <Route path="/viewsellbill" element={<ViewSellBill sellItems={setsellItems} onclose={() => setisOpen(true)} />} />
         <Route path="/viewsellbill/generate-sell-bill/:id" element={<SellBillPrintComponent items={sellItems} onClose={() => setisOpen(false)} />} />
-        <Route path="/datewisesellprice" element={<DateViseSellPrice/>}/>
-        <Route path="/datewiseItemlist" element={<DateWiseItemList/>}/>
-        <Route path="/datewiseaddmoneylist" element={<DateWiseAddMoneyList/>}/> 
-        <Route path="/mywiseaddmoneylist" element={<MYWiseAddMoneyList/>}/>
-
-
+        <Route path="/datewisesellprice" element={<DateViseSellPrice />} />
+        <Route path="/datewiseItemlist" element={<DateWiseItemList />} />
+        <Route path="/datewiseaddmoneylist" element={<DateWiseAddMoneyList />} />
+        <Route path="/mywiseaddmoneylist" element={<MYWiseAddMoneyList />} />
+        <Route path="/datewiseItemWise" element={<DateWiseItemWise />} />
 
         {/* Stock API */}
         <Route path="creditsellbill" element={<CreaditSellBill />} />
@@ -76,7 +78,7 @@ function App() {
 
         {/* Stock API */}
         <Route path="/list-stock" element={<StockListComponent />} />
-        <Route path='/list-stock/itemwisestock/:itemId' element={<ItemWiseStock/>} />
+        <Route path='/list-stock/itemwisestock/:itemId' element={<ItemWiseStock />} />
 
         <Route path="/*" element={<Error404 onClose={() => setisOpen(false)} />} />
       </Routes>

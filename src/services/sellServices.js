@@ -7,6 +7,7 @@ const getItemCompanyWise = (company) => {
     company
   );
 };
+
 const addsell = (data) => {
   return axios.post(
     "http://localhost:9990/distributer/api/v1/public/sell/add-sell",
@@ -17,6 +18,14 @@ const addsell = (data) => {
 const getsell = () => {
   return axios.get(
     "http://localhost:9990/distributer/api/v1/public/sell/get-sell"
+  );
+};
+
+const getFilterData = (data) => {
+  return axios.get(
+    "http://localhost:9990/distributer/api/v1/public/sell/search", {
+    params: data
+  }
   );
 };
 
@@ -47,7 +56,7 @@ const datewiseaddmoney = (data) => {
 }
 
 const MYWiseAddMoney = (data) => {
-  console.log("data in service file",data);
+  console.log("data in service file", data);
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-between", data)
 }
 
@@ -117,6 +126,13 @@ export const useDateWiseAddMoney = (data) => {
 
 export const useMYWiseAddMoney = (data) => {
   return useMutation("datewisesell", MYWiseAddMoney, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
+
+export const useGetFilterdData = (data) => {
+  return useQuery("getSearchedData", getFilterData, {
     retry: 5,
     retryDelay: 1000
   })
