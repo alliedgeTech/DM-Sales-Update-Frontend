@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
-import { useDateWiseSellBill, useDateWiseSellBillprice } from "../../services/sellServices"
+import { useDateWiseSellBill } from "../../services/sellServices"
 import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
 export const DateWiseItemWise = () => {
     const validation = {
@@ -12,7 +12,7 @@ export const DateWiseItemWise = () => {
             },
         }
     }
-    const mutation = useDateWiseSellBillprice();
+    const mutation = useDateWiseSellBill();
 
     var { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -33,9 +33,11 @@ export const DateWiseItemWise = () => {
     const [rowData, setRowData] = useState([]);
     var [total, settotal] = useState(0)
     const setRows = (data) => {
+        console.log("data",data);
         var id = 0; total = 0;
         var array = [];
         data?.forEach((element1) => {
+            console.log("element1", element1);
             element1.items?.forEach((element) => {
                 total += ((element?.qty) * (element?.price))
                 settotal(total)
@@ -58,6 +60,7 @@ export const DateWiseItemWise = () => {
     useEffect(() => {
         if (mutation.data && mutation.isLoading === false) {
             setRows(mutation.data.data.data);
+            console.log(mutation.data.data.data);
         }
         else if (mutation.data && mutation.isLoading === true) {
             refetch()
