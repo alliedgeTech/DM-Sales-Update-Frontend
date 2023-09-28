@@ -45,8 +45,8 @@ export const ItemWiseStock = () => {
                     _id: element?._id,
                     date: element?.date,
                     type: element?.type,
-                    company: element?.companyId.name,
-                    item: element?.itemId?.name,
+                    company: element?.company?.name,
+                    item: element?.item?.name,
                     inQty: element?.inQty,
                     currentQty:
                         element.type === "purchase" ? element.inQty : -element.inQty,

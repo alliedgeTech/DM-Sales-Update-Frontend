@@ -74,7 +74,7 @@ export const DateWiseItemWise = () => {
         return (
             <GridToolbarContainer>
                 <GridToolbar />
-                <h5 style={{ paddingTop: "10px" }}>Date Wise Item Summary:{itemdate}</h5>
+                <h5 style={{ paddingTop: "10px", fontSize:"16px"}}>Date Wise Item Summary:{itemdate} | Total selling Price : {Math.round(total)}</h5>
             </GridToolbarContainer>
         );
     };

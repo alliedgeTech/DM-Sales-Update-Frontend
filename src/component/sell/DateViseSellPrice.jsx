@@ -111,7 +111,7 @@ export const DateViseSellPrice = () => {
           itm.items.forEach((i) => {
             temptotalsellAmt = i.price * i.qty
           })
-          settotalsellAmt(temptotalsellAmt)
+          // settotalsellAmt(temptotalsellAmt)
         }
       })
     }
