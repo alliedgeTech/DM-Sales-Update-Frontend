@@ -257,7 +257,7 @@ export const FiltersComponet = () => {
                                                 </div>
                                                 <div className="col-md-12 pt-2">
                                                     <button type="submit" class="btn btn-primary me-1 mt-4">Search</button>
-                                                    <button type="submit" class="btn btn-secondry me-3 mt-4" onClick={() => document.getElementById("forms").reset()}>Reset</button>
+                                                    <button type="submit" class="btn btn-secondry me-3 mt-4" onClick={() => { window.location.reload() }}>Reset</button>
                                                 </div>
                                             </div>
                                         </form>
