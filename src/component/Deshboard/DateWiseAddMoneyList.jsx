@@ -28,14 +28,14 @@ export const DateWiseAddMoneyList = () => {
     {
       field: "id",
       headerName: "ID",
-      width: 70,
+      width: 15,
     },
     { field: "_id", headerName: "", width: "0" },
-    { field: "date", headerName: "Date", width: 150 },
-    { field: "sellbillno", headerName: "SellBill No", width: 120 },
-    { field: "clientname", headerName: "Client Name", width: 220 },
-    { field: "amount", headerName: "AddAmount", width: 110 },
-    { field: "paymentType", headerName: "PaymentMode", width: 130 },
+    { field: "date", headerName: "Date", width: 100 },
+    { field: "sellbillno", headerName: "SellBill No", width: 90 },
+    { field: "clientname", headerName: "Client Name", width: 330 },
+    { field: "amount", headerName: "AddAmount", width: 100 },
+    { field: "paymentType", headerName: "PaymentMode", width: 110 },
     { field: "receiptno", headerName: "Receipt No ", width: 100 }
   ];
   const [rowData, setRowData] = useState([]);

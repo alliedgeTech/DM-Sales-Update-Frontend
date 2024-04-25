@@ -18,14 +18,14 @@ const velidation = {
 export const FiltersComponet = () => {
 
     const columns = [
-        { field: "id", headerName: "ID", width: 90 },
+        { field: "id", headerName: "ID", width: 20 },
         // { field: "_id", headerName: "", width: "0" },
-        { field: "invoice", headerName: "Invoice No", width: 100 },
+        { field: "invoice", headerName: "Invoice No", width: 150 },
         { field: "vendor", headerName: "Vendor", width: 250 },
-        { field: "sellbillno", headerName: "Sell bill no", width: 150 },
-        { field: "date", headerName: "Date", width: 150 },
-        { field: "client", headerName: "Client", width: 200 },
-        { field: "paymentType", headerName: "PaymentType", width: 150 },
+        { field: "sellbillno", headerName: "Sell bill no", width: 110 },
+        { field: "date", headerName: "Date", width: 110 },
+        { field: "client", headerName: "Client", width: 330 },
+        { field: "paymentType", headerName: "PaymentType", width: 110 },
         { field: "total", headerName: "Credit Amount", width: 150 },
         { field: "dbtamount", headerName: "Main Amount", width: 150 },
     ]
@@ -92,18 +92,25 @@ export const FiltersComponet = () => {
                 var mainPrice = element?.items.reduce((accumulator, currentValue) => {
                     return accumulator + (currentValue.price * currentValue.qty);
                 }, 0);
+
+                var debitlogic = element?.total=== 0 ? mainPrice : (mainPrice - (element?.total)) 
                 debittoal += mainPrice
                 setdebittoal(debittoal)
-                credittotal += mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total)
+                // credittotal += mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total)
+                credittotal +=  element?.paymentType === 1 ? mainPrice : debitlogic
                 setcredittotal(credittotal)
+                console.log("credit and Debit",element)
                 return {
                     id: ++id,
                     _id: element._id,
                     sellbillno: element.sellbillno,
                     date: date,
                     client: element?.clientId?.name,
+                    // paymentType: element.paymentType === 1 ? "Credit" : "Debit",
+                    // total: mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total),
+                    // dbtamount: mainPrice
                     paymentType: element.paymentType === 1 ? "Credit" : "Debit",
-                    total: mainPrice - (element?.total) === 0 ? mainPrice : mainPrice - (element?.total),
+                    total: element?.paymentType === 1 ? mainPrice : debitlogic,
                     dbtamount: mainPrice
 
                 };
@@ -133,7 +140,7 @@ export const FiltersComponet = () => {
         return (
             <GridToolbarContainer>
                 <GridToolbar />
-                <h5 style={{ paddingTop: "12px", fontSize: "14px" }}>Main Amount Total: {Math.round(debittoal)} | Credit Amount Total :{Math.round(credittotal)} | MainAmt - CreditAmt = {Math.round(debittoal) - Math.round(credittotal)}</h5>
+                <h5 style={{ paddingTop: "12px", fontSize: "14px" }}>Main Amount Total: {Math.round(debittoal)} | Credit Amount Total :{Math.round(credittotal)} | Balance = {Math.round(debittoal) - Math.round(credittotal)}/-</h5>
             </GridToolbarContainer>
         );
     };

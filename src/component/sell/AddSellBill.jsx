@@ -43,7 +43,7 @@ export const AddSellBill = () => {
     clientId: {
       required: {
         value: true,
-        message: "Vendor name is required.",
+        message: "CLient name is required.",
       },
     },
     itemId: {

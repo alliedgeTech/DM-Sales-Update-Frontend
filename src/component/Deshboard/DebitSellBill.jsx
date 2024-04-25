@@ -1,4 +1,4 @@
-import { useGetSellData, useGetSellPriceHistory } from "../../services/sellServices";
+import { useChangeDate, useGetSellData, useGetSellPriceHistory } from "../../services/sellServices";
 import { useForm } from "react-hook-form"
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
@@ -27,13 +27,21 @@ export const DebitSellBill = () => {
         value: true,
         message: "Please select the Date."
       },
+    },
+    changedate: {
+      required: {
+        value: true,
+        message: "Please select the date to change"
+      }
     }
+
   }
 
 
 
   var [rowId, setrowId] = useState("")
   var { register, handleSubmit, formState: { errors } } = useForm();
+  var { register:register1, handleSubmit:handleSubmit1, formState: { errors } } = useForm();
   const { data, isLoading, refetch } = useGetSellData();
   const { data: sellHistoryData, isLoading: sellHistoryLoading, refetch: historyRefetch } = useGetSellPriceHistory();
   var [adddebittotal, setadddebittotal] = useState(0)
@@ -41,17 +49,17 @@ export const DebitSellBill = () => {
     {
       field: "id",
       headerName: "ID",
-      width: 50,
+      width: 15,
     },
-    { field: "_id", headerName: "", width: "0" },
-    { field: "sellbillnoId", headerName: "", width: 0 },
-    { field: "sellbillno", headerName: "Bill no", width: 90 },
+    // { field: "_id", headerName: "", width: "0" },
+    // { field: "sellbillnoId", headerName: "", width: 0 },
+    { field: "sellbillno", headerName: "Bill no", width: 75 },
     { field: "date", headerName: "Date", width: 110 },
-    { field: "clientId", headerName: "", width: 0 },
-    { field: "client", headerName: "Client", width: 230 },
-    { field: "paymentType", headerName: "PaymentType", width: 125 },
-    { field: "total", headerName: "Amount", width: 125 },
-    { field: "mainTotal", headerName: "Main_Amount", width: 140 },
+    // { field: "clientId", headerName: "", width: 0 },
+    { field: "client", headerName: "Client", width: 330 },
+    { field: "paymentType", headerName: "PaymentType", width: 100 },
+    { field: "total", headerName: "Amount", width: 115 },
+    { field: "mainTotal", headerName: "Main_Amount", width: 110 },
     {
       field: "actions",
       headerName: "View Items",
@@ -126,11 +134,29 @@ export const DebitSellBill = () => {
       headerName: "ID",
       width: 70,
     },
+        { field: "_id", headerName: "", width: "0" },
     { field: "date", headerName: "Date", width: 200 },
     { field: "type", headerName: "Type", width: 200 },
     { field: "total", headerName: "Amount", width: 200 },
     { field: "receiptNo", headerName: "Receipt No", width: 200 },
-
+    {
+      field: "actions",
+      headerName: "View Items",
+      width: 100,
+      renderCell: (params) => (
+        <>
+          <button
+            type="button"
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target={`#primaryDateChange`}
+            onClick={() =>ChangeDateid(params.row._id)}
+          >
+            <i class="bi bi-box-arrow-up"></i>
+          </button>
+        </>
+      ),
+    },
   ]
 
   const handleHistory = (data) => {
@@ -147,6 +173,7 @@ export const DebitSellBill = () => {
       date = `${date[2]}/${date[1]}/${date[0]}`;
       return {
         id: ++id1,
+        _id: d._id,
         date: date,
         type: d?.type,
         total: d?.amount,
@@ -160,12 +187,23 @@ export const DebitSellBill = () => {
 
 
   var mutation = useUpdateDebitMoney();
+  var mutation1=useChangeDate();
   const adddebitPrice = (data) => {
     data._Id = debitpriceid;
     mutation.mutate(data)
     document.getElementById("forms").reset();
     window.location.reload();
   }
+
+
+  const changeDate = (data) => {
+    data._Id = changedate;
+    mutation1.mutate(data)
+    document.getElementById("forms").reset();
+    window.location.reload();  
+  }
+
+
 
   var [note, setnote] = useState(1)
   useEffect(() => {
@@ -189,7 +227,12 @@ export const DebitSellBill = () => {
 
   const [debitpriceid, setdebitpriceid] = useState("")
   const handleButtonClick = (id) => {
+    console.log("other ID",id);
     setdebitpriceid(id);
+  }
+  const [changedate, setchangedate] = useState("")
+  const ChangeDateid = (id) => {
+    setchangedate(id);
   }
 
   const CustomToolbar = () => {
@@ -204,7 +247,9 @@ export const DebitSellBill = () => {
     return (
       <GridToolbarContainer>
         <GridToolbar />
-        <h5 style={{ paddingTop: "12px", fontSize: "14px" }}>DebitSell Bill List Total:{debitsellhistory} | SellbillNo :{sellbillno} | ClientName :{client}</h5>
+        <h5 style={{ fontSize: "14px" }}>DebitSell Bill List Total:{debitsellhistory} | SellbillNo :{sellbillno} | ClientName :{client}</h5>
+        <h3 style={{ fontSize: "14px", color: "black" }}><b>D.M Sales Agency</b> ( Sammati Market, Ambaji Highway, Khedbrahma SK ) |</h3>
+        <h3 style={{ fontSize: "14px", color: "black" }}>Pro.Darshitbhai M. Raval | Mo. 9724384019</h3>
       </GridToolbarContainer>
     );
   };
@@ -374,6 +419,69 @@ export const DebitSellBill = () => {
           </div>
         </div>
       </div>
+
+      {/* --------------------------------------------------------- */}
+      <div
+        class="modal fade text-left"
+        id="primaryDateChange"
+        tabindex="-1"
+        aria-labelledby="myModalLabel120"
+        style={{ display: "none" }}
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header bg-primary">
+              <h4 class="modal-title text-black" id="myModalLabel16">Change Date for Add Money</h4>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div className="card-content">
+                <div className="table-responsive">
+                  <form onSubmit={handleSubmit1(changeDate)} id='forms'>
+                    <div className="col-md-12 px-2">
+                      <div class="form-group mandatory">
+                        <label for="addDebitMoney" class="form-label">Change Date</label>
+                        <input type="date"
+                          id="addDebitMoney"
+                          class="form-control"
+                          placeholder="select date"
+                          name="fname-column"
+                          data-parsley-required="true"
+                          {...register1("date", validation.changedate)}
+                        />
+                        <span className="text-danger font-weight-bold">
+                          {errors?.changedate?.message}
+                        </span>
+                      </div>
+                      <div className="d-flex flex-row-reverse">
+                        <button type="submit"
+                          class="btn btn-primary w-20"
+                          data-bs-dismiss={errors?.type?.message?.length !== 0 ? "no" : "modal"}
+                        >Change Date
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                <i class="bx bx-x d-block d-sm-none"></i>
+                <span class="d-none d-sm-block">Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ----------------------------------------------------------------- */}
       <div class="modal fade text-left w-100" id="primary" tabindex="-1" aria-labelledby="myModalLabel16" style={{ "display": "none" }} aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
           <div class="modal-content">

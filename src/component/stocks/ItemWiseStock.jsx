@@ -11,14 +11,14 @@ export const ItemWiseStock = () => {
     var mutation = useHistoryData();
 
     const columns = [
-        { field: "id", headerName: "ID", width: 90 },
+        { field: "id", headerName: "ID", width: 15 },
         { field: "_id", headerName: "", width: "0" },
-        { field: "type", headerName: "Type", width: 150 },
-        { field: "date", headerName: "Date", width: 150 },
-        { field: "company", headerName: "Company", width: 150 },
-        { field: "item", headerName: "Items", width: 150 },
-        { field: "inQty", headerName: "Quantity", width: 150 },
-        { field: "currentQty", headerName: "Current Stock", width: 200 }
+        { field: "type", headerName: "Type", width: 80 },
+        { field: "date", headerName: "Date", width: 100 },
+        { field: "company", headerName: "Company", width: 180 },
+        { field: "item", headerName: "Items", width: 310 },
+        { field: "inQty", headerName: "Quantity", width: 70 },
+        { field: "currentQty", headerName: "Current Stock", width: 100 }
     ]
 
     const [debit, setDebit] = useState([]);

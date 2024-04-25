@@ -15,10 +15,10 @@ export const ListPurchaseComponent = () => {
       width: 30,
     },
     { field: "_id", headerName: "", width: "0" },
-    { field: "invoice", headerName: "Invoice No", width: 100 },
-    { field: "date", headerName: "Date", width: 220 },
+    { field: "invoice", headerName: "Invoice No", width: 150 },
+    { field: "date", headerName: "Date", width: 130 },
     { field: "vendor", headerName: "Vendor", width: 250 },
-    { field: "total", headerName: "Amount", width: 230 },
+    { field: "total", headerName: "Amount", width: 130 },
     {
       field: "actions",
       headerName: "View Items",

@@ -9,8 +9,8 @@ import { deleteClients } from "../../redux/ClientSlice";
 export const ListClientComponent = () => {
 
   const mutation = useDeleteClient();
-  const { data: clientData, isLoading: clientLoading, refetch} = useClientData();
-
+  const { data: clientData, isLoading: clientLoading, refetch } = useClientData();
+  var id=0;
   const [note, setnote] = useState(0)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const ListClientComponent = () => {
     if (mutation.isLoading === true && note === 1) {
       setnote(0)
     }
-  }, [mutation.data, mutation.isLoading,clientData]);
+  }, [mutation.data, mutation.isLoading, clientData]);
 
   const deleteClient = (id) => {
     mutation.mutate(id);
@@ -79,7 +79,7 @@ export const ListClientComponent = () => {
                   <h4 className="card-title">Clients </h4>
                 </div>
                 {clientLoading === 0 ||
-                  mutation.isLoading === true || clientData?.data?.data === undefined || clientData === true ?  (
+                  mutation.isLoading === true || clientData?.data?.data === undefined || clientData === true ? (
                   <div className="d-flex justify-content-center align-item-center my-5">
                     <div
                       class="spinner-border"
@@ -95,6 +95,7 @@ export const ListClientComponent = () => {
                       <table className="table mb-0">
                         <thead className="thead-dark">
                           <tr>
+                            <th>ID</th>
                             <th>NAME</th>
                             <th>EMAIL</th>
                             <th>PHONE NUMBER</th>
@@ -107,6 +108,7 @@ export const ListClientComponent = () => {
                             return (
                               <>
                                 <tr>
+                                  <td>{++id}</td>
                                   <td className="text-bold-500">
                                     {client.name}
                                   </td>

@@ -24,9 +24,9 @@ export const DateWiseItemList = () => {
         },
         { field: "_id", headerName: "", width: "0" },
         { field: "company", headerName: "company", width: 220 },
-        { field: "item", headerName: "Items", width: 220 },
+        { field: "item", headerName: "Items", width: 320 },
         { field: "qty", headerName: "Quantity", width: 130 },
-        { field: "price", headerName: "Price", width: 100 },
+        // { field: "price", headerName: "Price", width: 100 },
         { field: "total", headerName: "Total", width: 150 },
     ];
     const [rowData, setRowData] = useState([]);

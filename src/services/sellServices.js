@@ -43,6 +43,10 @@ const datewisesellprice = (data) => {
 const updateDebitMoney = (data) => {
   return axios.put("http://localhost:9990/distributer/api/v1/public/sell/update-money", data)
 }
+const ChangeDate = (data) => {
+  console.log("data--->",data);
+  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/updateaddmoneydate",data)
+}
 
 const getPriceHistory = () => {
   return axios.get("http://localhost:9990/distributer/api/v1/public/sell/get-price-history");
@@ -93,6 +97,13 @@ export const useDeleteSell = (id) => {
 
 export const useUpdateDebitMoney = () => {
   return useMutation("updateClient", updateDebitMoney, {
+    retry: 5,
+    retryDelay: 1000
+  })
+}
+
+export const useChangeDate = () => {
+  return useMutation("changedate", ChangeDate, {
     retry: 5,
     retryDelay: 1000
   })

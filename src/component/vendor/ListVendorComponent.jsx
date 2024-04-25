@@ -9,7 +9,7 @@ export const ListVendorComponent = () => {
     const mutation = useDeleteVendor();
     const { data: vendorData, isLoading: vendorLoading, refetch} = useVendorData();
     const [note, setnote] = useState(0)
-
+     var id=0;
     useEffect(() => {
         if (mutation.isSuccess && note === 0) {
             setnote(1)
@@ -88,6 +88,7 @@ export const ListVendorComponent = () => {
                                                 <table className="table mb-0">
                                                     <thead className="thead-dark">
                                                         <tr>
+                                                            <th>ID</th>
                                                             <th>NAME</th>
                                                             <th>EMAIL</th>
                                                             <th>PHONE NUMBER</th>
@@ -102,6 +103,7 @@ export const ListVendorComponent = () => {
                                                                 return (
                                                                     <>
                                                                         <tr>
+                                                                            <td>{++id}</td>
                                                                             <td className="text-bold-500">{vendor.vendorName}</td>
                                                                             <td>{vendor.email1}</td>
                                                                             <td className="text-bold-500">{vendor.phoneNumber1}</td>
@@ -145,7 +147,7 @@ export const ListVendorComponent = () => {
                                                                                         </button>
                                                                                     </div>
                                                                                     <div class="modal-body">
-                                                                                        Are you sure you want to delete this client?
+                                                                                        Are you sure you want to delete this Vendor?
                                                                                     </div>
                                                                                     <div class="modal-footer">
                                                                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
