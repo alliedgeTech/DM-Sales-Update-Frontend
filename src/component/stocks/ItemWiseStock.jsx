@@ -1,6 +1,6 @@
 import { useHistoryData } from "../../services/stockServices";
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, GridToolbarContainer } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
 import "../../assets/css/style.css";
 import { useMutation } from "react-query";
@@ -15,8 +15,8 @@ export const ItemWiseStock = () => {
         { field: "_id", headerName: "", width: "0" },
         { field: "type", headerName: "Type", width: 80 },
         { field: "date", headerName: "Date", width: 100 },
-        { field: "company", headerName: "Company", width: 180 },
-        { field: "item", headerName: "Items", width: 310 },
+        // { field: "company", headerName: "Company", width: 180 },
+        // { field: "item", headerName: "Items", width: 310 },
         { field: "inQty", headerName: "Quantity", width: 70 },
         { field: "currentQty", headerName: "Current Stock", width: 100 }
     ]
@@ -24,7 +24,9 @@ export const ItemWiseStock = () => {
     const [debit, setDebit] = useState([]);
     const [credit, setCredit] = useState([]);
     const [rowData, setRowData] = useState([]);
-    var [stockPrice, setstockPrice] = useState(0)
+    var [stockPrice, setstockPrice] = useState(0);
+
+
 
     var temp = true;
     var currentQty = 0;
@@ -45,8 +47,8 @@ export const ItemWiseStock = () => {
                     _id: element?._id,
                     date: element?.date,
                     type: element?.type,
-                    company: element?.company?.name,
-                    item: element?.item?.name,
+                    // company: element?.company?.name,
+                    // item: element?.item?.name,
                     inQty: element?.inQty,
                     currentQty:
                         element.type === "purchase" ? element.inQty : -element.inQty,
@@ -68,8 +70,8 @@ export const ItemWiseStock = () => {
                 _id: element?._id,
                 date: element?.date,
                 type: element?.type,
-                company: element?.company?.name,
-                item: element?.item?.name,
+                // company: element?.company?.name,
+                // item: element?.item?.name,
                 inQty: element?.inQty,
                 // currentQty: element.type === "purchase" ? (element?.inQty + currentQty) : (currentQty - element?.inQty)
                 currentQty: currentQty,
@@ -86,6 +88,19 @@ export const ItemWiseStock = () => {
             setRows(mutation.data?.data?.data);
         }
     }, [mutation.isLoading]);
+
+
+    console.log("mutation.data?.data?.data",mutation.data?.data?.data);
+    
+    const CustomToolbar = () => {
+        return (
+          <GridToolbarContainer>
+            <GridToolbar />
+            <h4 style={{ paddingTop: "12px" }}>Company:{mutation.data?.data?.data?.[0]?.company?.name}</h4>
+            <h4 style={{ paddingTop: "12px" }}>Item:{mutation.data?.data?.data?.[0]?.item?.name}</h4>
+          </GridToolbarContainer>
+        );
+      };
 
     return (
         <>
@@ -132,7 +147,10 @@ export const ItemWiseStock = () => {
                                         }}
                                         columns={columns}
                                         rows={rowData}
-                                        slots={{ toolbar: GridToolbar }}
+                                        // slots={{ toolbar: GridToolbar }}
+                                        components={{
+                                            Toolbar: CustomToolbar,
+                                        }}
                                     />
                                 ) : (
                                     <div className="d-flex justify-content-center align-item-center my-5">

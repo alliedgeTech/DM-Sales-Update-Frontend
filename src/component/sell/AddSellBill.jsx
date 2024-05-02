@@ -58,24 +58,24 @@ export const AddSellBill = () => {
         message: "Date is required.",
       },
     },
-    qty: {
-      required: {
-        value: true,
-        message: "Quantity is required.",
-      },
-      min: {
-        value: 1,
-        message: "Minimum one quantity is required.",
-      },
-      max: {
-        value: StockQuantity,
-        message: `Maximum ${StockQuantity} quantity is required.`,
-      },
-      pattern: {
-        value: /^[0-9.]+$/,
-        message: "Only numbers are allowed.",
-      },
-    },
+    // qty: {
+    //   required: {
+    //     value: true,
+    //     message: "Quantity is required.",
+    //   },
+    //   min: {
+    //     value: 1,
+    //     message: "Minimum one quantity is required.",
+    //   },
+    //   max: {
+    //     value: StockQuantity,
+    //     message: `Maximum ${StockQuantity} quantity is required.`,
+    //   },
+    //   pattern: {
+    //     value: /^[0-9.]+$/,
+    //     message: "Only numbers are allowed.",
+    //   },
+    // },
     price: {
       required: {
         value: true,
@@ -156,7 +156,7 @@ export const AddSellBill = () => {
     data.id = ids;
     setids((ids += 1));
     setsellItem([...sellItem, data]);
-    document.getElementById("forms").reset();
+    // document.getElementById("forms").reset();
   };
   
   
@@ -205,7 +205,7 @@ export const AddSellBill = () => {
   };
 
   const setInstock = (data) => {
-    StockQuantity = stockData?.data?.data?.find(ele => ele.itemId._id === data)?.qty
+    StockQuantity = stockData?.data?.data?.find(ele => ele?.itemId?._id === data)?.qty
     setStockQuantity(StockQuantity)
   }
 
@@ -226,7 +226,7 @@ export const AddSellBill = () => {
     }
     if (mutation.isSuccess) {
       notifyDone("sell items added successfully.");
-      navigate("/");
+      navigate("/viewsellbill");
     } else if (mutation.isError) {
       navigate("/erorr404");
     }

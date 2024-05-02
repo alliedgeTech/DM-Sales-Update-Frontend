@@ -4,12 +4,52 @@ import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { notifyDone, notifyErorr } from "../../assets/toster"
 import { useDispatch, useSelector } from 'react-redux';
+import { DataGrid, GridToolbarContainer, GridToolbar } from "@mui/x-data-grid";
+
 export const ListVendorComponent = () => {
+
+    const columns = [
+        { field: "id",headerName: "ID",width: 30 },
+        { field: "_id", headerName: "", width: "0" },
+        { field: "name", headerName: "NAME", width: 150 },
+        { field: "email", headerName: "EMAIL", width: 130 },
+        { field: "phoneNumber", headerName: "PHONE NUMBER", width: 250 },
+        { field: "gstNo", headerName: "GST NUMBER", width: 130 },
+        {
+          field: "actions",
+          headerName: "View Items",
+          width: 100,
+          renderCell: (params) => (
+           <>
+             <button
+            type="button"
+            className="btn btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target={`#primary${params.row._id}`}>
+                <i class="bi bi-card-text text-primary"></i>
+            </button>
+            <Link to={`editvendor/${params.row._id}`} className='btn btn-sm'>
+                <i class="bi bi-box-arrow-up-right"></i>
+            </Link>
+            <button
+                type="button"
+                className="btn btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target={`#danger${params.row._id}`}
+            >
+                <i class="bi bi-trash3 text-danger"></i>
+            </button>
+           </>
+          ),
+        },
+      ];
 
     const mutation = useDeleteVendor();
     const { data: vendorData, isLoading: vendorLoading, refetch} = useVendorData();
     const [note, setnote] = useState(0)
+    const [rowData, setRowData] = useState(0)
      var id=0;
+
     useEffect(() => {
         if (mutation.isSuccess && note === 0) {
             setnote(1)
@@ -21,6 +61,40 @@ export const ListVendorComponent = () => {
             setnote(0)
         }
     }, [mutation, vendorData]);
+
+    useEffect(() => {
+        setRows();
+      }, [vendorLoading])
+
+    const setRows = () => {
+        var id = 0; 
+        const dataArray = [];
+        if (vendorData?.data?.data?.length !== 0) {
+          const completedData = vendorData?.data?.data?.map((element) => {
+           return {
+              id: ++id,
+              _id: element._id,
+              name: element.vendorName,
+              email: element.email1,
+              phoneNumber: element.phoneNumber1,
+              gstNo: element.gstNo,
+           }
+            
+          });
+          if (completedData)
+            setRowData(completedData);
+        } else {
+          navigate('/')
+        }
+      };
+
+      const CustomToolbar = () => {
+        return (
+          <GridToolbarContainer>
+            <GridToolbar />
+          </GridToolbarContainer>
+        );
+      };
 
     const deleteVendor = (id) => {
         mutation.mutate(id);
@@ -76,7 +150,7 @@ export const ListVendorComponent = () => {
                                     <h4 className="card-title">Vendors </h4>
                                 </div>
                                 {
-                                    mutation.isLoading === true || vendorData?.data?.data === undefined || vendorLoading === true ? (
+                                    mutation.isLoading === true || rowData === undefined || vendorLoading === true ? (
                                         <div className='d-flex justify-content-center align-item-center my-5'>
                                             <div class="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
                                                 <span class="visually-hidden"></span>
@@ -85,143 +159,112 @@ export const ListVendorComponent = () => {
                                     ) : (
                                         <div className="card-content p-2">
                                             <div className="table-responsive">
-                                                <table className="table mb-0">
-                                                    <thead className="thead-dark">
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>NAME</th>
-                                                            <th>EMAIL</th>
-                                                            <th>PHONE NUMBER</th>
-                                                            <th>GST NUMBER</th>
-                                                            <th>ACTION</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        {
-                                                            vendorData?.data?.data?.map(vendor => {
-                                                                return (
-                                                                    <>
-                                                                        <tr>
-                                                                            <td>{++id}</td>
-                                                                            <td className="text-bold-500">{vendor.vendorName}</td>
-                                                                            <td>{vendor.email1}</td>
-                                                                            <td className="text-bold-500">{vendor.phoneNumber1}</td>
-                                                                            <td>{vendor.gstNo}</td>
-                                                                            <td>
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn btn-sm"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target={`#primary${vendor._id}`}
-                                                                                >
-                                                                                    <i class="bi bi-card-text text-primary"></i>
-                                                                                </button>
-                                                                                <Link to={`editvendor/${vendor._id}`} className='btn btn-sm'>
-                                                                                    <i class="bi bi-box-arrow-up-right"></i>
-                                                                                </Link>
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn btn-sm"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target={`#danger${vendor._id}`}
-                                                                                >
-                                                                                    <i class="bi bi-trash3 text-danger"></i>
-                                                                                </button>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <div
-                                                                            class="modal fade text-left"
-                                                                            id={`danger${vendor._id}`}
-                                                                            tabindex="-1"
-                                                                            aria-labelledby="myModalLabel120"
-                                                                            style={{ display: "none" }}
-                                                                            aria-hidden="true">
-                                                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header bg-danger">
-                                                                                        <h5 class="modal-title white" id="myModalLabel120">Danger alert
-                                                                                        </h5>
-                                                                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        Are you sure you want to delete this Vendor?
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                                                                            <i class="bx bx-x d-block d-sm-none"></i>
-                                                                                            <span class="d-none d-sm-block">Close</span>
-                                                                                        </button>
-                                                                                        <button
-                                                                                            class="btn btn-danger ml-1"
-                                                                                            data-bs-dismiss="modal"
-                                                                                            onClick={() => { deleteVendor(vendor._id) }}
-                                                                                        >
-                                                                                            <i class="bx bx-check d-block d-sm-none"></i>
-                                                                                            <span class="d-none d-sm-block">Delete</span>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                            <DataGrid
+                                                columnVisibilityModel={{
+                                                status: false,
+                                                _id: false,
+                                                }}
+                                                columns={columns}
+                                                rows={rowData}
+                                                components={{
+                                                    Toolbar: CustomToolbar,
+                                                }}
+                                            />
+                                            {
+                                                vendorData?.data?.data?.map(vendor => {
+                                                    return (
+                                                        <>
+                                                            <div
+                                                                class="modal fade text-left"
+                                                                id={`danger${vendor._id}`}
+                                                                tabindex="-1"
+                                                                aria-labelledby="myModalLabel120"
+                                                                style={{ display: "none" }}
+                                                                aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header bg-danger">
+                                                                            <h5 class="modal-title white" id="myModalLabel120">Danger alert
+                                                                            </h5>
+                                                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                                            </button>
                                                                         </div>
-                                                                        <div
-                                                                            className="modal fade text-left"
-                                                                            id={`primary${vendor._id}`}
-                                                                            tabIndex={-1}
-                                                                            role="dialog"
-                                                                            aria-labelledby="myModalLabel160"
-                                                                            aria-hidden="true"
-                                                                        >
-                                                                            <div
-                                                                                className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                                                role="document"
+                                                                        <div class="modal-body">
+                                                                            Are you sure you want to delete this Vendor?
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                                                                <i class="bx bx-x d-block d-sm-none"></i>
+                                                                                <span class="d-none d-sm-block">Close</span>
+                                                                            </button>
+                                                                            <button
+                                                                                class="btn btn-danger ml-1"
+                                                                                data-bs-dismiss="modal"
+                                                                                onClick={() => { deleteVendor(vendor._id) }}
                                                                             >
-                                                                                <div className="modal-content">
-                                                                                    <div className="modal-header bg-primary">
-                                                                                        <h5 className="modal-title white" id="myModalLabel160">
-                                                                                            Other details
-                                                                                        </h5>
-                                                                                    </div>
-                                                                                    <div className="modal-body">
-                                                                                        <tr className='d-flex flex-column'>
-                                                                                            <td>
-                                                                                                <h6>Second email</h6>
-                                                                                                <p>{vendor?.email2 ? vendor?.email2 : "No second email"}</p>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <h6>Second contact number</h6>
-                                                                                                <p>{vendor?.phoneNumber2 ? vendor?.phoneNumber2 : "No second phone number"}</p>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <h6>Remark</h6>
-                                                                                                <p>{vendor?.remark}</p>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <h6>Address</h6>
-                                                                                                <p>{vendor?.address}</p>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </div>
-                                                                                    <div className="modal-footer">
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="btn btn-light-secondary"
-                                                                                            data-bs-dismiss="modal"
-                                                                                        >
-                                                                                            x
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                                <i class="bx bx-check d-block d-sm-none"></i>
+                                                                                <span class="d-none d-sm-block">Delete</span>
+                                                                            </button>
                                                                         </div>
-                                                                    </>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className="modal fade text-left"
+                                                                id={`primary${vendor._id}`}
+                                                                tabIndex={-1}
+                                                                role="dialog"
+                                                                aria-labelledby="myModalLabel160"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <div
+                                                                    className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                                    role="document"
+                                                                >
+                                                                    <div className="modal-content">
+                                                                        <div className="modal-header bg-primary">
+                                                                            <h5 className="modal-title white" id="myModalLabel160">
+                                                                                Other details
+                                                                            </h5>
+                                                                        </div>
+                                                                        <div className="modal-body">
+                                                                            <tr className='d-flex flex-column'>
+                                                                                <td>
+                                                                                    <h6>Second email</h6>
+                                                                                    <p>{vendor?.email2 ? vendor?.email2 : "No second email"}</p>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h6>Second contact number</h6>
+                                                                                    <p>{vendor?.phoneNumber2 ? vendor?.phoneNumber2 : "No second phone number"}</p>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h6>Remark</h6>
+                                                                                    <p>{vendor?.remark}</p>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <h6>Address</h6>
+                                                                                    <p>{vendor?.address}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </div>
+                                                                        <div className="modal-footer">
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-light-secondary"
+                                                                                data-bs-dismiss="modal"
+                                                                            >
+                                                                                x
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                                  
                                             </div>
                                         </div>
                                     )
