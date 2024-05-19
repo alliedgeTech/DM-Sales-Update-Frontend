@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useDeferredValue } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { useClientData } from '../../services/clientServices';
 import { useForm } from "react-hook-form";
@@ -137,13 +137,19 @@ export const AddSellBill = () => {
     register: clientRegister,
     handleSubmit: clientSubmit,
     formState: { errors: clientError },
+    watch
   } = useForm();
   var {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [clientDetails, setclientDetails] = useState({})
+  const [clientDetails, setclientDetails] = useState({});
+  const watchBillNo = watch("sellbillno"); 
+  const watchDate = watch("date");
+  const defferedBillNo = useDeferredValue(watchBillNo);
+  const defferedDate = useDeferredValue(watchDate);
+
 
   const submitBeforeData = (data) => {
     setclientDetails(data)
@@ -213,11 +219,17 @@ export const AddSellBill = () => {
 
   var [sellbillError, setsellbillError] = useState(true)
   var billMutation = useGetUniqueBillNo();
-  const getBillUnique = (value) => {
-    if (value && value.length >= 2) {
-      billMutation.mutate(value);
-    }
+
+  const getBillUnique = (number,date) => {
+      billMutation.mutate({number,date});
   }
+
+  useEffect(() => {
+    if(defferedBillNo && defferedDate) {
+      getBillUnique(defferedBillNo,defferedDate);
+    }
+  },[defferedBillNo,defferedDate])
+
   useEffect(() => {
     if (stockData !== undefined && stockLoading === false && stockData?.data?.data?.length === 0) {
       stockData.data.data.forEach(element => {
@@ -241,9 +253,12 @@ export const AddSellBill = () => {
       navigate("/");
     }
     if (billMutation.data) {
+      console.log("is this run bro : ",billMutation.data);
       if (billMutation.data.data.data === false) {
+        console.log("sell bill error seted");
         setsellbillError(false)
       } else {
+        console.log("sell bill error removed");
         setsellbillError(true)
       }
     }
@@ -365,7 +380,7 @@ export const AddSellBill = () => {
                           className="form-control"
                           id="sellbillno"
                           placeholder="Enter your SellBill number"
-                          onKeyUp={(event) => getBillUnique(event.target.value)}
+                          // onKeyUp={(event) => getBillUnique(event.target.value)}
                           {...clientRegister("sellbillno", validation.sellbillno)}
                         />
                         <span className="text-danger font-weight-bold">

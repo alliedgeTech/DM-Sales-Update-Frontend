@@ -52,9 +52,10 @@ const getPriceHistory = () => {
   return axios.get("http://localhost:9990/distributer/api/v1/public/sell/get-price-history");
 }
 
-const getsellBillNumber = (sellbill) => {
+const getsellBillNumber = ({number,date}) => {
+  console.log("this is i got the data : ",number,date);
   return axios.put(
-    "http://localhost:9990/distributer/api/v1/public/sell/get-sellbill", { data: sellbill }
+    "http://localhost:9990/distributer/api/v1/public/sell/get-sellbill", { data: {number,date} }
   );
 };
 
@@ -68,7 +69,7 @@ const MYWiseAddMoney = (data) => {
 
 
 export const useGetItemCompanyWise = (company) => {
-  return useQuery("ge tItemCompanyWise", getItemCompanyWise, {
+  return useQuery("getItemCompanyWise", getItemCompanyWise, {
     retry: 5,
     retryDelay: 1000,
   });

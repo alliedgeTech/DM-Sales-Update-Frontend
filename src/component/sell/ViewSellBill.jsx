@@ -18,7 +18,7 @@ export const ViewSellBill = (props) => {
       width: 15,
     },
     { field: "_id", headerName: "", width: "0" },
-    { field: "sellbillno", headerName: "Bill no", width: 70 },
+    { field: "sellbillno", headerName: "Bill no", width: 170 },
     { field: "date", headerName: "Date", width: 100 },
     { field: "client", headerName: "Client", width: 340 },
     { field: "paymentType", headerName: "PaymentType", width: 100 },
