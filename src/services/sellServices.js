@@ -3,68 +3,68 @@ import { useMutation, useQuery } from "react-query";
 
 const getItemCompanyWise = (company) => {
   return axios.get(
-    "http://localhost:9990/distributer/api/v1/public/item/item-by-company",
+    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/item/item-by-company",
     company
   );
 };
 
 const addsell = (data) => {
   return axios.post(
-    "http://localhost:9990/distributer/api/v1/public/sell/add-sell",
+    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/add-sell",
     data
   );
 };
 
 const getsell = () => {
   return axios.get(
-    "http://localhost:9990/distributer/api/v1/public/sell/get-sell"
+    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/get-sell"
   );
 };
 
 const getFilterData = (data) => {
   return axios.get(
-    "http://localhost:9990/distributer/api/v1/public/sell/search", {
+    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/search", {
     params: data
   }
   );
 };
 
 const deletesell = (id) => {
-  return axios.delete("http://localhost:9990/distributer/api/v1/public/sell/deletesell/" + id)
+  return axios.delete("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/deletesell/" + id)
 }
 
 const datewisesellbill = (data) => {
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellitem", data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/datewisesellitem", data)
 }
 const datewisesellprice = (data) => {
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/datewisesellprice", data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/datewisesellprice", data)
 }
 
 const updateDebitMoney = (data) => {
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/update-money", data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/update-money", data)
 }
 const ChangeDate = (data) => {
   console.log("data--->",data);
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/updateaddmoneydate",data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/updateaddmoneydate",data)
 }
 
 const getPriceHistory = () => {
-  return axios.get("http://localhost:9990/distributer/api/v1/public/sell/get-price-history");
+  return axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/get-price-history");
 }
 
 const getsellBillNumber = ({number,date}) => {
   console.log("this is i got the data : ",number,date);
   return axios.put(
-    "http://localhost:9990/distributer/api/v1/public/sell/get-sellbill", { data: {number,date} }
+    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/get-sellbill", { data: {number,date} }
   );
 };
 
 const datewiseaddmoney = (data) => {
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-datewiseaddmoney", data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/get-datewiseaddmoney", data)
 }
 
 const MYWiseAddMoney = (data) => {
-  return axios.put("http://localhost:9990/distributer/api/v1/public/sell/get-between", data)
+  return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/get-between", data)
 }
 
 

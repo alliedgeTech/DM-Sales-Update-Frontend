@@ -2,27 +2,27 @@ import { useMutation, useQuery } from "react-query"
 import axios from "axios"
 
 const addCompany = (data) => {
-    return axios.post("http://localhost:9990/distributer/api/v1/public/company/addcompany", data)
+    return axios.post("https://dmsalesbackend.onrender.com/distributer/api/v1/public/company/addcompany", data)
 }
 
 const getCompanys = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/company/companys")
+    return axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/company/companys")
 }
 
 const deleteCompanys = (id) => {
-    return axios.delete("http://localhost:9990/distributer/api/v1/public/company/company/" + id)
+    return axios.delete("https://dmsalesbackend.onrender.com/distributer/api/v1/public/company/company/" + id)
 }
 
 const deleteItems = (id) => {
-    return axios.delete("http://localhost:9990/distributer/api/v1/public/item/item/" + id)
+    return axios.delete("https://dmsalesbackend.onrender.com/distributer/api/v1/public/item/item/" + id)
 }
 
 const AddItemsByCompany = (item) => {
-    return axios.post("http://localhost:9990/distributer/api/v1/public/item/additem", item)
+    return axios.post("https://dmsalesbackend.onrender.com/distributer/api/v1/public/item/additem", item)
 }
 
 const getItemsByCompany = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/item/items")
+    return axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/item/items")
 }
 
 export const useAddCompany = (data) => {

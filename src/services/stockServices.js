@@ -2,13 +2,13 @@ import axios from "axios"
 import { useMutation, useQuery } from "react-query"
 
 const getStock = () => {
-    return axios.get("http://localhost:9990/distributer/api/v1/public/stock/stock")
+    return axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/stock/stock")
 }
 
 
 const stockhistory = (id) => {
     // console.log("id param", id.itemId);
-    return axios.put("http://localhost:9990/distributer/api/v1/public/stock/stock-history/" + id.itemId)
+    return axios.put("https://dmsalesbackend.onrender.com/distributer/api/v1/public/stock/stock-history/" + id.itemId)
 }
 
 export const useGetStockData = () => {
