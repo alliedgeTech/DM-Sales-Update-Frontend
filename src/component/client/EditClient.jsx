@@ -58,7 +58,7 @@ export const EditClient = () => {
     var id = useParams().clientId;
     var { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: async () => {
-            const client = await axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/client/client/" + id)
+            const client = await axios.get("http://localhost:9990/distributer/api/v1/public/client/client/" + id)
             return {
                 name: client?.data?.data.name,
                 panNumber: client?.data?.data.panNumber,

@@ -39,7 +39,7 @@ export const FiltersComponet = () => {
 
     const submitData = async (data) => {
         data.type = personChange
-        const filterData = await axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/sell/search", { params: data })
+        const filterData = await axios.get("http://localhost:9990/distributer/api/v1/public/sell/search", { params: data })
         console.log(" =====>> ", filterData);
         setRows(filterData?.data?.data);
     }

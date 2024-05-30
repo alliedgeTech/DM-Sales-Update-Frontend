@@ -132,7 +132,7 @@ export const EditVendor = () => {
     var id = useParams().vendorId;
     var { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: async () => {
-            const vendor = await axios.get("https://dmsalesbackend.onrender.com/distributer/api/v1/public/vendor/vendor/" + id)
+            const vendor = await axios.get("http://localhost:9990/distributer/api/v1/public/vendor/vendor/" + id)
             return {
                 vendorName: vendor?.data?.data.vendorName,
                 phoneNumber1: vendor?.data?.data.phoneNumber1,

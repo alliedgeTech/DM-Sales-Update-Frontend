@@ -3,27 +3,27 @@ import { useMutation, useQuery } from "react-query";
 
 const getItemCompanyWise = (company) => {
   return axios.get(
-    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/item/item-by-company",
+    "http://localhost:9990/distributer/api/v1/public/item/item-by-company",
     company
   );
 };
 
 const addPurchase = (data) => {
   return axios.post(
-    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/purchase/add-purchase",
+    "http://localhost:9990/distributer/api/v1/public/purchase/add-purchase",
     data
   );
 };
 
 const getPurchase = () => {
   return axios.get(
-    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/purchase/get-purchase"
+    "http://localhost:9990/distributer/api/v1/public/purchase/get-purchase"
   );
 };
 
 const getBillNumber = (invoice) => {
   return axios.put(
-    "https://dmsalesbackend.onrender.com/distributer/api/v1/public/purchase/get-bill", { data: invoice }
+    "http://localhost:9990/distributer/api/v1/public/purchase/get-bill", { data: invoice }
   );
 };
 
